@@ -27,6 +27,7 @@ setup(
     version=get_version('philip'),
     packages=find_packages(),
     install_requires=[str(x.req) for x in requirements],
+    include_package_data=True,
     license="BSD 3-Clause",
     classifiers=(
         "Development Status :: 3 - Alpha",
