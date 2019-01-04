@@ -1,7 +1,7 @@
 {% macro tag_list(post) -%}
 <div class="tags">
-{% for tag in post.post_metadata.tags %}
-	<a class="tag" href="/blog/tag/{{ tag }}">{{ tag }}</a>
+{% for tag in post.object.tag %}
+	<a class="tag" href="/blog/tag/{{ tag }}">{{ tag.name }}</a>
 {% endfor %}
 </div>
 {%- endmacro %}
@@ -10,14 +10,12 @@
 <div>
 	<ul class="post-list">
 		{% for post in posts %}
-		{% if not post.post_metadata.hidden %}
 		<li class="post">
 			<a href="/blog/post/{{ post.name }}"><h2 id="post-{{ post.name }}">{{ post.title }}</h2></a>
 			{{ metadata(post) }}
 			{{ tag_list(post) }}
-			<p>{{ post.post_metadata.description }}</p>
+			<p>{{ post.object.content }}</p>
 		</li>
-		{% endif %}
 		{% endfor %}
 	</ul>
 </div>
@@ -25,17 +23,8 @@
 
 {% macro metadata(post) -%}
 <div class="metadata">
-	<span>{{ post.post_metadata.date.pretty_date }}</span>
+	<span>{{ post.published }}</span>
 	<span class="metadata-seperator">·</span>
-	<span>{{ post.read_time.word_count }} Words</span>
-	<span class="metadata-seperator">·</span>
-	<span class="overall-time">{{ post.read_time.pretty_overall_time }}
-		<span class="time-breakdown">
-			{% for element in post.read_time.pretty_time_breakdown %}
-			<span>{{ element }}: {{ post.read_time.pretty_time_breakdown[element] }}</span>
-			{% endfor %}
-		</span>
-	</span>
 </div>
 {%- endmacro %}
 

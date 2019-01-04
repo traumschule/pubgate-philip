@@ -28,7 +28,7 @@ async def home(request, **kwargs):
         # html_minify(
             jinja_env.get_template("home.jinja").render(
                 static_url="static/",
-                posts=[]
+                posts=posts
             # )
         )
     )

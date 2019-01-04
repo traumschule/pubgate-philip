@@ -18,7 +18,15 @@
 		<li><a href="/dot-dot-dot">...</a></li>
 	</ul>
 </header>
-<div id="about" class="hidden content">
+<div id="about" class="">
+	{% if posts %}
+		{{ macros.post_list(posts) }}
+	{% else %}
+		{{ macros.warning("Could not load blog posts.", is_content=False) }}
+	{% endif %}
+
+</div>
+<div id="blog" class="hidden content">
 	<span class="about-greeting">Hi!</span>
 	<p>My name is <a href="https://twitter.com/PhilipTrauner">Philip Trauner</a>.</p>
 	<p>I'm a software engineer currently residing in Austria. I sometimes write about <a href="/blog">programming related things</a>, create <a href="/projects">open-source tools</a> as well as <a href="/projects">libraries</a>, and listen to <a href="/playlists">lots of music</a>.</p>
@@ -30,13 +38,6 @@
 		</div>
 		<cite>Philip Trauner</cite>
 	</blockquote>
-</div>
-<div id="blog" class="hidden content">
-	{% if posts %}
-		{{ macros.post_list(posts) }}
-	{% else %}
-		{{ macros.warning("Could not load blog posts.", is_content=False) }}
-	{% endif %}
 </div>
 <div id="projects" class="hidden content">
 	<svg class="hidden">
