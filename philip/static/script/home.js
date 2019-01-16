@@ -1,6 +1,6 @@
 'use strict';
 
-var DEFAULT_PATH= 'about';
+var DEFAULT_PATH= 'local';
 var LINK_NODE_NAME = 'A';
 var LINK_REGEX = '^\/[^\/]+\/?$';
 

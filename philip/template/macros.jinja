@@ -21,10 +21,14 @@
 </div>
 {%- endmacro %}
 
+
 {% macro metadata(post) -%}
 <div class="metadata">
-	<span>{{ post.published }}</span>
-	<span class="metadata-seperator">·</span>
+    {% set userlist = post.actor.split('/') %}
+    <span>User <a href="{{ post.actor }}">{{ userlist[-1] }}</a></span>
+    <span class="metadata-seperator">·</span>
+	<span>{{ post.published |replace("T", " ") |replace("Z", " ")}}</span>
+
 </div>
 {%- endmacro %}
 

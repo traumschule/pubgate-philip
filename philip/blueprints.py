@@ -4,7 +4,7 @@ from html.parser import HTMLParser
 from sanic import response, Blueprint
 from jinja2 import Environment, PackageLoader
 
-from pubgate.db.models import Outbox
+from pubgate.db.boxes import Outbox, Inbox
 
 philip_v1 = Blueprint('philip')
 
@@ -36,6 +36,10 @@ def strip_tags(html):
     return s.get_data()
 
 
+@philip_v1.route('/local', methods=['GET'])
+@philip_v1.route('/fed', methods=['GET'])
+@philip_v1.route('/home', methods=['GET'])
+@philip_v1.route('/about', methods=['GET'])
 @philip_v1.route('/', methods=['GET'])
 async def home(request, **kwargs):
     data = await Outbox.find(filter={
@@ -47,11 +51,22 @@ async def home(request, **kwargs):
     for post in posts:
         post["object"]["content"] = strip_tags(post["object"]["content"])
 
+    feddata = await Inbox.find(filter={
+                "deleted": False,
+                "activity.type": "Create"
+            },
+            sort="activity.published desc")
+    fedposts = Inbox.activity_clean(feddata.objects)
+    for fpost in fedposts:
+        fpost["object"]["content"] = strip_tags(fpost["object"]["content"])
+
     return response.html(
         # html_minify(
             jinja_env.get_template("home.jinja").render(
                 static_url="static/",
-                posts=posts
+                localposts=posts,
+                fedposts=fedposts
+
             # )
         )
     )
