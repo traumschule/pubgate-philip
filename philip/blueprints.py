@@ -1,5 +1,4 @@
 import os
-from html.parser import HTMLParser
 
 from sanic import response, Blueprint
 from jinja2 import Environment, PackageLoader
@@ -17,25 +16,6 @@ jinja_env = Environment(
 )
 
 
-class MLStripper(HTMLParser):
-    def __init__(self):
-        super().__init__()
-        self.reset()
-        self.fed = []
-
-    def handle_data(self, d):
-        self.fed.append(d)
-
-    def get_data(self):
-        return ''.join(self.fed)
-
-
-def strip_tags(html):
-    s = MLStripper()
-    s.feed(html)
-    return s.get_data()
-
-
 @philip_v1.route('/local', methods=['GET'])
 @philip_v1.route('/fed', methods=['GET'])
 @philip_v1.route('/home', methods=['GET'])
@@ -47,23 +27,20 @@ async def home(request, **kwargs):
                 "activity.type": "Create"
             },
             sort="activity.published desc")
-    posts = Outbox.activity_clean(data.objects)
-    for post in posts:
-        post["object"]["content"] = strip_tags(post["object"]["content"])
+    posts = Outbox.activity_clean(data.objects, striptags=True)
 
     feddata = await Inbox.find(filter={
                 "deleted": False,
                 "activity.type": "Create"
             },
             sort="activity.published desc")
-    fedposts = Inbox.activity_clean(feddata.objects)
-    for fpost in fedposts:
-        fpost["object"]["content"] = strip_tags(fpost["object"]["content"])
+    fedposts = Inbox.activity_clean(feddata.objects, striptags=True)
 
     return response.html(
         # html_minify(
             jinja_env.get_template("home.jinja").render(
                 static_url="static/",
+                conf=request.app.config,
                 localposts=posts,
                 fedposts=fedposts
 
