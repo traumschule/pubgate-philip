@@ -1,13 +1,9 @@
 <script>
-	export let name;
+	export let posts;
+	import TimeLine from "./TimeLine.svelte.svelte"
 </script>
 
 <style>
-	h1 {
-		color: purple;
-	}
 </style>
 
-<h1>Hello {name}!</h1>
-
-<Post />
+<TimeLine posts={posts} />
