@@ -16,6 +16,11 @@ jinja_env = Environment(
 )
 
 
+@philip_v1.route('/svelte', methods=['GET'])
+async def home(request, **kwargs):
+    return response.html()
+
+
 @philip_v1.route('/local', methods=['GET'])
 @philip_v1.route('/fed', methods=['GET'])
 @philip_v1.route('/home', methods=['GET'])
@@ -26,14 +31,16 @@ async def home(request, **kwargs):
                 "deleted": False,
                 "activity.type": "Create"
             },
-            sort="activity.published desc")
+            sort="activity.published desc",
+            limit=50)
     posts = Outbox.activity_clean(data.objects, striptags=True)
 
     feddata = await Inbox.find(filter={
                 "deleted": False,
                 "activity.type": "Create"
             },
-            sort="activity.published desc")
+            sort="activity.published desc",
+            limit=50)
     fedposts = Inbox.activity_clean(feddata.objects, striptags=True)
 
     return response.html(
