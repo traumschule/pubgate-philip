@@ -22,11 +22,9 @@ jinja_env = Environment(
 @philip_v1.route('/svelte', methods=['GET'])
 async def svelte(request, **kwargs):
     return response.html(
-        # html_minify(
             jinja_env.get_template("svelte_home.jinja").render(
                 static_url="svelte_static/",
                 conf=request.app.config,
-            # )
         )
     )
 
