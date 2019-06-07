@@ -1,6 +1,6 @@
 <script>
 	export let posts;
-	import TimeLine from "./TimeLine.svelte.svelte"
+	import TimeLine from "./TimeLine.svelte"
 </script>
 
 <style>

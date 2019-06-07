@@ -1,4 +1,5 @@
 import os
+from pathlib import Path
 
 from sanic import response, Blueprint
 from jinja2 import Environment, PackageLoader
@@ -10,6 +11,8 @@ philip_v1 = Blueprint('philip')
 
 philip_dir = os.path.dirname(os.path.abspath(__file__))
 philip_v1.static('/static', f'{philip_dir}/static')
+parent_dir = Path(philip_dir).parent
+philip_v1.static('/svelte_static', f'{parent_dir}/fephilip/public')
 
 jinja_env = Environment(
     loader=PackageLoader("philip", "template"), trim_blocks=True, lstrip_blocks=True
@@ -17,8 +20,15 @@ jinja_env = Environment(
 
 
 @philip_v1.route('/svelte', methods=['GET'])
-async def home(request, **kwargs):
-    return response.html()
+async def svelte(request, **kwargs):
+    return response.html(
+        # html_minify(
+            jinja_env.get_template("svelte_home.jinja").render(
+                static_url="svelte_static/",
+                conf=request.app.config,
+            # )
+        )
+    )
 
 
 @philip_v1.route('/local', methods=['GET'])
