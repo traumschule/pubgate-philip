@@ -1,3 +1,2 @@
 recursive-include philip/template *
-recursive-include philip/static *
 recursive-include fephilip/public *

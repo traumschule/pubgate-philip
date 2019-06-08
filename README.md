@@ -29,4 +29,4 @@ CONTACT = 'https://mastodon.social/users/autogestion'
     var base_url = "https://<instance_domain>";
     var pubgate_instance = <true if running against remote pubgate instance>
   ```
-  - ```cd fephilip && npm run dev```
+  - run ```cd fephilip && npm run dev```
