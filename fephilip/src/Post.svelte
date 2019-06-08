@@ -1,6 +1,7 @@
 
 <script>
 	export let post;
+	console.log(post);
 </script>
 
 <li class="post">

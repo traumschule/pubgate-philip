@@ -3,10 +3,11 @@
 	import Post from "./Post.svelte"
 </script>
 
+{#await posts then value}
 <ul class="post-list">
 
-    {#each posts as post}
+    {#each value.first.orderedItems as post}
         <Post post={post} />
     {/each}
-
 </ul>
+{/await}

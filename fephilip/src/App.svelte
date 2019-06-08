@@ -1,6 +1,9 @@
 <script>
 	export let posts;
 	import TimeLine from "./TimeLine.svelte"
+
+    export let local_timeline = fetch(base_url + "/timeline/local").then(d => d.json());
+	export let federated_timeline = fetch(base_url + "/timeline/federated").then(d => d.json());
 </script>
 
 <style>
@@ -21,7 +24,7 @@
 	</ul>
 </header>
 <div id="local" class="hidden content">
-    <TimeLine posts={posts} />
+    <TimeLine posts={local_timeline} />
 </div>
 
 <div id="fed" class="hidden content">
