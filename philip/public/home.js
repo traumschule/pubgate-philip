@@ -1,6 +1,7 @@
 'use strict';
 
-var DEFAULT_PATH= 'local';
+var DEFAULT_PUBGATE_PATH= 'local';
+var DEFAULT_CLIENT_PATH= 'about';
 var LINK_NODE_NAME = 'A';
 var LINK_REGEX = '^\/[^\/]+\/?$';
 
@@ -46,14 +47,19 @@ function processPath(path, hash, causedByPop) {
 
   // Path is invalid, continue with default path
   if (!correctPath) {
-    path = DEFAULT_PATH;
+    if (pubgate_instance == true) {
+      path = DEFAULT_PUBGATE_PATH;
+    } else {
+      path = DEFAULT_CLIENT_PATH;
+    }
+
   }
 
   // Path now always valid, remove hidden class from corresponding div
   paths[path][0].classList = ['content'];
 
   // Set title to be able to distinguish paths in history
-  document.title = 'Philip Trauner - ' + paths[path][2];
+  document.title = paths[path][2];
 
   for (var pathId = 0; pathId < pathsKeys.length; pathId++) {
     if (pathsKeys[pathId] !== path) {

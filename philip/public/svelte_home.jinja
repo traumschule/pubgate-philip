@@ -1,0 +1,25 @@
+<!doctype html>
+<html>
+<head>
+	<meta charset='utf8'>
+	<meta name="viewport" content="width=device-width,initial-scale=1" />
+	<title>{{ conf.TITLE }}</title>
+    <meta name="description" content="{{ conf.DESCRIPTION }}" />
+
+	<link rel='icon' type='image/png' href='{{ static_url }}favicon.png'>
+	<link rel='stylesheet' href='{{ static_url }}base.css'>
+	<link rel='stylesheet' href='{{ static_url }}home.css'>
+	<link rel='stylesheet' href='{{ static_url }}bundle.css'>
+</head>
+
+<body>
+    <script>
+    var base_url = "{{ conf.base_url }}";
+	var description = "{{ conf.DESCRIPTION }}";
+	var pubgate_instance = true
+    </script>
+	<script src='{{ static_url }}bundle.js'></script>
+	<script src='{{ static_url }}home.js'></script>
+</body>
+</html>
+
