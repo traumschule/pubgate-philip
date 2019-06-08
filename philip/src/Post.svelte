@@ -2,14 +2,28 @@
 <script>
 	export let post;
 	import PostBody from "./PostBody.svelte"
+
 	let fpost;
 	let fetched_post = false;
 	if (["Announce", "Like"].includes(post.type)) {
 	    fpost = fetch(post.object, { headers: {
 	        "Accept": "application/activity+json"
 	    }}).then(d => d.json());
+
+	    // if (!fpost.isResolved) {
+	    if (false) {
+            fpost = fetch(base_url + "/proxy_fetch", {
+                method: 'POST',
+                headers: {
+                  'Accept': 'application/json',
+                  'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({"url": post.object})
+            }).then(d => d.json());
+	    }
 	    fetched_post = true
     }
+
 </script>
 
 <style>

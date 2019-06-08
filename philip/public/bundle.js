@@ -1,2 +1,1559 @@
-var app=function(){"use strict";function t(){}function e(t,e){for(const n in e)t[n]=e[n];return t}function n(t){return t()}function o(){return Object.create(null)}function r(t){t.forEach(n)}function s(t){return"function"==typeof t}function c(t,e){return t!=t?e==e:t!==e||t&&"object"==typeof t||"function"==typeof t}function a(t,e){t.appendChild(e)}function i(t,e,n){t.insertBefore(e,n||null)}function l(t){t.parentNode.removeChild(t)}function p(t,e){for(let n=0;n<t.length;n+=1)t[n]&&t[n].d(e)}function u(t){return document.createElement(t)}function f(t){return document.createTextNode(t)}function d(){return f(" ")}function m(){return f("")}function h(t,e){e=""+e,t.data!==e&&(t.data=e)}let $;function g(t){$=t}const b=[],v=Promise.resolve();let T=!1;const y=[],k=[],x=[];function N(t){k.push(t)}function _(){const t=new Set;do{for(;b.length;){const t=b.shift();g(t),H(t.$$)}for(;y.length;)y.shift()();for(;k.length;){const e=k.pop();t.has(e)||(e(),t.add(e))}}while(b.length);for(;x.length;)x.pop()();T=!1}function H(t){t.fragment&&(t.update(t.dirty),r(t.before_render),t.fragment.p(t.dirty,t.ctx),t.dirty=null,t.after_render.forEach(N))}let L;function j(){L={remaining:0,callbacks:[]}}function M(){L.remaining||r(L.callbacks)}function w(t){L.callbacks.push(t)}function C(t,n){const o=n.token={};function r(t,r,s,c){if(n.token!==o)return;n.resolved=s&&{[s]:c};const a=e(e({},n.ctx),n.resolved),i=t&&(n.current=t)(a);n.block&&(n.blocks?n.blocks.forEach((t,e)=>{e!==r&&t&&(j(),w(()=>{t.d(1),n.blocks[e]=null}),t.o(1),M())}):n.block.d(1),i.c(),i.i&&i.i(1),i.m(n.mount(),n.anchor),_()),n.block=i,n.blocks&&(n.blocks[r]=i)}if((s=t)&&"function"==typeof s.then){if(t.then(t=>{r(n.then,1,n.value,t)},t=>{r(n.catch,2,n.error,t)}),n.current!==n.pending)return r(n.pending,0),!0}else{if(n.current!==n.then)return r(n.then,1,n.value,t),!0;n.resolved={[n.value]:t}}var s}function A(t,e,o){const{fragment:c,on_mount:a,on_destroy:i,after_render:l}=t.$$;c.m(e,o),N(()=>{const e=a.map(n).filter(s);i?i.push(...e):r(e),t.$$.on_mount=[]}),l.forEach(N)}function E(t,e){t.$$.dirty||(b.push(t),T||(T=!0,v.then(_)),t.$$.dirty=o()),t.$$.dirty[e]=!0}function O(e,n,s,c,a,i){const l=$;g(e);const p=n.props||{},u=e.$$={fragment:null,ctx:null,props:i,update:t,not_equal:a,bound:o(),on_mount:[],on_destroy:[],before_render:[],after_render:[],context:new Map(l?l.$$.context:[]),callbacks:o(),dirty:null};let f=!1;var d;u.ctx=s?s(e,p,(t,n)=>{u.ctx&&a(u.ctx[t],u.ctx[t]=n)&&(u.bound[t]&&u.bound[t](n),f&&E(e,t))}):p,u.update(),f=!0,r(u.before_render),u.fragment=c(u.ctx),n.target&&(n.hydrate?u.fragment.l((d=n.target,Array.from(d.childNodes))):u.fragment.c(),n.intro&&e.$$.fragment.i&&e.$$.fragment.i(),A(e,n.target,n.anchor),_()),g(l)}class P{$destroy(){var e,n;n=!0,(e=this).$$&&(r(e.$$.on_destroy),e.$$.fragment.d(n),e.$$.on_destroy=e.$$.fragment=null,e.$$.ctx={}),this.$destroy=t}$on(t,e){const n=this.$$.callbacks[t]||(this.$$.callbacks[t]=[]);return n.push(e),()=>{const t=n.indexOf(e);-1!==t&&n.splice(t,1)}}$set(){}}function Z(t,e,n){const o=Object.create(t);return o.tag=e[n],o}function I(t){var e,n,o,r=t.tag.name;return{c(){e=u("a"),n=f(r),e.className="tag",e.href=o=t.tag.href},m(t,o){i(t,e,o),a(e,n)},p(t,s){t.post&&r!==(r=s.tag.name)&&h(n,r),t.post&&o!==(o=s.tag.href)&&(e.href=o)},d(t){t&&l(e)}}}function q(e){for(var n,o,r,s,c,m,$,g,b,v,T,y,k,x,N,_,H,L=e.post.attributedTo.split("/").pop(),j=e.post.published.replace("T"," ").replace("Z"," "),M=e.post.content,w=e.post.tag,C=[],A=0;A<w.length;A+=1)C[A]=I(Z(e,w,A));return{c(){n=u("div"),o=u("a"),r=f("Create"),c=f(" by user "),m=u("a"),$=f(L),b=d(),(v=u("span")).textContent="·",T=d(),y=u("span"),k=f(j),x=d(),N=u("div");for(var t=0;t<C.length;t+=1)C[t].c();_=d(),H=u("p"),o.href=s=e.post.id,m.href=g=e.post.attributedTo,v.className="metadata-seperator",n.className="metadata",N.className="tags"},m(t,e){i(t,n,e),a(n,o),a(o,r),a(n,c),a(n,m),a(m,$),a(n,b),a(n,v),a(n,T),a(n,y),a(y,k),i(t,x,e),i(t,N,e);for(var s=0;s<C.length;s+=1)C[s].m(N,null);i(t,_,e),i(t,H,e),H.innerHTML=M},p(t,e){if(t.post&&s!==(s=e.post.id)&&(o.href=s),t.post&&L!==(L=e.post.attributedTo.split("/").pop())&&h($,L),t.post&&g!==(g=e.post.attributedTo)&&(m.href=g),t.post&&j!==(j=e.post.published.replace("T"," ").replace("Z"," "))&&h(k,j),t.post){w=e.post.tag;for(var n=0;n<w.length;n+=1){const o=Z(e,w,n);C[n]?C[n].p(t,o):(C[n]=I(o),C[n].c(),C[n].m(N,null))}for(;n<C.length;n+=1)C[n].d(1);C.length=w.length}t.post&&M!==(M=e.post.content)&&(H.innerHTML=M)},i:t,o:t,d(t){t&&(l(n),l(x),l(N)),p(C,t),t&&(l(_),l(H))}}}function B(t,e,n){let{post:o}=e;return t.$set=(t=>{"post"in t&&n("post",o=t.post)}),{post:o}}class F extends P{constructor(t){super(),O(this,t,B,q,c,["post"])}}function G(t){var n,o,r;let s={ctx:t,current:null,pending:z,then:R,catch:D,value:"fpost",error:"null",blocks:Array(3)};return C(o=t.fpost,s),{c(){n=m(),s.block.c()},m(t,e){i(t,n,e),s.block.m(t,s.anchor=e),s.mount=(()=>n.parentNode),s.anchor=n,r=!0},p(n,r){t=r,s.ctx=t,"fpost"in n&&o!==(o=t.fpost)&&C(o,s)||s.block.p(n,e(e({},t),s.resolved))},i(t){r||(s.block.i(),r=!0)},o(t){for(let t=0;t<3;t+=1){const e=s.blocks[t];e&&e.o()}r=!1},d(t){t&&l(n),s.block.d(t),s=null}}}function S(t){var e,n,o,r,s=new F({props:{post:t.post.object}});return{c(){e=u("li"),(n=u("h2")).textContent=".",o=d(),s.$$.fragment.c(),n.id="",e.className="post"},m(t,c){i(t,e,c),a(e,n),a(e,o),A(s,e,null),r=!0},p(t,e){var n={};t.post&&(n.post=e.post.object),s.$set(n)},i(t){r||(s.$$.fragment.i(t),r=!0)},o(t){s.$$.fragment.o(t),r=!1},d(t){t&&l(e),s.$destroy()}}}function D(e){return{c:t,m:t,p:t,i:t,o:t,d:t}}function R(t){var e,n,o,r,s,c,p,m,$,g,b,v,T,y,k,x,N,_,H,L=t.post.type,j=t.post.actor.split("/").slice(-1)[0],M=t.post.published.replace("T"," ").replace("Z"," "),w=new F({props:{post:t.fpost}});return{c(){e=u("li"),n=u("div"),(o=u("h2")).textContent=".",r=d(),s=u("a"),c=f(L),m=f(" by user "),$=u("a"),g=f(j),v=d(),(T=u("span")).textContent="·",y=d(),k=u("span"),x=f(M),N=d(),_=u("div"),w.$$.fragment.c(),o.id="",s.href=p=t.post.id,$.href=b=t.post.actor,T.className="metadata-seperator",n.className="metadata",_.className="reaction svelte-1gf6p2q",e.className="post"},m(t,l){i(t,e,l),a(e,n),a(n,o),a(n,r),a(n,s),a(s,c),a(n,m),a(n,$),a($,g),a(n,v),a(n,T),a(n,y),a(n,k),a(k,x),a(e,N),a(e,_),A(w,_,null),H=!0},p(t,e){H&&!t.post||L===(L=e.post.type)||h(c,L),H&&!t.post||p===(p=e.post.id)||(s.href=p),H&&!t.post||j===(j=e.post.actor.split("/").slice(-1)[0])||h(g,j),H&&!t.post||b===(b=e.post.actor)||($.href=b),H&&!t.post||M===(M=e.post.published.replace("T"," ").replace("Z"," "))||h(x,M);var n={};t.fpost&&(n.post=e.fpost),w.$set(n)},i(t){H||(w.$$.fragment.i(t),H=!0)},o(t){w.$$.fragment.o(t),H=!1},d(t){t&&l(e),w.$destroy()}}}function z(e){return{c:t,m:t,p:t,i:t,o:t,d:t}}function J(t){var e,n,o,r,s=[S,G],c=[];function a(t){return 0==t.fetched_post?0:1}return e=a(t),n=c[e]=s[e](t),{c(){n.c(),o=m()},m(t,n){c[e].m(t,n),i(t,o,n),r=!0},p(t,r){var i=e;(e=a(r))===i?c[e].p(t,r):(j(),w(()=>{c[i].d(1),c[i]=null}),n.o(1),M(),(n=c[e])||(n=c[e]=s[e](r)).c(),n.i(1),n.m(o.parentNode,o))},i(t){r||(n&&n.i(),r=!0)},o(t){n&&n.o(),r=!1},d(t){c[e].d(t),t&&l(o)}}}function K(t,e,n){let o,{post:r}=e,s=!1;return["Announce","Like"].includes(r.type)&&(n("fpost",o=fetch(r.object,{headers:{Accept:"application/activity+json"}}).then(t=>t.json())),n("fetched_post",s=!0)),t.$set=(t=>{"post"in t&&n("post",r=t.post)}),{post:r,fpost:o,fetched_post:s}}class Q extends P{constructor(t){super(),O(this,t,K,J,c,["post"])}}function U(t,e,n){const o=Object.create(t);return o.post=e[n],o}function V(e){return{c:t,m:t,p:t,i:t,o:t,d:t}}function W(t){for(var e,n,o=t.value,r=[],s=0;s<o.length;s+=1)r[s]=X(U(t,o,s));function c(t,e,n){r[t]&&(e&&w(()=>{r[t].d(e),r[t]=null}),r[t].o(n))}return{c(){e=u("ul");for(var t=0;t<r.length;t+=1)r[t].c();e.className="post-list"},m(t,o){i(t,e,o);for(var s=0;s<r.length;s+=1)r[s].m(e,null);n=!0},p(t,n){if(t.posts){o=n.value;for(var s=0;s<o.length;s+=1){const c=U(n,o,s);r[s]?(r[s].p(t,c),r[s].i(1)):(r[s]=X(c),r[s].c(),r[s].i(1),r[s].m(e,null))}for(j();s<r.length;s+=1)c(s,1,1);M()}},i(t){if(!n){for(var e=0;e<o.length;e+=1)r[e].i();n=!0}},o(t){r=r.filter(Boolean);for(let t=0;t<r.length;t+=1)c(t,0);n=!1},d(t){t&&l(e),p(r,t)}}}function X(t){var e,n=new Q({props:{post:t.post}});return{c(){n.$$.fragment.c()},m(t,o){A(n,t,o),e=!0},p(t,e){var o={};t.posts&&(o.post=e.post),n.$set(o)},i(t){e||(n.$$.fragment.i(t),e=!0)},o(t){n.$$.fragment.o(t),e=!1},d(t){n.$destroy(t)}}}function Y(e){return{c:t,m:t,p:t,i:t,o:t,d:t}}function tt(t){var n,o,r;let s={ctx:t,current:null,pending:Y,then:W,catch:V,value:"value",error:"null",blocks:Array(3)};return C(o=t.posts,s),{c(){n=m(),s.block.c()},m(t,e){i(t,n,e),s.block.m(t,s.anchor=e),s.mount=(()=>n.parentNode),s.anchor=n,r=!0},p(n,r){t=r,s.ctx=t,"posts"in n&&o!==(o=t.posts)&&C(o,s)||s.block.p(n,e(e({},t),s.resolved))},i(t){r||(s.block.i(),r=!0)},o(t){for(let t=0;t<3;t+=1){const e=s.blocks[t];e&&e.o()}r=!1},d(t){t&&l(n),s.block.d(t),s=null}}}function et(t,e,n){let{posts:o}=e;return t.$set=(t=>{"posts"in t&&n("posts",o=t.posts)}),{posts:o}}class nt extends P{constructor(t){super(),O(this,t,et,tt,c,["posts"])}}function ot(t){var e,n,o;return{c(){(e=u("li")).innerHTML='<a href="/local">Local Timeline</a>',n=d(),(o=u("li")).innerHTML='<a href="/fed">Federated Timeline</a>'},m(t,r){i(t,e,r),i(t,n,r),i(t,o,r)},d(t){t&&(l(e),l(n),l(o))}}}function rt(t){var e,n,o,r,s,c,p,f,m,h,$,g,b,v,T,y,k,x,N,_,H,L,j,M=1==t.pgi&&ot(),w=new nt({props:{posts:t.localTimeline}}),C=new nt({props:{posts:t.federatedTimeline}});return{c(){e=u("header"),n=u("ul"),M&&M.c(),o=d(),(r=u("li")).innerHTML='<a href="/home">Home</a>',s=d(),(c=u("li")).innerHTML='<a href="/about">About</a>',p=d(),(f=u("li")).innerHTML='<a href="/dot-dot-dot">...</a>',m=d(),h=u("div"),w.$$.fragment.c(),$=d(),g=u("div"),C.$$.fragment.c(),b=d(),v=u("div"),T=d(),(y=u("div")).innerHTML='<span class="about-greeting">Hi!</span>\n\t\t\t\t<p>DESCRIPTION</p>',k=d(),x=u("div"),N=d(),_=u("hr"),H=d(),(L=u("footer")).innerHTML='<div class="left-column"><h2>PubGate-Philip</h2>\n\t\t\t        <p>Gotta<br>go<br>Fast</p></div>\n\t\t\t    <div class="right-column"><h2>Contact</h2>\n\t\t\t        <p></p></div>',h.id="local",h.className="hidden content",g.id="fed",g.className="hidden content",v.id="home",v.className="hidden content",y.id="about",y.className="hidden content",x.id="dot-dot-dot",x.className="hidden content",_.className="separator",L.className="content"},m(t,l){i(t,e,l),a(e,n),M&&M.m(n,null),a(n,o),a(n,r),a(n,s),a(n,c),a(n,p),a(n,f),i(t,m,l),i(t,h,l),A(w,h,null),i(t,$,l),i(t,g,l),A(C,g,null),i(t,b,l),i(t,v,l),i(t,T,l),i(t,y,l),i(t,k,l),i(t,x,l),i(t,N,l),i(t,_,l),i(t,H,l),i(t,L,l),j=!0},p(t,e){1==e.pgi?M||((M=ot()).c(),M.m(n,o)):M&&(M.d(1),M=null);var r={};t.localTimeline&&(r.posts=e.localTimeline),w.$set(r);var s={};t.federatedTimeline&&(s.posts=e.federatedTimeline),C.$set(s)},i(t){j||(w.$$.fragment.i(t),C.$$.fragment.i(t),j=!0)},o(t){w.$$.fragment.o(t),C.$$.fragment.o(t),j=!1},d(t){t&&l(e),M&&M.d(),t&&(l(m),l(h)),w.$destroy(),t&&(l($),l(g)),C.$destroy(),t&&(l(b),l(v),l(T),l(y),l(k),l(x),l(N),l(_),l(H),l(L))}}}function st(t,e,n){const o=(t,e)=>t?fetch(base_url+e).then(t=>t.json()).then(t=>t.first).then(t=>t.orderedItems):[];let{localTimeline:r=o(pubgate_instance,"/timeline/local"),federatedTimeline:s=o(pubgate_instance,"/timeline/federated"),pgi:c=pubgate_instance}=e;return t.$set=(t=>{"localTimeline"in t&&n("localTimeline",r=t.localTimeline),"federatedTimeline"in t&&n("federatedTimeline",s=t.federatedTimeline),"pgi"in t&&n("pgi",c=t.pgi)}),{localTimeline:r,federatedTimeline:s,pgi:c}}return new class extends P{constructor(t){super(),O(this,t,st,rt,c,["localTimeline","federatedTimeline","pgi"])}}({target:document.body,props:{}})}();
+
+(function(l, i, v, e) { v = l.createElement(i); v.async = 1; v.src = '//' + (location.host || 'localhost').split(':')[0] + ':35729/livereload.js?snipver=1'; e = l.getElementsByTagName(i)[0]; e.parentNode.insertBefore(v, e)})(document, 'script');
+var app = (function () {
+    'use strict';
+
+    function noop() { }
+    function assign(tar, src) {
+        for (const k in src)
+            tar[k] = src[k];
+        return tar;
+    }
+    function is_promise(value) {
+        return value && typeof value.then === 'function';
+    }
+    function add_location(element, file, line, column, char) {
+        element.__svelte_meta = {
+            loc: { file, line, column, char }
+        };
+    }
+    function run(fn) {
+        return fn();
+    }
+    function blank_object() {
+        return Object.create(null);
+    }
+    function run_all(fns) {
+        fns.forEach(run);
+    }
+    function is_function(thing) {
+        return typeof thing === 'function';
+    }
+    function safe_not_equal(a, b) {
+        return a != a ? b == b : a !== b || ((a && typeof a === 'object') || typeof a === 'function');
+    }
+
+    function append(target, node) {
+        target.appendChild(node);
+    }
+    function insert(target, node, anchor) {
+        target.insertBefore(node, anchor || null);
+    }
+    function detach(node) {
+        node.parentNode.removeChild(node);
+    }
+    function destroy_each(iterations, detaching) {
+        for (let i = 0; i < iterations.length; i += 1) {
+            if (iterations[i])
+                iterations[i].d(detaching);
+        }
+    }
+    function element(name) {
+        return document.createElement(name);
+    }
+    function text(data) {
+        return document.createTextNode(data);
+    }
+    function space() {
+        return text(' ');
+    }
+    function empty() {
+        return text('');
+    }
+    function children(element) {
+        return Array.from(element.childNodes);
+    }
+    function set_data(text, data) {
+        data = '' + data;
+        if (text.data !== data)
+            text.data = data;
+    }
+
+    let current_component;
+    function set_current_component(component) {
+        current_component = component;
+    }
+
+    const dirty_components = [];
+    const resolved_promise = Promise.resolve();
+    let update_scheduled = false;
+    const binding_callbacks = [];
+    const render_callbacks = [];
+    const flush_callbacks = [];
+    function schedule_update() {
+        if (!update_scheduled) {
+            update_scheduled = true;
+            resolved_promise.then(flush);
+        }
+    }
+    function add_render_callback(fn) {
+        render_callbacks.push(fn);
+    }
+    function flush() {
+        const seen_callbacks = new Set();
+        do {
+            // first, call beforeUpdate functions
+            // and update components
+            while (dirty_components.length) {
+                const component = dirty_components.shift();
+                set_current_component(component);
+                update(component.$$);
+            }
+            while (binding_callbacks.length)
+                binding_callbacks.shift()();
+            // then, once components are updated, call
+            // afterUpdate functions. This may cause
+            // subsequent updates...
+            while (render_callbacks.length) {
+                const callback = render_callbacks.pop();
+                if (!seen_callbacks.has(callback)) {
+                    callback();
+                    // ...so guard against infinite loops
+                    seen_callbacks.add(callback);
+                }
+            }
+        } while (dirty_components.length);
+        while (flush_callbacks.length) {
+            flush_callbacks.pop()();
+        }
+        update_scheduled = false;
+    }
+    function update($$) {
+        if ($$.fragment) {
+            $$.update($$.dirty);
+            run_all($$.before_render);
+            $$.fragment.p($$.dirty, $$.ctx);
+            $$.dirty = null;
+            $$.after_render.forEach(add_render_callback);
+        }
+    }
+    let outros;
+    function group_outros() {
+        outros = {
+            remaining: 0,
+            callbacks: []
+        };
+    }
+    function check_outros() {
+        if (!outros.remaining) {
+            run_all(outros.callbacks);
+        }
+    }
+    function on_outro(callback) {
+        outros.callbacks.push(callback);
+    }
+
+    function handle_promise(promise, info) {
+        const token = info.token = {};
+        function update(type, index, key, value) {
+            if (info.token !== token)
+                return;
+            info.resolved = key && { [key]: value };
+            const child_ctx = assign(assign({}, info.ctx), info.resolved);
+            const block = type && (info.current = type)(child_ctx);
+            if (info.block) {
+                if (info.blocks) {
+                    info.blocks.forEach((block, i) => {
+                        if (i !== index && block) {
+                            group_outros();
+                            on_outro(() => {
+                                block.d(1);
+                                info.blocks[i] = null;
+                            });
+                            block.o(1);
+                            check_outros();
+                        }
+                    });
+                }
+                else {
+                    info.block.d(1);
+                }
+                block.c();
+                if (block.i)
+                    block.i(1);
+                block.m(info.mount(), info.anchor);
+                flush();
+            }
+            info.block = block;
+            if (info.blocks)
+                info.blocks[index] = block;
+        }
+        if (is_promise(promise)) {
+            promise.then(value => {
+                update(info.then, 1, info.value, value);
+            }, error => {
+                update(info.catch, 2, info.error, error);
+            });
+            // if we previously had a then/catch block, destroy it
+            if (info.current !== info.pending) {
+                update(info.pending, 0);
+                return true;
+            }
+        }
+        else {
+            if (info.current !== info.then) {
+                update(info.then, 1, info.value, promise);
+                return true;
+            }
+            info.resolved = { [info.value]: promise };
+        }
+    }
+    function mount_component(component, target, anchor) {
+        const { fragment, on_mount, on_destroy, after_render } = component.$$;
+        fragment.m(target, anchor);
+        // onMount happens after the initial afterUpdate. Because
+        // afterUpdate callbacks happen in reverse order (inner first)
+        // we schedule onMount callbacks before afterUpdate callbacks
+        add_render_callback(() => {
+            const new_on_destroy = on_mount.map(run).filter(is_function);
+            if (on_destroy) {
+                on_destroy.push(...new_on_destroy);
+            }
+            else {
+                // Edge case - component was destroyed immediately,
+                // most likely as a result of a binding initialising
+                run_all(new_on_destroy);
+            }
+            component.$$.on_mount = [];
+        });
+        after_render.forEach(add_render_callback);
+    }
+    function destroy(component, detaching) {
+        if (component.$$) {
+            run_all(component.$$.on_destroy);
+            component.$$.fragment.d(detaching);
+            // TODO null out other refs, including component.$$ (but need to
+            // preserve final state?)
+            component.$$.on_destroy = component.$$.fragment = null;
+            component.$$.ctx = {};
+        }
+    }
+    function make_dirty(component, key) {
+        if (!component.$$.dirty) {
+            dirty_components.push(component);
+            schedule_update();
+            component.$$.dirty = blank_object();
+        }
+        component.$$.dirty[key] = true;
+    }
+    function init(component, options, instance, create_fragment, not_equal$$1, prop_names) {
+        const parent_component = current_component;
+        set_current_component(component);
+        const props = options.props || {};
+        const $$ = component.$$ = {
+            fragment: null,
+            ctx: null,
+            // state
+            props: prop_names,
+            update: noop,
+            not_equal: not_equal$$1,
+            bound: blank_object(),
+            // lifecycle
+            on_mount: [],
+            on_destroy: [],
+            before_render: [],
+            after_render: [],
+            context: new Map(parent_component ? parent_component.$$.context : []),
+            // everything else
+            callbacks: blank_object(),
+            dirty: null
+        };
+        let ready = false;
+        $$.ctx = instance
+            ? instance(component, props, (key, value) => {
+                if ($$.ctx && not_equal$$1($$.ctx[key], $$.ctx[key] = value)) {
+                    if ($$.bound[key])
+                        $$.bound[key](value);
+                    if (ready)
+                        make_dirty(component, key);
+                }
+            })
+            : props;
+        $$.update();
+        ready = true;
+        run_all($$.before_render);
+        $$.fragment = create_fragment($$.ctx);
+        if (options.target) {
+            if (options.hydrate) {
+                $$.fragment.l(children(options.target));
+            }
+            else {
+                $$.fragment.c();
+            }
+            if (options.intro && component.$$.fragment.i)
+                component.$$.fragment.i();
+            mount_component(component, options.target, options.anchor);
+            flush();
+        }
+        set_current_component(parent_component);
+    }
+    class SvelteComponent {
+        $destroy() {
+            destroy(this, true);
+            this.$destroy = noop;
+        }
+        $on(type, callback) {
+            const callbacks = (this.$$.callbacks[type] || (this.$$.callbacks[type] = []));
+            callbacks.push(callback);
+            return () => {
+                const index = callbacks.indexOf(callback);
+                if (index !== -1)
+                    callbacks.splice(index, 1);
+            };
+        }
+        $set() {
+            // overridden by instance, if it has props
+        }
+    }
+    class SvelteComponentDev extends SvelteComponent {
+        constructor(options) {
+            if (!options || (!options.target && !options.$$inline)) {
+                throw new Error(`'target' is a required option`);
+            }
+            super();
+        }
+        $destroy() {
+            super.$destroy();
+            this.$destroy = () => {
+                console.warn(`Component was already destroyed`); // eslint-disable-line no-console
+            };
+        }
+    }
+
+    /* src/PostBody.svelte generated by Svelte v3.4.3 */
+
+    const file = "src/PostBody.svelte";
+
+    function get_each_context(ctx, list, i) {
+    	const child_ctx = Object.create(ctx);
+    	child_ctx.tag = list[i];
+    	return child_ctx;
+    }
+
+    // (12:0) {#each post.tag as tag}
+    function create_each_block(ctx) {
+    	var a, t_value = ctx.tag.name, t, a_href_value;
+
+    	return {
+    		c: function create() {
+    			a = element("a");
+    			t = text(t_value);
+    			a.className = "tag";
+    			a.href = a_href_value = ctx.tag.href;
+    			add_location(a, file, 12, 4, 351);
+    		},
+
+    		m: function mount(target, anchor) {
+    			insert(target, a, anchor);
+    			append(a, t);
+    		},
+
+    		p: function update(changed, ctx) {
+    			if ((changed.post) && t_value !== (t_value = ctx.tag.name)) {
+    				set_data(t, t_value);
+    			}
+
+    			if ((changed.post) && a_href_value !== (a_href_value = ctx.tag.href)) {
+    				a.href = a_href_value;
+    			}
+    		},
+
+    		d: function destroy(detaching) {
+    			if (detaching) {
+    				detach(a);
+    			}
+    		}
+    	};
+    }
+
+    function create_fragment(ctx) {
+    	var div0, a0, t0, a0_href_value, t1, a1, t2_value = ctx.post.attributedTo.split('/').pop(), t2, a1_href_value, t3, span0, t5, span1, t6_value = ctx.post.published.replace("T", " ").replace("Z", " "), t6, t7, div1, t8, p, raw_value = ctx.post.content;
+
+    	var each_value = ctx.post.tag;
+
+    	var each_blocks = [];
+
+    	for (var i = 0; i < each_value.length; i += 1) {
+    		each_blocks[i] = create_each_block(get_each_context(ctx, each_value, i));
+    	}
+
+    	return {
+    		c: function create() {
+    			div0 = element("div");
+    			a0 = element("a");
+    			t0 = text("Create");
+    			t1 = text(" by user ");
+    			a1 = element("a");
+    			t2 = text(t2_value);
+    			t3 = space();
+    			span0 = element("span");
+    			span0.textContent = "·";
+    			t5 = space();
+    			span1 = element("span");
+    			t6 = text(t6_value);
+    			t7 = space();
+    			div1 = element("div");
+
+    			for (var i = 0; i < each_blocks.length; i += 1) {
+    				each_blocks[i].c();
+    			}
+
+    			t8 = space();
+    			p = element("p");
+    			a0.href = a0_href_value = ctx.post.id;
+    			add_location(a0, file, 6, 4, 66);
+    			a1.href = a1_href_value = ctx.post.attributedTo;
+    			add_location(a1, file, 6, 43, 105);
+    			span0.className = "metadata-seperator";
+    			add_location(span0, file, 7, 4, 184);
+    			add_location(span1, file, 8, 4, 230);
+    			div0.className = "metadata";
+    			add_location(div0, file, 5, 0, 39);
+    			div1.className = "tags";
+    			add_location(div1, file, 10, 0, 304);
+    			add_location(p, file, 15, 0, 418);
+    		},
+
+    		l: function claim(nodes) {
+    			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
+    		},
+
+    		m: function mount(target, anchor) {
+    			insert(target, div0, anchor);
+    			append(div0, a0);
+    			append(a0, t0);
+    			append(div0, t1);
+    			append(div0, a1);
+    			append(a1, t2);
+    			append(div0, t3);
+    			append(div0, span0);
+    			append(div0, t5);
+    			append(div0, span1);
+    			append(span1, t6);
+    			insert(target, t7, anchor);
+    			insert(target, div1, anchor);
+
+    			for (var i = 0; i < each_blocks.length; i += 1) {
+    				each_blocks[i].m(div1, null);
+    			}
+
+    			insert(target, t8, anchor);
+    			insert(target, p, anchor);
+    			p.innerHTML = raw_value;
+    		},
+
+    		p: function update(changed, ctx) {
+    			if ((changed.post) && a0_href_value !== (a0_href_value = ctx.post.id)) {
+    				a0.href = a0_href_value;
+    			}
+
+    			if ((changed.post) && t2_value !== (t2_value = ctx.post.attributedTo.split('/').pop())) {
+    				set_data(t2, t2_value);
+    			}
+
+    			if ((changed.post) && a1_href_value !== (a1_href_value = ctx.post.attributedTo)) {
+    				a1.href = a1_href_value;
+    			}
+
+    			if ((changed.post) && t6_value !== (t6_value = ctx.post.published.replace("T", " ").replace("Z", " "))) {
+    				set_data(t6, t6_value);
+    			}
+
+    			if (changed.post) {
+    				each_value = ctx.post.tag;
+
+    				for (var i = 0; i < each_value.length; i += 1) {
+    					const child_ctx = get_each_context(ctx, each_value, i);
+
+    					if (each_blocks[i]) {
+    						each_blocks[i].p(changed, child_ctx);
+    					} else {
+    						each_blocks[i] = create_each_block(child_ctx);
+    						each_blocks[i].c();
+    						each_blocks[i].m(div1, null);
+    					}
+    				}
+
+    				for (; i < each_blocks.length; i += 1) {
+    					each_blocks[i].d(1);
+    				}
+    				each_blocks.length = each_value.length;
+    			}
+
+    			if ((changed.post) && raw_value !== (raw_value = ctx.post.content)) {
+    				p.innerHTML = raw_value;
+    			}
+    		},
+
+    		i: noop,
+    		o: noop,
+
+    		d: function destroy(detaching) {
+    			if (detaching) {
+    				detach(div0);
+    				detach(t7);
+    				detach(div1);
+    			}
+
+    			destroy_each(each_blocks, detaching);
+
+    			if (detaching) {
+    				detach(t8);
+    				detach(p);
+    			}
+    		}
+    	};
+    }
+
+    function instance($$self, $$props, $$invalidate) {
+    	let { post } = $$props;
+
+    	const writable_props = ['post'];
+    	Object.keys($$props).forEach(key => {
+    		if (!writable_props.includes(key)) console.warn(`<PostBody> was created with unknown prop '${key}'`);
+    	});
+
+    	$$self.$set = $$props => {
+    		if ('post' in $$props) $$invalidate('post', post = $$props.post);
+    	};
+
+    	return { post };
+    }
+
+    class PostBody extends SvelteComponentDev {
+    	constructor(options) {
+    		super(options);
+    		init(this, options, instance, create_fragment, safe_not_equal, ["post"]);
+
+    		const { ctx } = this.$$;
+    		const props = options.props || {};
+    		if (ctx.post === undefined && !('post' in props)) {
+    			console.warn("<PostBody> was created without expected prop 'post'");
+    		}
+    	}
+
+    	get post() {
+    		throw new Error("<PostBody>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set post(value) {
+    		throw new Error("<PostBody>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+    }
+
+    /* src/Post.svelte generated by Svelte v3.4.3 */
+
+    const file$1 = "src/Post.svelte";
+
+    // (41:0) {:else}
+    function create_else_block(ctx) {
+    	var await_block_anchor, promise, current;
+
+    	let info = {
+    		ctx,
+    		current: null,
+    		pending: create_pending_block,
+    		then: create_then_block,
+    		catch: create_catch_block,
+    		value: 'fpost',
+    		error: 'null',
+    		blocks: Array(3)
+    	};
+
+    	handle_promise(promise = ctx.fpost, info);
+
+    	return {
+    		c: function create() {
+    			await_block_anchor = empty();
+
+    			info.block.c();
+    		},
+
+    		m: function mount(target, anchor) {
+    			insert(target, await_block_anchor, anchor);
+
+    			info.block.m(target, info.anchor = anchor);
+    			info.mount = () => await_block_anchor.parentNode;
+    			info.anchor = await_block_anchor;
+
+    			current = true;
+    		},
+
+    		p: function update(changed, new_ctx) {
+    			ctx = new_ctx;
+    			info.ctx = ctx;
+
+    			if (('fpost' in changed) && promise !== (promise = ctx.fpost) && handle_promise(promise, info)) ; else {
+    				info.block.p(changed, assign(assign({}, ctx), info.resolved));
+    			}
+    		},
+
+    		i: function intro(local) {
+    			if (current) return;
+    			info.block.i();
+    			current = true;
+    		},
+
+    		o: function outro(local) {
+    			for (let i = 0; i < 3; i += 1) {
+    				const block = info.blocks[i];
+    				if (block) block.o();
+    			}
+
+    			current = false;
+    		},
+
+    		d: function destroy(detaching) {
+    			if (detaching) {
+    				detach(await_block_anchor);
+    			}
+
+    			info.block.d(detaching);
+    			info = null;
+    		}
+    	};
+    }
+
+    // (36:0) {#if fetched_post == false}
+    function create_if_block(ctx) {
+    	var li, h2, t_1, current;
+
+    	var postbody = new PostBody({
+    		props: { post: ctx.post.object },
+    		$$inline: true
+    	});
+
+    	return {
+    		c: function create() {
+    			li = element("li");
+    			h2 = element("h2");
+    			h2.textContent = ".";
+    			t_1 = space();
+    			postbody.$$.fragment.c();
+    			h2.id = "";
+    			add_location(h2, file$1, 37, 4, 830);
+    			li.className = "post";
+    			add_location(li, file$1, 36, 0, 808);
+    		},
+
+    		m: function mount(target, anchor) {
+    			insert(target, li, anchor);
+    			append(li, h2);
+    			append(li, t_1);
+    			mount_component(postbody, li, null);
+    			current = true;
+    		},
+
+    		p: function update(changed, ctx) {
+    			var postbody_changes = {};
+    			if (changed.post) postbody_changes.post = ctx.post.object;
+    			postbody.$set(postbody_changes);
+    		},
+
+    		i: function intro(local) {
+    			if (current) return;
+    			postbody.$$.fragment.i(local);
+
+    			current = true;
+    		},
+
+    		o: function outro(local) {
+    			postbody.$$.fragment.o(local);
+    			current = false;
+    		},
+
+    		d: function destroy(detaching) {
+    			if (detaching) {
+    				detach(li);
+    			}
+
+    			postbody.$destroy();
+    		}
+    	};
+    }
+
+    // (1:0)  <script>  export let post;  import PostBody from "./PostBody.svelte"   let fpost;  let fetched_post = false;  if (["Announce", "Like"].includes(post.type)) {      fpost = fetch(post.object, { headers: {          "Accept": "application/activity+json"      }}
+    function create_catch_block(ctx) {
+    	return {
+    		c: noop,
+    		m: noop,
+    		p: noop,
+    		i: noop,
+    		o: noop,
+    		d: noop
+    	};
+    }
+
+    // (42:25)  <li class="post">     <div class="metadata">         <h2 id=""> . </h2>         <a href="{post.id}
+    function create_then_block(ctx) {
+    	var li, div0, h2, t1, a0, t2_value = ctx.post.type, t2, a0_href_value, t3, a1, t4_value = ctx.post.actor.split('/').slice(-1)[0], t4, a1_href_value, t5, span0, t7, span1, t8_value = ctx.post.published.replace("T", " ").replace("Z", " "), t8, t9, div1, current;
+
+    	var postbody = new PostBody({
+    		props: { post: ctx.fpost },
+    		$$inline: true
+    	});
+
+    	return {
+    		c: function create() {
+    			li = element("li");
+    			div0 = element("div");
+    			h2 = element("h2");
+    			h2.textContent = ".";
+    			t1 = space();
+    			a0 = element("a");
+    			t2 = text(t2_value);
+    			t3 = text(" by user ");
+    			a1 = element("a");
+    			t4 = text(t4_value);
+    			t5 = space();
+    			span0 = element("span");
+    			span0.textContent = "·";
+    			t7 = space();
+    			span1 = element("span");
+    			t8 = text(t8_value);
+    			t9 = space();
+    			div1 = element("div");
+    			postbody.$$.fragment.c();
+    			h2.id = "";
+    			add_location(h2, file$1, 44, 8, 978);
+    			a0.href = a0_href_value = ctx.post.id;
+    			add_location(a0, file$1, 45, 8, 1005);
+    			a1.href = a1_href_value = ctx.post.actor;
+    			add_location(a1, file$1, 45, 52, 1049);
+    			span0.className = "metadata-seperator";
+    			add_location(span0, file$1, 46, 8, 1125);
+    			add_location(span1, file$1, 47, 8, 1175);
+    			div0.className = "metadata";
+    			add_location(div0, file$1, 43, 4, 947);
+    			div1.className = "reaction svelte-1gf6p2q";
+    			add_location(div1, file$1, 49, 4, 1257);
+    			li.className = "post";
+    			add_location(li, file$1, 42, 0, 925);
+    		},
+
+    		m: function mount(target, anchor) {
+    			insert(target, li, anchor);
+    			append(li, div0);
+    			append(div0, h2);
+    			append(div0, t1);
+    			append(div0, a0);
+    			append(a0, t2);
+    			append(div0, t3);
+    			append(div0, a1);
+    			append(a1, t4);
+    			append(div0, t5);
+    			append(div0, span0);
+    			append(div0, t7);
+    			append(div0, span1);
+    			append(span1, t8);
+    			append(li, t9);
+    			append(li, div1);
+    			mount_component(postbody, div1, null);
+    			current = true;
+    		},
+
+    		p: function update(changed, ctx) {
+    			if ((!current || changed.post) && t2_value !== (t2_value = ctx.post.type)) {
+    				set_data(t2, t2_value);
+    			}
+
+    			if ((!current || changed.post) && a0_href_value !== (a0_href_value = ctx.post.id)) {
+    				a0.href = a0_href_value;
+    			}
+
+    			if ((!current || changed.post) && t4_value !== (t4_value = ctx.post.actor.split('/').slice(-1)[0])) {
+    				set_data(t4, t4_value);
+    			}
+
+    			if ((!current || changed.post) && a1_href_value !== (a1_href_value = ctx.post.actor)) {
+    				a1.href = a1_href_value;
+    			}
+
+    			if ((!current || changed.post) && t8_value !== (t8_value = ctx.post.published.replace("T", " ").replace("Z", " "))) {
+    				set_data(t8, t8_value);
+    			}
+
+    			var postbody_changes = {};
+    			if (changed.fpost) postbody_changes.post = ctx.fpost;
+    			postbody.$set(postbody_changes);
+    		},
+
+    		i: function intro(local) {
+    			if (current) return;
+    			postbody.$$.fragment.i(local);
+
+    			current = true;
+    		},
+
+    		o: function outro(local) {
+    			postbody.$$.fragment.o(local);
+    			current = false;
+    		},
+
+    		d: function destroy(detaching) {
+    			if (detaching) {
+    				detach(li);
+    			}
+
+    			postbody.$destroy();
+    		}
+    	};
+    }
+
+    // (1:0)  <script>  export let post;  import PostBody from "./PostBody.svelte"   let fpost;  let fetched_post = false;  if (["Announce", "Like"].includes(post.type)) {      fpost = fetch(post.object, { headers: {          "Accept": "application/activity+json"      }}
+    function create_pending_block(ctx) {
+    	return {
+    		c: noop,
+    		m: noop,
+    		p: noop,
+    		i: noop,
+    		o: noop,
+    		d: noop
+    	};
+    }
+
+    function create_fragment$1(ctx) {
+    	var current_block_type_index, if_block, if_block_anchor, current;
+
+    	var if_block_creators = [
+    		create_if_block,
+    		create_else_block
+    	];
+
+    	var if_blocks = [];
+
+    	function select_block_type(ctx) {
+    		if (ctx.fetched_post == false) return 0;
+    		return 1;
+    	}
+
+    	current_block_type_index = select_block_type(ctx);
+    	if_block = if_blocks[current_block_type_index] = if_block_creators[current_block_type_index](ctx);
+
+    	return {
+    		c: function create() {
+    			if_block.c();
+    			if_block_anchor = empty();
+    		},
+
+    		l: function claim(nodes) {
+    			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
+    		},
+
+    		m: function mount(target, anchor) {
+    			if_blocks[current_block_type_index].m(target, anchor);
+    			insert(target, if_block_anchor, anchor);
+    			current = true;
+    		},
+
+    		p: function update(changed, ctx) {
+    			var previous_block_index = current_block_type_index;
+    			current_block_type_index = select_block_type(ctx);
+    			if (current_block_type_index === previous_block_index) {
+    				if_blocks[current_block_type_index].p(changed, ctx);
+    			} else {
+    				group_outros();
+    				on_outro(() => {
+    					if_blocks[previous_block_index].d(1);
+    					if_blocks[previous_block_index] = null;
+    				});
+    				if_block.o(1);
+    				check_outros();
+
+    				if_block = if_blocks[current_block_type_index];
+    				if (!if_block) {
+    					if_block = if_blocks[current_block_type_index] = if_block_creators[current_block_type_index](ctx);
+    					if_block.c();
+    				}
+    				if_block.i(1);
+    				if_block.m(if_block_anchor.parentNode, if_block_anchor);
+    			}
+    		},
+
+    		i: function intro(local) {
+    			if (current) return;
+    			if (if_block) if_block.i();
+    			current = true;
+    		},
+
+    		o: function outro(local) {
+    			if (if_block) if_block.o();
+    			current = false;
+    		},
+
+    		d: function destroy(detaching) {
+    			if_blocks[current_block_type_index].d(detaching);
+
+    			if (detaching) {
+    				detach(if_block_anchor);
+    			}
+    		}
+    	};
+    }
+
+    function instance$1($$self, $$props, $$invalidate) {
+    	let { post } = $$props;
+
+    	let fpost;
+    	let fetched_post = false;
+    	if (["Announce", "Like"].includes(post.type)) {
+    	    $$invalidate('fpost', fpost = fetch(post.object, { headers: {
+    	        "Accept": "application/activity+json"
+    	    }}).then(d => d.json()));
+    	    $$invalidate('fetched_post', fetched_post = true);
+        }
+
+    	const writable_props = ['post'];
+    	Object.keys($$props).forEach(key => {
+    		if (!writable_props.includes(key)) console.warn(`<Post> was created with unknown prop '${key}'`);
+    	});
+
+    	$$self.$set = $$props => {
+    		if ('post' in $$props) $$invalidate('post', post = $$props.post);
+    	};
+
+    	return { post, fpost, fetched_post };
+    }
+
+    class Post extends SvelteComponentDev {
+    	constructor(options) {
+    		super(options);
+    		init(this, options, instance$1, create_fragment$1, safe_not_equal, ["post"]);
+
+    		const { ctx } = this.$$;
+    		const props = options.props || {};
+    		if (ctx.post === undefined && !('post' in props)) {
+    			console.warn("<Post> was created without expected prop 'post'");
+    		}
+    	}
+
+    	get post() {
+    		throw new Error("<Post>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set post(value) {
+    		throw new Error("<Post>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+    }
+
+    /* src/TimeLine.svelte generated by Svelte v3.4.3 */
+
+    const file$2 = "src/TimeLine.svelte";
+
+    function get_each_context$1(ctx, list, i) {
+    	const child_ctx = Object.create(ctx);
+    	child_ctx.post = list[i];
+    	return child_ctx;
+    }
+
+    // (1:0) <script>     export let posts;  import Post from "./Post.svelte" </script>  {#await posts then value}
+    function create_catch_block$1(ctx) {
+    	return {
+    		c: noop,
+    		m: noop,
+    		p: noop,
+    		i: noop,
+    		o: noop,
+    		d: noop
+    	};
+    }
+
+    // (6:25)  <ul class="post-list">     {#each value as post}
+    function create_then_block$1(ctx) {
+    	var ul, current;
+
+    	var each_value = ctx.value;
+
+    	var each_blocks = [];
+
+    	for (var i = 0; i < each_value.length; i += 1) {
+    		each_blocks[i] = create_each_block$1(get_each_context$1(ctx, each_value, i));
+    	}
+
+    	function outro_block(i, detaching, local) {
+    		if (each_blocks[i]) {
+    			if (detaching) {
+    				on_outro(() => {
+    					each_blocks[i].d(detaching);
+    					each_blocks[i] = null;
+    				});
+    			}
+
+    			each_blocks[i].o(local);
+    		}
+    	}
+
+    	return {
+    		c: function create() {
+    			ul = element("ul");
+
+    			for (var i = 0; i < each_blocks.length; i += 1) {
+    				each_blocks[i].c();
+    			}
+    			ul.className = "post-list";
+    			add_location(ul, file$2, 6, 0, 102);
+    		},
+
+    		m: function mount(target, anchor) {
+    			insert(target, ul, anchor);
+
+    			for (var i = 0; i < each_blocks.length; i += 1) {
+    				each_blocks[i].m(ul, null);
+    			}
+
+    			current = true;
+    		},
+
+    		p: function update(changed, ctx) {
+    			if (changed.posts) {
+    				each_value = ctx.value;
+
+    				for (var i = 0; i < each_value.length; i += 1) {
+    					const child_ctx = get_each_context$1(ctx, each_value, i);
+
+    					if (each_blocks[i]) {
+    						each_blocks[i].p(changed, child_ctx);
+    						each_blocks[i].i(1);
+    					} else {
+    						each_blocks[i] = create_each_block$1(child_ctx);
+    						each_blocks[i].c();
+    						each_blocks[i].i(1);
+    						each_blocks[i].m(ul, null);
+    					}
+    				}
+
+    				group_outros();
+    				for (; i < each_blocks.length; i += 1) outro_block(i, 1, 1);
+    				check_outros();
+    			}
+    		},
+
+    		i: function intro(local) {
+    			if (current) return;
+    			for (var i = 0; i < each_value.length; i += 1) each_blocks[i].i();
+
+    			current = true;
+    		},
+
+    		o: function outro(local) {
+    			each_blocks = each_blocks.filter(Boolean);
+    			for (let i = 0; i < each_blocks.length; i += 1) outro_block(i, 0);
+
+    			current = false;
+    		},
+
+    		d: function destroy(detaching) {
+    			if (detaching) {
+    				detach(ul);
+    			}
+
+    			destroy_each(each_blocks, detaching);
+    		}
+    	};
+    }
+
+    // (8:4) {#each value as post}
+    function create_each_block$1(ctx) {
+    	var current;
+
+    	var post = new Post({
+    		props: { post: ctx.post },
+    		$$inline: true
+    	});
+
+    	return {
+    		c: function create() {
+    			post.$$.fragment.c();
+    		},
+
+    		m: function mount(target, anchor) {
+    			mount_component(post, target, anchor);
+    			current = true;
+    		},
+
+    		p: function update(changed, ctx) {
+    			var post_changes = {};
+    			if (changed.posts) post_changes.post = ctx.post;
+    			post.$set(post_changes);
+    		},
+
+    		i: function intro(local) {
+    			if (current) return;
+    			post.$$.fragment.i(local);
+
+    			current = true;
+    		},
+
+    		o: function outro(local) {
+    			post.$$.fragment.o(local);
+    			current = false;
+    		},
+
+    		d: function destroy(detaching) {
+    			post.$destroy(detaching);
+    		}
+    	};
+    }
+
+    // (1:0) <script>     export let posts;  import Post from "./Post.svelte" </script>  {#await posts then value}
+    function create_pending_block$1(ctx) {
+    	return {
+    		c: noop,
+    		m: noop,
+    		p: noop,
+    		i: noop,
+    		o: noop,
+    		d: noop
+    	};
+    }
+
+    function create_fragment$2(ctx) {
+    	var await_block_anchor, promise, current;
+
+    	let info = {
+    		ctx,
+    		current: null,
+    		pending: create_pending_block$1,
+    		then: create_then_block$1,
+    		catch: create_catch_block$1,
+    		value: 'value',
+    		error: 'null',
+    		blocks: Array(3)
+    	};
+
+    	handle_promise(promise = ctx.posts, info);
+
+    	return {
+    		c: function create() {
+    			await_block_anchor = empty();
+
+    			info.block.c();
+    		},
+
+    		l: function claim(nodes) {
+    			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
+    		},
+
+    		m: function mount(target, anchor) {
+    			insert(target, await_block_anchor, anchor);
+
+    			info.block.m(target, info.anchor = anchor);
+    			info.mount = () => await_block_anchor.parentNode;
+    			info.anchor = await_block_anchor;
+
+    			current = true;
+    		},
+
+    		p: function update(changed, new_ctx) {
+    			ctx = new_ctx;
+    			info.ctx = ctx;
+
+    			if (('posts' in changed) && promise !== (promise = ctx.posts) && handle_promise(promise, info)) ; else {
+    				info.block.p(changed, assign(assign({}, ctx), info.resolved));
+    			}
+    		},
+
+    		i: function intro(local) {
+    			if (current) return;
+    			info.block.i();
+    			current = true;
+    		},
+
+    		o: function outro(local) {
+    			for (let i = 0; i < 3; i += 1) {
+    				const block = info.blocks[i];
+    				if (block) block.o();
+    			}
+
+    			current = false;
+    		},
+
+    		d: function destroy(detaching) {
+    			if (detaching) {
+    				detach(await_block_anchor);
+    			}
+
+    			info.block.d(detaching);
+    			info = null;
+    		}
+    	};
+    }
+
+    function instance$2($$self, $$props, $$invalidate) {
+    	let { posts } = $$props;
+
+    	const writable_props = ['posts'];
+    	Object.keys($$props).forEach(key => {
+    		if (!writable_props.includes(key)) console.warn(`<TimeLine> was created with unknown prop '${key}'`);
+    	});
+
+    	$$self.$set = $$props => {
+    		if ('posts' in $$props) $$invalidate('posts', posts = $$props.posts);
+    	};
+
+    	return { posts };
+    }
+
+    class TimeLine extends SvelteComponentDev {
+    	constructor(options) {
+    		super(options);
+    		init(this, options, instance$2, create_fragment$2, safe_not_equal, ["posts"]);
+
+    		const { ctx } = this.$$;
+    		const props = options.props || {};
+    		if (ctx.posts === undefined && !('posts' in props)) {
+    			console.warn("<TimeLine> was created without expected prop 'posts'");
+    		}
+    	}
+
+    	get posts() {
+    		throw new Error("<TimeLine>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set posts(value) {
+    		throw new Error("<TimeLine>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+    }
+
+    /* src/App.svelte generated by Svelte v3.4.3 */
+
+    const file$3 = "src/App.svelte";
+
+    // (16:5) {#if pgi == true }
+    function create_if_block$1(ctx) {
+    	var li0, a0, t_1, li1, a1;
+
+    	return {
+    		c: function create() {
+    			li0 = element("li");
+    			a0 = element("a");
+    			a0.textContent = "Local Timeline";
+    			t_1 = space();
+    			li1 = element("li");
+    			a1 = element("a");
+    			a1.textContent = "Federated Timeline";
+    			a0.href = "/local";
+    			add_location(a0, file$3, 16, 6, 488);
+    			add_location(li0, file$3, 16, 2, 484);
+    			a1.href = "/fed";
+    			add_location(a1, file$3, 17, 6, 535);
+    			add_location(li1, file$3, 17, 2, 531);
+    		},
+
+    		m: function mount(target, anchor) {
+    			insert(target, li0, anchor);
+    			append(li0, a0);
+    			insert(target, t_1, anchor);
+    			insert(target, li1, anchor);
+    			append(li1, a1);
+    		},
+
+    		d: function destroy(detaching) {
+    			if (detaching) {
+    				detach(li0);
+    				detach(t_1);
+    				detach(li1);
+    			}
+    		}
+    	};
+    }
+
+    function create_fragment$3(ctx) {
+    	var header, ul, t0, li0, a0, t2, li1, a1, t4, li2, a2, t6, div0, t7, div1, t8, div2, t9, div3, span, t11, p0, t13, div4, t14, hr, t15, footer, div5, h20, t17, p1, t18, br0, t19, br1, t20, t21, div6, h21, t23, p2, current;
+
+    	var if_block = (ctx.pgi == true) && create_if_block$1(ctx);
+
+    	var timeline0 = new TimeLine({
+    		props: { posts: ctx.localTimeline },
+    		$$inline: true
+    	});
+
+    	var timeline1 = new TimeLine({
+    		props: { posts: ctx.federatedTimeline },
+    		$$inline: true
+    	});
+
+    	return {
+    		c: function create() {
+    			header = element("header");
+    			ul = element("ul");
+    			if (if_block) if_block.c();
+    			t0 = space();
+    			li0 = element("li");
+    			a0 = element("a");
+    			a0.textContent = "Home";
+    			t2 = space();
+    			li1 = element("li");
+    			a1 = element("a");
+    			a1.textContent = "About";
+    			t4 = space();
+    			li2 = element("li");
+    			a2 = element("a");
+    			a2.textContent = "...";
+    			t6 = space();
+    			div0 = element("div");
+    			timeline0.$$.fragment.c();
+    			t7 = space();
+    			div1 = element("div");
+    			timeline1.$$.fragment.c();
+    			t8 = space();
+    			div2 = element("div");
+    			t9 = space();
+    			div3 = element("div");
+    			span = element("span");
+    			span.textContent = "Hi!";
+    			t11 = space();
+    			p0 = element("p");
+    			p0.textContent = "DESCRIPTION";
+    			t13 = space();
+    			div4 = element("div");
+    			t14 = space();
+    			hr = element("hr");
+    			t15 = space();
+    			footer = element("footer");
+    			div5 = element("div");
+    			h20 = element("h2");
+    			h20.textContent = "PubGate-Philip";
+    			t17 = space();
+    			p1 = element("p");
+    			t18 = text("Gotta");
+    			br0 = element("br");
+    			t19 = text("go");
+    			br1 = element("br");
+    			t20 = text("Fast");
+    			t21 = space();
+    			div6 = element("div");
+    			h21 = element("h2");
+    			h21.textContent = "Contact";
+    			t23 = space();
+    			p2 = element("p");
+    			a0.href = "/home";
+    			add_location(a0, file$3, 19, 6, 592);
+    			add_location(li0, file$3, 19, 2, 588);
+    			a1.href = "/about";
+    			add_location(a1, file$3, 20, 6, 628);
+    			add_location(li1, file$3, 20, 2, 624);
+    			a2.href = "/dot-dot-dot";
+    			add_location(a2, file$3, 21, 6, 666);
+    			add_location(li2, file$3, 21, 2, 662);
+    			add_location(ul, file$3, 14, 1, 453);
+    			add_location(header, file$3, 13, 0, 443);
+    			div0.id = "local";
+    			div0.className = "hidden content";
+    			add_location(div0, file$3, 25, 0, 720);
+    			div1.id = "fed";
+    			div1.className = "hidden content";
+    			add_location(div1, file$3, 29, 0, 807);
+    			div2.id = "home";
+    			div2.className = "hidden content";
+    			add_location(div2, file$3, 33, 0, 896);
+    			span.className = "about-greeting";
+    			add_location(span, file$3, 37, 1, 984);
+    			add_location(p0, file$3, 38, 1, 1025);
+    			div3.id = "about";
+    			div3.className = "hidden content";
+    			add_location(div3, file$3, 36, 0, 943);
+    			div4.id = "dot-dot-dot";
+    			div4.className = "hidden content";
+    			add_location(div4, file$3, 41, 0, 1052);
+    			hr.className = "separator";
+    			add_location(hr, file$3, 44, 0, 1106);
+    			add_location(h20, file$3, 47, 8, 1194);
+    			add_location(br0, file$3, 48, 16, 1234);
+    			add_location(br1, file$3, 48, 22, 1240);
+    			add_location(p1, file$3, 48, 8, 1226);
+    			div5.className = "left-column";
+    			add_location(div5, file$3, 46, 4, 1160);
+    			add_location(h21, file$3, 51, 8, 1303);
+    			add_location(p2, file$3, 52, 8, 1328);
+    			div6.className = "right-column";
+    			add_location(div6, file$3, 50, 4, 1268);
+    			footer.className = "content";
+    			add_location(footer, file$3, 45, 0, 1131);
+    		},
+
+    		l: function claim(nodes) {
+    			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
+    		},
+
+    		m: function mount(target, anchor) {
+    			insert(target, header, anchor);
+    			append(header, ul);
+    			if (if_block) if_block.m(ul, null);
+    			append(ul, t0);
+    			append(ul, li0);
+    			append(li0, a0);
+    			append(ul, t2);
+    			append(ul, li1);
+    			append(li1, a1);
+    			append(ul, t4);
+    			append(ul, li2);
+    			append(li2, a2);
+    			insert(target, t6, anchor);
+    			insert(target, div0, anchor);
+    			mount_component(timeline0, div0, null);
+    			insert(target, t7, anchor);
+    			insert(target, div1, anchor);
+    			mount_component(timeline1, div1, null);
+    			insert(target, t8, anchor);
+    			insert(target, div2, anchor);
+    			insert(target, t9, anchor);
+    			insert(target, div3, anchor);
+    			append(div3, span);
+    			append(div3, t11);
+    			append(div3, p0);
+    			insert(target, t13, anchor);
+    			insert(target, div4, anchor);
+    			insert(target, t14, anchor);
+    			insert(target, hr, anchor);
+    			insert(target, t15, anchor);
+    			insert(target, footer, anchor);
+    			append(footer, div5);
+    			append(div5, h20);
+    			append(div5, t17);
+    			append(div5, p1);
+    			append(p1, t18);
+    			append(p1, br0);
+    			append(p1, t19);
+    			append(p1, br1);
+    			append(p1, t20);
+    			append(footer, t21);
+    			append(footer, div6);
+    			append(div6, h21);
+    			append(div6, t23);
+    			append(div6, p2);
+    			current = true;
+    		},
+
+    		p: function update(changed, ctx) {
+    			if (ctx.pgi == true) {
+    				if (!if_block) {
+    					if_block = create_if_block$1(ctx);
+    					if_block.c();
+    					if_block.m(ul, t0);
+    				}
+    			} else if (if_block) {
+    				if_block.d(1);
+    				if_block = null;
+    			}
+
+    			var timeline0_changes = {};
+    			if (changed.localTimeline) timeline0_changes.posts = ctx.localTimeline;
+    			timeline0.$set(timeline0_changes);
+
+    			var timeline1_changes = {};
+    			if (changed.federatedTimeline) timeline1_changes.posts = ctx.federatedTimeline;
+    			timeline1.$set(timeline1_changes);
+    		},
+
+    		i: function intro(local) {
+    			if (current) return;
+    			timeline0.$$.fragment.i(local);
+
+    			timeline1.$$.fragment.i(local);
+
+    			current = true;
+    		},
+
+    		o: function outro(local) {
+    			timeline0.$$.fragment.o(local);
+    			timeline1.$$.fragment.o(local);
+    			current = false;
+    		},
+
+    		d: function destroy(detaching) {
+    			if (detaching) {
+    				detach(header);
+    			}
+
+    			if (if_block) if_block.d();
+
+    			if (detaching) {
+    				detach(t6);
+    				detach(div0);
+    			}
+
+    			timeline0.$destroy();
+
+    			if (detaching) {
+    				detach(t7);
+    				detach(div1);
+    			}
+
+    			timeline1.$destroy();
+
+    			if (detaching) {
+    				detach(t8);
+    				detach(div2);
+    				detach(t9);
+    				detach(div3);
+    				detach(t13);
+    				detach(div4);
+    				detach(t14);
+    				detach(hr);
+    				detach(t15);
+    				detach(footer);
+    			}
+    		}
+    	};
+    }
+
+    function instance$3($$self, $$props, $$invalidate) {
+    	const fetchTimeline = (isLocal, path) => isLocal
+    	?  fetch(base_url + path).then(d => d.json()).then(d => d.first).then(d => d.orderedItems) : [];
+        let { localTimeline = fetchTimeline(pubgate_instance, "/timeline/local"), federatedTimeline = fetchTimeline(pubgate_instance, "/timeline/federated"), pgi = pubgate_instance } = $$props;
+
+    	const writable_props = ['localTimeline', 'federatedTimeline', 'pgi'];
+    	Object.keys($$props).forEach(key => {
+    		if (!writable_props.includes(key)) console.warn(`<App> was created with unknown prop '${key}'`);
+    	});
+
+    	$$self.$set = $$props => {
+    		if ('localTimeline' in $$props) $$invalidate('localTimeline', localTimeline = $$props.localTimeline);
+    		if ('federatedTimeline' in $$props) $$invalidate('federatedTimeline', federatedTimeline = $$props.federatedTimeline);
+    		if ('pgi' in $$props) $$invalidate('pgi', pgi = $$props.pgi);
+    	};
+
+    	return { localTimeline, federatedTimeline, pgi };
+    }
+
+    class App extends SvelteComponentDev {
+    	constructor(options) {
+    		super(options);
+    		init(this, options, instance$3, create_fragment$3, safe_not_equal, ["localTimeline", "federatedTimeline", "pgi"]);
+    	}
+
+    	get localTimeline() {
+    		throw new Error("<App>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set localTimeline(value) {
+    		throw new Error("<App>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get federatedTimeline() {
+    		throw new Error("<App>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set federatedTimeline(value) {
+    		throw new Error("<App>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get pgi() {
+    		throw new Error("<App>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set pgi(value) {
+    		throw new Error("<App>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+    }
+
+    const app = new App({
+    	target: document.body,
+    	props: {}
+    });
+
+    return app;
+
+}());
 //# sourceMappingURL=bundle.js.map
