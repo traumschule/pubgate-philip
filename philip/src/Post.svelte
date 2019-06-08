@@ -22,7 +22,7 @@
 {#if fetched_post == false}
 <li class="post">
     <h2 id=""> . </h2>
-    <PostBody post={post} />
+    <PostBody post={post.object} />
 </li>
 {:else}
 {#await fpost then fpost}
