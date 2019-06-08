@@ -1,10 +1,10 @@
 
 <script>
 	export let post;
+	import PostBody from "./PostBody.svelte"
 	let fpost;
 	let fetched_post = false;
 	if (["Announce", "Like"].includes(post.type)) {
-	    console.log(post);
 	    fpost = fetch(post.object, { headers: {
 	        "Accept": "application/activity+json"
 	    }}).then(d => d.json());
@@ -21,42 +21,21 @@
 
 {#if fetched_post == false}
 <li class="post">
-    <div class="metadata">
-        <a href="{post.id}"><h2 id="">.</h2></a>
-        <span>User <a href="{ post.actor }">{ post.actor.split('/').slice(-1)[0] }</a></span>
-        <span class="metadata-seperator">·</span>
-        <span>{ post.published.replace("T", " ").replace("Z", " ")}</span>
-    </div>
-    <div class="tags">
-    {#each post.object.tag as tag}
-        <a class="tag" href="{ tag.href }">{ tag.name }</a>
-    {/each}
-    </div>
-    <p>{@html post.object.content }</p>
+    <h2 id=""> . </h2>
+    <PostBody post={post} />
 </li>
 {:else}
 {#await fpost then fpost}
 <li class="post">
     <div class="metadata">
-        <a href="{fpost.id}"><h2 id="">.</h2></a>
-        <span>{post.type} by user <a href="{ fpost.actor }">{ fpost.actor.split('/').slice(-1)[0] }</a></span>
+        <h2 id=""> . </h2>
+        <a href="{post.id}">{post.type}</a> by user <a href="{ post.actor }">{ post.actor.split('/').slice(-1)[0] }</a>
         <span class="metadata-seperator">·</span>
         <span>{ post.published.replace("T", " ").replace("Z", " ")}</span>
     </div>
     <div class="reaction">
-        <div class="metadata">
-            <a href="{fpost.id}"><h2 id="">.</h2></a>
-            <span>User <a href="{ fpost.actor }">{ fpost.actor.split('/').slice(-1)[0] }</a></span>
-            <span class="metadata-seperator">·</span>
-            <span>{ fpost.published.replace("T", " ").replace("Z", " ")}</span>
-        </div>
-        <div class="tags">
-        {#each fpost.object.tag as tag}
-            <a class="tag" href="{ tag.href }">{ tag.name }</a>
-        {/each}
-        </div>
-        <p>{@html fpost.object.content }</p>
-     </div>
+        <PostBody post={fpost} />
+    </div>
 </li>
 {/await}
 {/if}
