@@ -24,7 +24,7 @@ CONTACT = 'https://mastodon.social/users/autogestion'
 ### Run standalone client
 
   - ```git clone git@github.com:autogestion/pubgate-philip.git```
-  - Update fephilip/public/index.html 
+  - Update philip/public/index.html 
   ```
     var base_url = "https://<instance_domain>";
     var pubgate_instance = <true if running against remote pubgate instance>

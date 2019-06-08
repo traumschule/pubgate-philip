@@ -1,5 +1,4 @@
 import os
-from pathlib import Path
 
 from sanic import response, Blueprint
 from jinja2 import Environment, PackageLoader
@@ -8,11 +7,10 @@ from jinja2 import Environment, PackageLoader
 philip_v1 = Blueprint('philip')
 
 philip_dir = os.path.dirname(os.path.abspath(__file__))
-parent_dir = Path(philip_dir).parent
-philip_v1.static('/static', f'{parent_dir}/fephilip/public')
+philip_v1.static('/static', f'{philip_dir}/public')
 
 jinja_env = Environment(
-    loader=PackageLoader("philip", "template"), trim_blocks=True, lstrip_blocks=True
+    loader=PackageLoader("philip", "public"), trim_blocks=True, lstrip_blocks=True
 )
 
 
