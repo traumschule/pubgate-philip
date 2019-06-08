@@ -4,7 +4,7 @@ Extension for [PubGate](https://github.com/autogestion/pubgate), minimalist blog
 Forked from [philip-trauner.me](https://github.com/PhilipTrauner/philip-trauner.me)
 
 
-Requires PubGate >= 0.2.14
+Requires PubGate >= 0.2.13
 ### Run
 
  - Install PubGate
