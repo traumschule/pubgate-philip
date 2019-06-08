@@ -1,5 +1,5 @@
 ## PubGate Blog
-Extension for [PubGate](https://github.com/autogestion/pubgate), minimalist blogging UI
+Extension for [PubGate](https://github.com/autogestion/pubgate), minimalist blogging js client made with Svelte
 
 Forked from [philip-trauner.me](https://github.com/PhilipTrauner/philip-trauner.me)
 
