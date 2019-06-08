@@ -1,9 +1,7 @@
 <script>
-	export let posts;
-	import TimeLine from "./TimeLine.svelte"
-
+	import TimeLine from "./TimeLine.svelte";
     export let local_timeline = fetch(base_url + "/timeline/local").then(d => d.json()).then(d => d.first).then(d => d.orderedItems);
-	export let federated_timeline = fetch(base_url + "/timeline/federated").then(d => d.json()).then(d => d.first).then(d => d.orderedItems);
+    export let federated_timeline = fetch(base_url + "/timeline/federated").then(d => d.json()).then(d => d.first).then(d => d.orderedItems);
 </script>
 
 <style>
@@ -23,6 +21,7 @@
 		<li><a href="/dot-dot-dot">...</a></li>
 	</ul>
 </header>
+
 <div id="local" class="hidden content">
     <TimeLine posts={local_timeline} />
 </div>
