@@ -4,7 +4,7 @@
 </script>
 
 <div class="metadata">
-    <a href="{post.id}">Create</a> by user <a href="{ post.actor }">{ post.actor.split('/').slice(-1)[0] }</a>
+    <a href="{post.id}">Create</a> by user <a href="{ post.actor }">{ post.actor.split('/').pop() }</a>
     <span class="metadata-seperator">·</span>
     <span>{ post.published.replace("T", " ").replace("Z", " ")}</span>
 </div>
