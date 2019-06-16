@@ -1,8 +1,13 @@
 
 <script>
 	export let post;
+	console.log(post)
 </script>
 
+{#if typeof post === 'string'}
+<p>{@html post }</p>
+
+{:else}
 <div class="metadata">
     <a href="{post.id}">Create</a> by user <a href="{ post.attributedTo }">{ post.attributedTo.split('/').pop() }</a>
     <span class="metadata-seperator">·</span>
@@ -13,5 +18,7 @@
     <a class="tag" href="{ tag.href }">{ tag.name }</a>
 {/each}
 </div>
+
 <p>{@html post.content }</p>
+{/if}
 

@@ -27,11 +27,3 @@ async def home(request, **kwargs):
             conf=request.app.config,
         )
     )
-
-
-@philip_v1.route('/proxy_fetch', methods=['POST'])
-async def home(request, **kwargs):
-    post = await fetch(request.json["url"])
-    return response.json(
-        post, headers={'Access-Control-Allow-Origin': '*'}
-    )

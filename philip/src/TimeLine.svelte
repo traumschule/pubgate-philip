@@ -6,7 +6,9 @@
 {#await posts then value}
 <ul class="post-list">
     {#each value as post}
+
         <Post post={post} />
+
     {/each}
 </ul>
 {/await}

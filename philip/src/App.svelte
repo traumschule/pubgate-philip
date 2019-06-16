@@ -3,8 +3,8 @@
 
 	const fetchTimeline = (isLocal, path) => isLocal
 	?  fetch(base_url + path).then(d => d.json()).then(d => d.first).then(d => d.orderedItems) : [];
-    export let localTimeline = fetchTimeline(pubgate_instance, "/timeline/local");
-    export let federatedTimeline = fetchTimeline(pubgate_instance, "/timeline/federated");
+    export let localTimeline = fetchTimeline(pubgate_instance, "/timeline/local?cached=1");
+    export let federatedTimeline = fetchTimeline(pubgate_instance, "/timeline/federated?cached=1");
     export let pgi = pubgate_instance;
 </script>
 

@@ -330,43 +330,8 @@ var app = (function () {
     	return child_ctx;
     }
 
-    // (12:0) {#each post.tag as tag}
-    function create_each_block(ctx) {
-    	var a, t_value = ctx.tag.name, t, a_href_value;
-
-    	return {
-    		c: function create() {
-    			a = element("a");
-    			t = text(t_value);
-    			a.className = "tag";
-    			a.href = a_href_value = ctx.tag.href;
-    			add_location(a, file, 12, 4, 351);
-    		},
-
-    		m: function mount(target, anchor) {
-    			insert(target, a, anchor);
-    			append(a, t);
-    		},
-
-    		p: function update(changed, ctx) {
-    			if ((changed.post) && t_value !== (t_value = ctx.tag.name)) {
-    				set_data(t, t_value);
-    			}
-
-    			if ((changed.post) && a_href_value !== (a_href_value = ctx.tag.href)) {
-    				a.href = a_href_value;
-    			}
-    		},
-
-    		d: function destroy(detaching) {
-    			if (detaching) {
-    				detach(a);
-    			}
-    		}
-    	};
-    }
-
-    function create_fragment(ctx) {
+    // (10:0) {:else}
+    function create_else_block(ctx) {
     	var div0, a0, t0, a0_href_value, t1, a1, t2_value = ctx.post.attributedTo.split('/').pop(), t2, a1_href_value, t3, span0, t5, span1, t6_value = ctx.post.published.replace("T", " ").replace("Z", " "), t6, t7, div1, t8, p, raw_value = ctx.post.content;
 
     	var each_value = ctx.post.tag;
@@ -401,21 +366,17 @@ var app = (function () {
     			t8 = space();
     			p = element("p");
     			a0.href = a0_href_value = ctx.post.id;
-    			add_location(a0, file, 6, 4, 66);
+    			add_location(a0, file, 11, 4, 146);
     			a1.href = a1_href_value = ctx.post.attributedTo;
-    			add_location(a1, file, 6, 43, 105);
+    			add_location(a1, file, 11, 43, 185);
     			span0.className = "metadata-seperator";
-    			add_location(span0, file, 7, 4, 184);
-    			add_location(span1, file, 8, 4, 230);
+    			add_location(span0, file, 12, 4, 264);
+    			add_location(span1, file, 13, 4, 310);
     			div0.className = "metadata";
-    			add_location(div0, file, 5, 0, 39);
+    			add_location(div0, file, 10, 0, 119);
     			div1.className = "tags";
-    			add_location(div1, file, 10, 0, 304);
-    			add_location(p, file, 15, 0, 418);
-    		},
-
-    		l: function claim(nodes) {
-    			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
+    			add_location(div1, file, 15, 0, 384);
+    			add_location(p, file, 21, 0, 499);
     		},
 
     		m: function mount(target, anchor) {
@@ -485,9 +446,6 @@ var app = (function () {
     			}
     		},
 
-    		i: noop,
-    		o: noop,
-
     		d: function destroy(detaching) {
     			if (detaching) {
     				detach(div0);
@@ -505,8 +463,126 @@ var app = (function () {
     	};
     }
 
+    // (7:0) {#if typeof post === 'string'}
+    function create_if_block(ctx) {
+    	var p;
+
+    	return {
+    		c: function create() {
+    			p = element("p");
+    			add_location(p, file, 7, 0, 89);
+    		},
+
+    		m: function mount(target, anchor) {
+    			insert(target, p, anchor);
+    			p.innerHTML = ctx.post;
+    		},
+
+    		p: function update(changed, ctx) {
+    			if (changed.post) {
+    				p.innerHTML = ctx.post;
+    			}
+    		},
+
+    		d: function destroy(detaching) {
+    			if (detaching) {
+    				detach(p);
+    			}
+    		}
+    	};
+    }
+
+    // (17:0) {#each post.tag as tag}
+    function create_each_block(ctx) {
+    	var a, t_value = ctx.tag.name, t, a_href_value;
+
+    	return {
+    		c: function create() {
+    			a = element("a");
+    			t = text(t_value);
+    			a.className = "tag";
+    			a.href = a_href_value = ctx.tag.href;
+    			add_location(a, file, 17, 4, 431);
+    		},
+
+    		m: function mount(target, anchor) {
+    			insert(target, a, anchor);
+    			append(a, t);
+    		},
+
+    		p: function update(changed, ctx) {
+    			if ((changed.post) && t_value !== (t_value = ctx.tag.name)) {
+    				set_data(t, t_value);
+    			}
+
+    			if ((changed.post) && a_href_value !== (a_href_value = ctx.tag.href)) {
+    				a.href = a_href_value;
+    			}
+    		},
+
+    		d: function destroy(detaching) {
+    			if (detaching) {
+    				detach(a);
+    			}
+    		}
+    	};
+    }
+
+    function create_fragment(ctx) {
+    	var if_block_anchor;
+
+    	function select_block_type(ctx) {
+    		if (typeof ctx.post === 'string') return create_if_block;
+    		return create_else_block;
+    	}
+
+    	var current_block_type = select_block_type(ctx);
+    	var if_block = current_block_type(ctx);
+
+    	return {
+    		c: function create() {
+    			if_block.c();
+    			if_block_anchor = empty();
+    		},
+
+    		l: function claim(nodes) {
+    			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
+    		},
+
+    		m: function mount(target, anchor) {
+    			if_block.m(target, anchor);
+    			insert(target, if_block_anchor, anchor);
+    		},
+
+    		p: function update(changed, ctx) {
+    			if (current_block_type === (current_block_type = select_block_type(ctx)) && if_block) {
+    				if_block.p(changed, ctx);
+    			} else {
+    				if_block.d(1);
+    				if_block = current_block_type(ctx);
+    				if (if_block) {
+    					if_block.c();
+    					if_block.m(if_block_anchor.parentNode, if_block_anchor);
+    				}
+    			}
+    		},
+
+    		i: noop,
+    		o: noop,
+
+    		d: function destroy(detaching) {
+    			if_block.d(detaching);
+
+    			if (detaching) {
+    				detach(if_block_anchor);
+    			}
+    		}
+    	};
+    }
+
     function instance($$self, $$props, $$invalidate) {
     	let { post } = $$props;
+    	console.log(post);
 
     	const writable_props = ['post'];
     	Object.keys($$props).forEach(key => {
@@ -545,77 +621,134 @@ var app = (function () {
 
     const file$1 = "src/Post.svelte";
 
-    // (41:0) {:else}
-    function create_else_block(ctx) {
-    	var await_block_anchor, promise, current;
+    // (37:0) {:else}
+    function create_else_block$1(ctx) {
+    	var li, div0, h2, t1, a0, t2_value = ctx.post.type, t2, a0_href_value, t3, a1, t4_value = ctx.post.actor.split('/').slice(-1)[0], t4, a1_href_value, t5, span, t7, t8, div1, current;
 
-    	let info = {
-    		ctx,
-    		current: null,
-    		pending: create_pending_block,
-    		then: create_then_block,
-    		catch: create_catch_block,
-    		value: 'fpost',
-    		error: 'null',
-    		blocks: Array(3)
-    	};
+    	var if_block = (ctx.post.published) && create_if_block_1(ctx);
 
-    	handle_promise(promise = ctx.fpost, info);
+    	var postbody = new PostBody({
+    		props: { post: ctx.post_object },
+    		$$inline: true
+    	});
 
     	return {
     		c: function create() {
-    			await_block_anchor = empty();
-
-    			info.block.c();
+    			li = element("li");
+    			div0 = element("div");
+    			h2 = element("h2");
+    			h2.textContent = ".";
+    			t1 = space();
+    			a0 = element("a");
+    			t2 = text(t2_value);
+    			t3 = text(" by user ");
+    			a1 = element("a");
+    			t4 = text(t4_value);
+    			t5 = space();
+    			span = element("span");
+    			span.textContent = "·";
+    			t7 = space();
+    			if (if_block) if_block.c();
+    			t8 = space();
+    			div1 = element("div");
+    			postbody.$$.fragment.c();
+    			h2.id = "";
+    			add_location(h2, file$1, 39, 8, 766);
+    			a0.href = a0_href_value = ctx.post.id;
+    			add_location(a0, file$1, 40, 8, 793);
+    			a1.href = a1_href_value = ctx.post.actor;
+    			add_location(a1, file$1, 40, 52, 837);
+    			span.className = "metadata-seperator";
+    			add_location(span, file$1, 41, 8, 913);
+    			div0.className = "metadata";
+    			add_location(div0, file$1, 38, 4, 735);
+    			div1.className = "reaction svelte-1gf6p2q";
+    			add_location(div1, file$1, 46, 4, 1090);
+    			li.className = "post";
+    			add_location(li, file$1, 37, 0, 713);
     		},
 
     		m: function mount(target, anchor) {
-    			insert(target, await_block_anchor, anchor);
-
-    			info.block.m(target, info.anchor = anchor);
-    			info.mount = () => await_block_anchor.parentNode;
-    			info.anchor = await_block_anchor;
-
+    			insert(target, li, anchor);
+    			append(li, div0);
+    			append(div0, h2);
+    			append(div0, t1);
+    			append(div0, a0);
+    			append(a0, t2);
+    			append(div0, t3);
+    			append(div0, a1);
+    			append(a1, t4);
+    			append(div0, t5);
+    			append(div0, span);
+    			append(div0, t7);
+    			if (if_block) if_block.m(div0, null);
+    			append(li, t8);
+    			append(li, div1);
+    			mount_component(postbody, div1, null);
     			current = true;
     		},
 
-    		p: function update(changed, new_ctx) {
-    			ctx = new_ctx;
-    			info.ctx = ctx;
-
-    			if (('fpost' in changed) && promise !== (promise = ctx.fpost) && handle_promise(promise, info)) ; else {
-    				info.block.p(changed, assign(assign({}, ctx), info.resolved));
+    		p: function update(changed, ctx) {
+    			if ((!current || changed.post) && t2_value !== (t2_value = ctx.post.type)) {
+    				set_data(t2, t2_value);
     			}
+
+    			if ((!current || changed.post) && a0_href_value !== (a0_href_value = ctx.post.id)) {
+    				a0.href = a0_href_value;
+    			}
+
+    			if ((!current || changed.post) && t4_value !== (t4_value = ctx.post.actor.split('/').slice(-1)[0])) {
+    				set_data(t4, t4_value);
+    			}
+
+    			if ((!current || changed.post) && a1_href_value !== (a1_href_value = ctx.post.actor)) {
+    				a1.href = a1_href_value;
+    			}
+
+    			if (ctx.post.published) {
+    				if (if_block) {
+    					if_block.p(changed, ctx);
+    				} else {
+    					if_block = create_if_block_1(ctx);
+    					if_block.c();
+    					if_block.m(div0, null);
+    				}
+    			} else if (if_block) {
+    				if_block.d(1);
+    				if_block = null;
+    			}
+
+    			var postbody_changes = {};
+    			if (changed.post_object) postbody_changes.post = ctx.post_object;
+    			postbody.$set(postbody_changes);
     		},
 
     		i: function intro(local) {
     			if (current) return;
-    			info.block.i();
+    			postbody.$$.fragment.i(local);
+
     			current = true;
     		},
 
     		o: function outro(local) {
-    			for (let i = 0; i < 3; i += 1) {
-    				const block = info.blocks[i];
-    				if (block) block.o();
-    			}
-
+    			postbody.$$.fragment.o(local);
     			current = false;
     		},
 
     		d: function destroy(detaching) {
     			if (detaching) {
-    				detach(await_block_anchor);
+    				detach(li);
     			}
 
-    			info.block.d(detaching);
-    			info = null;
+    			if (if_block) if_block.d();
+
+    			postbody.$destroy();
     		}
     	};
     }
 
-    // (36:0) {#if fetched_post == false}
-    function create_if_block(ctx) {
+    // (31:0) {#if fetched_post == false}
+    function create_if_block$1(ctx) {
     	var li, h2, t_1, current;
 
     	var postbody = new PostBody({
@@ -631,9 +764,9 @@ var app = (function () {
     			t_1 = space();
     			postbody.$$.fragment.c();
     			h2.id = "";
-    			add_location(h2, file$1, 37, 4, 830);
+    			add_location(h2, file$1, 32, 4, 643);
     			li.className = "post";
-    			add_location(li, file$1, 36, 0, 808);
+    			add_location(li, file$1, 31, 0, 621);
     		},
 
     		m: function mount(target, anchor) {
@@ -672,143 +805,33 @@ var app = (function () {
     	};
     }
 
-    // (1:0)  <script>  export let post;  import PostBody from "./PostBody.svelte"   let fpost;  let fetched_post = false;  if (["Announce", "Like"].includes(post.type)) {      fpost = fetch(post.object, { headers: {          "Accept": "application/activity+json"      }}
-    function create_catch_block(ctx) {
-    	return {
-    		c: noop,
-    		m: noop,
-    		p: noop,
-    		i: noop,
-    		o: noop,
-    		d: noop
-    	};
-    }
-
-    // (42:25)  <li class="post">     <div class="metadata">         <h2 id=""> . </h2>         <a href="{post.id}
-    function create_then_block(ctx) {
-    	var li, div0, h2, t1, a0, t2_value = ctx.post.type, t2, a0_href_value, t3, a1, t4_value = ctx.post.actor.split('/').slice(-1)[0], t4, a1_href_value, t5, span0, t7, span1, t8_value = ctx.post.published.replace("T", " ").replace("Z", " "), t8, t9, div1, current;
-
-    	var postbody = new PostBody({
-    		props: { post: ctx.fpost },
-    		$$inline: true
-    	});
+    // (43:8) {#if post.published }
+    function create_if_block_1(ctx) {
+    	var span, t_value = ctx.post.published.replace("T", " ").replace("Z", " "), t;
 
     	return {
     		c: function create() {
-    			li = element("li");
-    			div0 = element("div");
-    			h2 = element("h2");
-    			h2.textContent = ".";
-    			t1 = space();
-    			a0 = element("a");
-    			t2 = text(t2_value);
-    			t3 = text(" by user ");
-    			a1 = element("a");
-    			t4 = text(t4_value);
-    			t5 = space();
-    			span0 = element("span");
-    			span0.textContent = "·";
-    			t7 = space();
-    			span1 = element("span");
-    			t8 = text(t8_value);
-    			t9 = space();
-    			div1 = element("div");
-    			postbody.$$.fragment.c();
-    			h2.id = "";
-    			add_location(h2, file$1, 44, 8, 978);
-    			a0.href = a0_href_value = ctx.post.id;
-    			add_location(a0, file$1, 45, 8, 1005);
-    			a1.href = a1_href_value = ctx.post.actor;
-    			add_location(a1, file$1, 45, 52, 1049);
-    			span0.className = "metadata-seperator";
-    			add_location(span0, file$1, 46, 8, 1125);
-    			add_location(span1, file$1, 47, 8, 1175);
-    			div0.className = "metadata";
-    			add_location(div0, file$1, 43, 4, 947);
-    			div1.className = "reaction svelte-1gf6p2q";
-    			add_location(div1, file$1, 49, 4, 1257);
-    			li.className = "post";
-    			add_location(li, file$1, 42, 0, 925);
+    			span = element("span");
+    			t = text(t_value);
+    			add_location(span, file$1, 43, 8, 993);
     		},
 
     		m: function mount(target, anchor) {
-    			insert(target, li, anchor);
-    			append(li, div0);
-    			append(div0, h2);
-    			append(div0, t1);
-    			append(div0, a0);
-    			append(a0, t2);
-    			append(div0, t3);
-    			append(div0, a1);
-    			append(a1, t4);
-    			append(div0, t5);
-    			append(div0, span0);
-    			append(div0, t7);
-    			append(div0, span1);
-    			append(span1, t8);
-    			append(li, t9);
-    			append(li, div1);
-    			mount_component(postbody, div1, null);
-    			current = true;
+    			insert(target, span, anchor);
+    			append(span, t);
     		},
 
     		p: function update(changed, ctx) {
-    			if ((!current || changed.post) && t2_value !== (t2_value = ctx.post.type)) {
-    				set_data(t2, t2_value);
+    			if ((changed.post) && t_value !== (t_value = ctx.post.published.replace("T", " ").replace("Z", " "))) {
+    				set_data(t, t_value);
     			}
-
-    			if ((!current || changed.post) && a0_href_value !== (a0_href_value = ctx.post.id)) {
-    				a0.href = a0_href_value;
-    			}
-
-    			if ((!current || changed.post) && t4_value !== (t4_value = ctx.post.actor.split('/').slice(-1)[0])) {
-    				set_data(t4, t4_value);
-    			}
-
-    			if ((!current || changed.post) && a1_href_value !== (a1_href_value = ctx.post.actor)) {
-    				a1.href = a1_href_value;
-    			}
-
-    			if ((!current || changed.post) && t8_value !== (t8_value = ctx.post.published.replace("T", " ").replace("Z", " "))) {
-    				set_data(t8, t8_value);
-    			}
-
-    			var postbody_changes = {};
-    			if (changed.fpost) postbody_changes.post = ctx.fpost;
-    			postbody.$set(postbody_changes);
-    		},
-
-    		i: function intro(local) {
-    			if (current) return;
-    			postbody.$$.fragment.i(local);
-
-    			current = true;
-    		},
-
-    		o: function outro(local) {
-    			postbody.$$.fragment.o(local);
-    			current = false;
     		},
 
     		d: function destroy(detaching) {
     			if (detaching) {
-    				detach(li);
+    				detach(span);
     			}
-
-    			postbody.$destroy();
     		}
-    	};
-    }
-
-    // (1:0)  <script>  export let post;  import PostBody from "./PostBody.svelte"   let fpost;  let fetched_post = false;  if (["Announce", "Like"].includes(post.type)) {      fpost = fetch(post.object, { headers: {          "Accept": "application/activity+json"      }}
-    function create_pending_block(ctx) {
-    	return {
-    		c: noop,
-    		m: noop,
-    		p: noop,
-    		i: noop,
-    		o: noop,
-    		d: noop
     	};
     }
 
@@ -816,8 +839,8 @@ var app = (function () {
     	var current_block_type_index, if_block, if_block_anchor, current;
 
     	var if_block_creators = [
-    		create_if_block,
-    		create_else_block
+    		create_if_block$1,
+    		create_else_block$1
     	];
 
     	var if_blocks = [];
@@ -895,13 +918,21 @@ var app = (function () {
     	let { post } = $$props;
 
     	let fpost;
+    	let post_object;
     	let fetched_post = false;
     	if (["Announce", "Like"].includes(post.type)) {
-    	    $$invalidate('fpost', fpost = fetch(post.object, { headers: {
-    	        "Accept": "application/activity+json"
-    	    }}).then(d => d.json()));
+    	    if (pubgate_instance == false) {
+                $$invalidate('fpost', fpost = fetch(post.object, { headers: {
+                    "Accept": "application/activity+json"
+                }}).then(d => d.json()));
+                $$invalidate('post_object', post_object = fpost => fpost.object);
+    	    } else {
+    	        $$invalidate('post_object', post_object = post.object);
+    	    }
+
     	    $$invalidate('fetched_post', fetched_post = true);
         }
+    	console.log(post);
 
     	const writable_props = ['post'];
     	Object.keys($$props).forEach(key => {
@@ -912,7 +943,7 @@ var app = (function () {
     		if ('post' in $$props) $$invalidate('post', post = $$props.post);
     	};
 
-    	return { post, fpost, fetched_post };
+    	return { post, post_object, fetched_post };
     }
 
     class Post extends SvelteComponentDev {
@@ -947,7 +978,7 @@ var app = (function () {
     }
 
     // (1:0) <script>     export let posts;  import Post from "./Post.svelte" </script>  {#await posts then value}
-    function create_catch_block$1(ctx) {
+    function create_catch_block(ctx) {
     	return {
     		c: noop,
     		m: noop,
@@ -959,7 +990,7 @@ var app = (function () {
     }
 
     // (6:25)  <ul class="post-list">     {#each value as post}
-    function create_then_block$1(ctx) {
+    function create_then_block(ctx) {
     	var ul, current;
 
     	var each_value = ctx.value;
@@ -1096,7 +1127,7 @@ var app = (function () {
     }
 
     // (1:0) <script>     export let posts;  import Post from "./Post.svelte" </script>  {#await posts then value}
-    function create_pending_block$1(ctx) {
+    function create_pending_block(ctx) {
     	return {
     		c: noop,
     		m: noop,
@@ -1113,9 +1144,9 @@ var app = (function () {
     	let info = {
     		ctx,
     		current: null,
-    		pending: create_pending_block$1,
-    		then: create_then_block$1,
-    		catch: create_catch_block$1,
+    		pending: create_pending_block,
+    		then: create_then_block,
+    		catch: create_catch_block,
     		value: 'value',
     		error: 'null',
     		blocks: Array(3)
@@ -1220,7 +1251,7 @@ var app = (function () {
     const file$3 = "src/App.svelte";
 
     // (16:5) {#if pgi == true }
-    function create_if_block$1(ctx) {
+    function create_if_block$2(ctx) {
     	var li0, a0, t_1, li1, a1;
 
     	return {
@@ -1233,11 +1264,11 @@ var app = (function () {
     			a1 = element("a");
     			a1.textContent = "Federated Timeline";
     			a0.href = "/local";
-    			add_location(a0, file$3, 16, 6, 488);
-    			add_location(li0, file$3, 16, 2, 484);
+    			add_location(a0, file$3, 16, 6, 506);
+    			add_location(li0, file$3, 16, 2, 502);
     			a1.href = "/fed";
-    			add_location(a1, file$3, 17, 6, 535);
-    			add_location(li1, file$3, 17, 2, 531);
+    			add_location(a1, file$3, 17, 6, 553);
+    			add_location(li1, file$3, 17, 2, 549);
     		},
 
     		m: function mount(target, anchor) {
@@ -1261,7 +1292,7 @@ var app = (function () {
     function create_fragment$3(ctx) {
     	var header, ul, t0, li0, a0, t2, li1, a1, t4, li2, a2, t6, div0, t7, div1, t8, div2, t9, div3, span, t11, p0, t13, div4, t14, hr, t15, footer, div5, h20, t17, p1, t18, br0, t19, br1, t20, t21, div6, h21, t23, p2, current;
 
-    	var if_block = (ctx.pgi == true) && create_if_block$1(ctx);
+    	var if_block = (ctx.pgi == true) && create_if_block$2(ctx);
 
     	var timeline0 = new TimeLine({
     		props: { posts: ctx.localTimeline },
@@ -1328,48 +1359,48 @@ var app = (function () {
     			t23 = space();
     			p2 = element("p");
     			a0.href = "/home";
-    			add_location(a0, file$3, 19, 6, 592);
-    			add_location(li0, file$3, 19, 2, 588);
+    			add_location(a0, file$3, 19, 6, 610);
+    			add_location(li0, file$3, 19, 2, 606);
     			a1.href = "/about";
-    			add_location(a1, file$3, 20, 6, 628);
-    			add_location(li1, file$3, 20, 2, 624);
+    			add_location(a1, file$3, 20, 6, 646);
+    			add_location(li1, file$3, 20, 2, 642);
     			a2.href = "/dot-dot-dot";
-    			add_location(a2, file$3, 21, 6, 666);
-    			add_location(li2, file$3, 21, 2, 662);
-    			add_location(ul, file$3, 14, 1, 453);
-    			add_location(header, file$3, 13, 0, 443);
+    			add_location(a2, file$3, 21, 6, 684);
+    			add_location(li2, file$3, 21, 2, 680);
+    			add_location(ul, file$3, 14, 1, 471);
+    			add_location(header, file$3, 13, 0, 461);
     			div0.id = "local";
     			div0.className = "hidden content";
-    			add_location(div0, file$3, 25, 0, 720);
+    			add_location(div0, file$3, 25, 0, 738);
     			div1.id = "fed";
     			div1.className = "hidden content";
-    			add_location(div1, file$3, 29, 0, 807);
+    			add_location(div1, file$3, 29, 0, 825);
     			div2.id = "home";
     			div2.className = "hidden content";
-    			add_location(div2, file$3, 33, 0, 896);
+    			add_location(div2, file$3, 33, 0, 914);
     			span.className = "about-greeting";
-    			add_location(span, file$3, 37, 1, 984);
-    			add_location(p0, file$3, 38, 1, 1025);
+    			add_location(span, file$3, 37, 1, 1002);
+    			add_location(p0, file$3, 38, 1, 1043);
     			div3.id = "about";
     			div3.className = "hidden content";
-    			add_location(div3, file$3, 36, 0, 943);
+    			add_location(div3, file$3, 36, 0, 961);
     			div4.id = "dot-dot-dot";
     			div4.className = "hidden content";
-    			add_location(div4, file$3, 41, 0, 1052);
+    			add_location(div4, file$3, 41, 0, 1070);
     			hr.className = "separator";
-    			add_location(hr, file$3, 44, 0, 1106);
-    			add_location(h20, file$3, 47, 8, 1194);
-    			add_location(br0, file$3, 48, 16, 1234);
-    			add_location(br1, file$3, 48, 22, 1240);
-    			add_location(p1, file$3, 48, 8, 1226);
+    			add_location(hr, file$3, 44, 0, 1124);
+    			add_location(h20, file$3, 47, 8, 1212);
+    			add_location(br0, file$3, 48, 16, 1252);
+    			add_location(br1, file$3, 48, 22, 1258);
+    			add_location(p1, file$3, 48, 8, 1244);
     			div5.className = "left-column";
-    			add_location(div5, file$3, 46, 4, 1160);
-    			add_location(h21, file$3, 51, 8, 1303);
-    			add_location(p2, file$3, 52, 8, 1328);
+    			add_location(div5, file$3, 46, 4, 1178);
+    			add_location(h21, file$3, 51, 8, 1321);
+    			add_location(p2, file$3, 52, 8, 1346);
     			div6.className = "right-column";
-    			add_location(div6, file$3, 50, 4, 1268);
+    			add_location(div6, file$3, 50, 4, 1286);
     			footer.className = "content";
-    			add_location(footer, file$3, 45, 0, 1131);
+    			add_location(footer, file$3, 45, 0, 1149);
     		},
 
     		l: function claim(nodes) {
@@ -1428,7 +1459,7 @@ var app = (function () {
     		p: function update(changed, ctx) {
     			if (ctx.pgi == true) {
     				if (!if_block) {
-    					if_block = create_if_block$1(ctx);
+    					if_block = create_if_block$2(ctx);
     					if_block.c();
     					if_block.m(ul, t0);
     				}
@@ -1501,7 +1532,7 @@ var app = (function () {
     function instance$3($$self, $$props, $$invalidate) {
     	const fetchTimeline = (isLocal, path) => isLocal
     	?  fetch(base_url + path).then(d => d.json()).then(d => d.first).then(d => d.orderedItems) : [];
-        let { localTimeline = fetchTimeline(pubgate_instance, "/timeline/local"), federatedTimeline = fetchTimeline(pubgate_instance, "/timeline/federated"), pgi = pubgate_instance } = $$props;
+        let { localTimeline = fetchTimeline(pubgate_instance, "/timeline/local?cached=1"), federatedTimeline = fetchTimeline(pubgate_instance, "/timeline/federated?cached=1"), pgi = pubgate_instance } = $$props;
 
     	const writable_props = ['localTimeline', 'federatedTimeline', 'pgi'];
     	Object.keys($$props).forEach(key => {

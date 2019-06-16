@@ -4,26 +4,21 @@
 	import PostBody from "./PostBody.svelte"
 
 	let fpost;
+	let post_object;
 	let fetched_post = false;
 	if (["Announce", "Like"].includes(post.type)) {
-	    fpost = fetch(post.object, { headers: {
-	        "Accept": "application/activity+json"
-	    }}).then(d => d.json());
-
-	    // if (!fpost.isResolved) {
-	    if (false) {
-            fpost = fetch(base_url + "/proxy_fetch", {
-                method: 'POST',
-                headers: {
-                  'Accept': 'application/json',
-                  'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({"url": post.object})
-            }).then(d => d.json());
+	    if (pubgate_instance == false) {
+            fpost = fetch(post.object, { headers: {
+                "Accept": "application/activity+json"
+            }}).then(d => d.json());
+            post_object = fpost => fpost.object;
+	    } else {
+	        post_object = post.object
 	    }
+
 	    fetched_post = true
     }
-
+	console.log(post)
 </script>
 
 <style>
@@ -38,18 +33,20 @@
     <h2 id=""> . </h2>
     <PostBody post={post.object} />
 </li>
+
 {:else}
-{#await fpost then fpost}
 <li class="post">
     <div class="metadata">
         <h2 id=""> . </h2>
         <a href="{post.id}">{post.type}</a> by user <a href="{ post.actor }">{ post.actor.split('/').slice(-1)[0] }</a>
         <span class="metadata-seperator">·</span>
-        <span>{ post.published.replace("T", " ").replace("Z", " ")}</span>
+        // TODO: catch any undefined inside component
+        {#if post.published }
+        <span>{ post.published.replace("T", " ").replace("Z", " ") }</span>
+        {/if}
     </div>
     <div class="reaction">
-        <PostBody post={fpost} />
+        <PostBody post={post_object} />
     </div>
 </li>
-{/await}
 {/if}
