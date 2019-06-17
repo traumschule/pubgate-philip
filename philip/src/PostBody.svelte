@@ -1,7 +1,6 @@
 
 <script>
 	export let post;
-	console.log(post)
 </script>
 
 {#if typeof post === 'string'}

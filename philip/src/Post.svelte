@@ -18,7 +18,6 @@
 
 	    fetched_post = true
     }
-	console.log(post)
 </script>
 
 <style>
@@ -40,7 +39,7 @@
         <h2 id=""> . </h2>
         <a href="{post.id}">{post.type}</a> by user <a href="{ post.actor }">{ post.actor.split('/').slice(-1)[0] }</a>
         <span class="metadata-seperator">·</span>
-        // TODO: catch any undefined inside component
+
         {#if post.published }
         <span>{ post.published.replace("T", " ").replace("Z", " ") }</span>
         {/if}
