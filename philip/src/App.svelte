@@ -1,8 +1,8 @@
 <script>
-	import Page from "./Page.svelte";
+	import Tab from "./Tab.svelte";
 
-	export let active_tab = 'local';
-    export let pgi = pubgate_instance;
+	let active_tab = 'local';
+    let pgi = pubgate_instance;
 
     function selectTab (event) {
         event.preventDefault();
@@ -23,17 +23,18 @@
 <header>
 	<ul>
 	    {#if pgi == true }
-		<li ><a href="#local" class="header-selected" on:click="{selectTab}">Local Timeline</a></li>
+		<li><a href="#local" class="header-selected" on:click="{selectTab}">Local Timeline</a></li>
 		<li><a href="#federated" on:click="{selectTab}">Federated Timeline</a></li>
 		{/if}
-		<li><a href="#home" on:click="{selectTab}">Home</a></li>
+		<li><a href="#inbox" on:click="{selectTab}">Inbox</a></li>
+		<li><a href="#create" on:click="{selectTab}">Create</a></li>
+		<li><a href="#profile" on:click="{selectTab}">...</a></li>
 		<li><a href="#about" on:click="{selectTab}">About</a></li>
-		<li><a href="#dot-dot-dot" on:click="{selectTab}">...</a></li>
 	</ul>
 </header>
 
 <div class="content">
-    <Page active_tab={active_tab} />
+    <Tab active_tab={active_tab} />
 </div>
 
 <hr class="separator" />
