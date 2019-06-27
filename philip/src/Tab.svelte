@@ -1,20 +1,34 @@
 <script>
-    export let active_tab;
-	import TimeLine from "./TimeLine.svelte"
-	import { writable } from 'svelte/store';
+    import { createEventDispatcher } from "svelte";
+    const dispatch = createEventDispatcher();
 
-	const session = writable({});
+    export let active_tab;
+    export let session;
+	import TimeLine from "./TimeLine.svelte"
+
 	let username = '';
 	let password = '';
-	let errors = null;
-	async function submit(event) {
-		const response = await post(`auth/login`, { email, password });
-		// TODO handle network errors
-		errors = response.errors;
-		if (response.user) {
-			$session.user = response.user;
-			goto('/');
+	async function login(event) {
+        const profile = await fetch(base_url + "/@" + username, { headers: {
+            "Accept": "application/activity+json"
+        }}).then(d => d.json());
+
+        const token = await fetch(profile.endpoints.oauthTokenEndpoint, {
+            method: 'POST',
+            body: JSON.stringify({username: username, password:password})
+        }).then(d => d.json());
+
+        console.log(token.access_token);
+		if (token.access_token) {
+			$: session.user = profile;
+			$: session.token = token.access_token;
 		}
+		dispatch("updatesession", session);
+	}
+
+	async function logout(event) {
+	    $: session = {};
+	    dispatch("updatesession", session);
 	}
 
 
@@ -22,9 +36,10 @@
 
 {#if active_tab == 'profile'}
     {#if session.user }
-        <TimeLine active_tab={active_tab} />
+         <button class="btn btn-sm" on:click={logout}>Logout</button>
+         <TimeLine active_tab={active_tab} />
     {:else}
-        <form on:submit|preventDefault={submit}>
+        <form on:submit|preventDefault={login}>
             <fieldset class="form-group">
                 <input class="form-control form-control-lg" type="username" placeholder="Username" bind:value={username}>
             </fieldset>
