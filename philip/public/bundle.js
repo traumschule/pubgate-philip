@@ -1015,7 +1015,7 @@ var app = (function () {
     	return child_ctx;
     }
 
-    // (1:0) <script>     export let active_tab;  import Post from "./Post.svelte"   let pubgate_url_map = {      'local': "/timeline/local?cached=1",      'federated': "/timeline/federated?cached=1"  }
+    // (1:0) <script>     export let active_tab;     export let session;  import Post from "./Post.svelte"   let pgi = pubgate_instance;   const fetchCollection = function(path, session={}
     function create_catch_block(ctx) {
     	return {
     		c: noop,
@@ -1027,7 +1027,7 @@ var app = (function () {
     	};
     }
 
-    // (18:25)  <ul class="post-list">     {#each value as post}
+    // (40:25)  <ul class="post-list">     {#each value as post}
     function create_then_block(ctx) {
     	var ul, current;
 
@@ -1060,7 +1060,7 @@ var app = (function () {
     				each_blocks[i].c();
     			}
     			ul.className = "post-list";
-    			add_location(ul, file$2, 18, 0, 456);
+    			add_location(ul, file$2, 40, 0, 1252);
     		},
 
     		m: function mount(target, anchor) {
@@ -1121,7 +1121,7 @@ var app = (function () {
     	};
     }
 
-    // (20:4) {#each value as post}
+    // (42:4) {#each value as post}
     function create_each_block$1(ctx) {
     	var current;
 
@@ -1164,7 +1164,7 @@ var app = (function () {
     	};
     }
 
-    // (1:0) <script>     export let active_tab;  import Post from "./Post.svelte"   let pubgate_url_map = {      'local': "/timeline/local?cached=1",      'federated': "/timeline/federated?cached=1"  }
+    // (1:0) <script>     export let active_tab;     export let session;  import Post from "./Post.svelte"   let pgi = pubgate_instance;   const fetchCollection = function(path, session={}
     function create_pending_block(ctx) {
     	return {
     		c: noop,
@@ -1249,43 +1249,69 @@ var app = (function () {
     }
 
     function instance$2($$self, $$props, $$invalidate) {
-    	let { active_tab } = $$props;
+    	let { active_tab, session } = $$props;
 
-    	let pubgate_url_map = {
-    	    'local': "/timeline/local?cached=1",
-    	    'federated': "/timeline/federated?cached=1"
+    	let pgi = pubgate_instance;
+
+    	const fetchCollection = function(path, session={}) {
+    	    let headers_set = {
+                "Accept": "application/activity+json"
+            };
+    	    if (session.user) {
+                headers_set['Authorization'] = "Bearer" + session.user.token;
+    	    }
+    	    return fetch(path, { headers: headers_set}).then(d => d.json())
+    	        .then(d => d.first.orderedItems);
     	};
 
-    	const fetchTimeline = (isLocal, path) => isLocal
-    	?  fetch(base_url + path).then(d => d.json()).then(d => d.first).then(d => d.orderedItems) : [];
+    	const getTimeline = function(tab, session) {
+            switch (tab) {
+              case 'local':
+                return pgi ? fetchCollection(base_url + "/timeline/local?cached=1"): [];
+              case 'federated':
+                return pgi ? fetchCollection(base_url + "/timeline/federated?cached=1"): [];
+              case 'inbox':
+                return pgi ? fetchCollection(session.user.inbox + "?cached=1", session):
+                    fetchCollection(session.user.inbox, session);
+              case 'profile':
+                return pgi ? fetchCollection(session.user.outbox + "?cached=1"):
+                    fetchCollection(session.user.outbox);
+              default:
+                return []
+            }
+    	};
 
-    	const writable_props = ['active_tab'];
+    	const writable_props = ['active_tab', 'session'];
     	Object.keys($$props).forEach(key => {
     		if (!writable_props.includes(key)) console.warn(`<TimeLine> was created with unknown prop '${key}'`);
     	});
 
     	$$self.$set = $$props => {
     		if ('active_tab' in $$props) $$invalidate('active_tab', active_tab = $$props.active_tab);
+    		if ('session' in $$props) $$invalidate('session', session = $$props.session);
     	};
 
     	let posts;
 
-    	$$self.$$.update = ($$dirty = { pubgate_url_map: 1, active_tab: 1 }) => {
-    		if ($$dirty.pubgate_url_map || $$dirty.active_tab) { $$invalidate('posts', posts = fetchTimeline(pubgate_instance, pubgate_url_map[active_tab])); }
+    	$$self.$$.update = ($$dirty = { active_tab: 1, session: 1 }) => {
+    		if ($$dirty.active_tab || $$dirty.session) { $$invalidate('posts', posts = getTimeline(active_tab, session)); }
     	};
 
-    	return { active_tab, posts };
+    	return { active_tab, session, posts };
     }
 
     class TimeLine extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
-    		init(this, options, instance$2, create_fragment$2, safe_not_equal, ["active_tab"]);
+    		init(this, options, instance$2, create_fragment$2, safe_not_equal, ["active_tab", "session"]);
 
     		const { ctx } = this.$$;
     		const props = options.props || {};
     		if (ctx.active_tab === undefined && !('active_tab' in props)) {
     			console.warn("<TimeLine> was created without expected prop 'active_tab'");
+    		}
+    		if (ctx.session === undefined && !('session' in props)) {
+    			console.warn("<TimeLine> was created without expected prop 'session'");
     		}
     	}
 
@@ -1296,18 +1322,29 @@ var app = (function () {
     	set active_tab(value) {
     		throw new Error("<TimeLine>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
     	}
+
+    	get session() {
+    		throw new Error("<TimeLine>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set session(value) {
+    		throw new Error("<TimeLine>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
     }
 
     /* src/Tab.svelte generated by Svelte v3.4.3 */
 
     const file$3 = "src/Tab.svelte";
 
-    // (56:0) {:else}
+    // (55:0) {:else}
     function create_else_block_1(ctx) {
     	var current;
 
     	var timeline = new TimeLine({
-    		props: { active_tab: ctx.active_tab },
+    		props: {
+    		active_tab: ctx.active_tab,
+    		session: ctx.session
+    	},
     		$$inline: true
     	});
 
@@ -1324,6 +1361,7 @@ var app = (function () {
     		p: function update(changed, ctx) {
     			var timeline_changes = {};
     			if (changed.active_tab) timeline_changes.active_tab = ctx.active_tab;
+    			if (changed.session) timeline_changes.session = ctx.session;
     			timeline.$set(timeline_changes);
     		},
 
@@ -1345,7 +1383,7 @@ var app = (function () {
     	};
     }
 
-    // (37:0) {#if active_tab == 'profile'}
+    // (35:0) {#if active_tab == 'profile'}
     function create_if_block$2(ctx) {
     	var current_block_type_index, if_block, if_block_anchor, current;
 
@@ -1421,7 +1459,7 @@ var app = (function () {
     	};
     }
 
-    // (41:4) {:else}
+    // (40:4) {:else}
     function create_else_block$2(ctx) {
     	var form, fieldset0, input0, t0, fieldset1, input1, t1, button, t2, button_disabled_value, dispose;
 
@@ -1439,20 +1477,20 @@ var app = (function () {
     			input0.className = "form-control form-control-lg";
     			attr(input0, "type", "username");
     			input0.placeholder = "Username";
-    			add_location(input0, file$3, 43, 16, 1229);
+    			add_location(input0, file$3, 42, 16, 1284);
     			fieldset0.className = "form-group";
-    			add_location(fieldset0, file$3, 42, 12, 1183);
+    			add_location(fieldset0, file$3, 41, 12, 1238);
     			input1.className = "form-control form-control-lg";
     			attr(input1, "type", "password");
     			input1.placeholder = "Password";
-    			add_location(input1, file$3, 46, 16, 1417);
+    			add_location(input1, file$3, 45, 16, 1472);
     			fieldset1.className = "form-group";
-    			add_location(fieldset1, file$3, 45, 12, 1371);
+    			add_location(fieldset1, file$3, 44, 12, 1426);
     			button.className = "btn btn-lg btn-primary pull-xs-right";
     			button.type = "submit";
     			button.disabled = button_disabled_value = !ctx.username || !ctx.password;
-    			add_location(button, file$3, 48, 12, 1559);
-    			add_location(form, file$3, 41, 8, 1131);
+    			add_location(button, file$3, 47, 12, 1614);
+    			add_location(form, file$3, 40, 8, 1186);
 
     			dispose = [
     				listen(input0, "input", ctx.input0_input_handler),
@@ -1501,12 +1539,15 @@ var app = (function () {
     	};
     }
 
-    // (38:4) {#if session.user }
+    // (36:4) {#if session.user }
     function create_if_block_1$1(ctx) {
     	var button, t_1, current, dispose;
 
     	var timeline = new TimeLine({
-    		props: { active_tab: ctx.active_tab },
+    		props: {
+    		active_tab: ctx.active_tab,
+    		session: ctx.session
+    	},
     		$$inline: true
     	});
 
@@ -1517,7 +1558,7 @@ var app = (function () {
     			t_1 = space();
     			timeline.$$.fragment.c();
     			button.className = "btn btn-sm";
-    			add_location(button, file$3, 38, 9, 1004);
+    			add_location(button, file$3, 36, 9, 1025);
     			dispose = listen(button, "click", ctx.logout);
     		},
 
@@ -1531,6 +1572,7 @@ var app = (function () {
     		p: function update(changed, ctx) {
     			var timeline_changes = {};
     			if (changed.active_tab) timeline_changes.active_tab = ctx.active_tab;
+    			if (changed.session) timeline_changes.session = ctx.session;
     			timeline.$set(timeline_changes);
     		},
 
@@ -1643,9 +1685,9 @@ var app = (function () {
 
         let { active_tab, session } = $$props;
 
-    	let username = '';
-    	let password = '';
-    	async function login(event) {
+        let username = '';
+        let password = '';
+        async function login(event) {
             const profile = await fetch(base_url + "/@" + username, { headers: {
                 "Accept": "application/activity+json"
             }}).then(d => d.json());
@@ -1655,18 +1697,17 @@ var app = (function () {
                 body: JSON.stringify({username: username, password:password})
             }).then(d => d.json());
 
-            console.log(token.access_token);
-    		if (token.access_token) {
-    			$: session.user = profile; $$invalidate('session', session);
-    			$: session.token = token.access_token; $$invalidate('session', session);
-    		}
-    		dispatch("updatesession", session);
-    	}
+            if (token.access_token) {
+                $: session.user = profile; $$invalidate('session', session);
+                $: session.token = token.access_token; $$invalidate('session', session);
+            }
+            dispatch("updatesession", session);
+        }
 
-    	async function logout(event) {
-    	    $: $$invalidate('session', session = {});
-    	    dispatch("updatesession", session);
-    	}
+        async function logout(event) {
+            $: $$invalidate('session', session = {});
+            dispatch("updatesession", session);
+        }
 
     	const writable_props = ['active_tab', 'session'];
     	Object.keys($$props).forEach(key => {
@@ -1736,7 +1777,7 @@ var app = (function () {
 
     const file$4 = "src/App.svelte";
 
-    // (33:5) {#if pgi == true }
+    // (35:5) {#if pgi == true }
     function create_if_block_2(ctx) {
     	var li0, a0, t_1, li1, a1, dispose;
 
@@ -1751,11 +1792,11 @@ var app = (function () {
     			a1.textContent = "Federated Timeline";
     			a0.href = "#local";
     			a0.className = "header-selected";
-    			add_location(a0, file$4, 33, 6, 723);
-    			add_location(li0, file$4, 33, 2, 719);
+    			add_location(a0, file$4, 35, 6, 761);
+    			add_location(li0, file$4, 35, 2, 757);
     			a1.href = "#federated";
-    			add_location(a1, file$4, 34, 6, 817);
-    			add_location(li1, file$4, 34, 2, 813);
+    			add_location(a1, file$4, 36, 6, 855);
+    			add_location(li1, file$4, 36, 2, 851);
 
     			dispose = [
     				listen(a0, "click", ctx.selectTab),
@@ -1785,7 +1826,7 @@ var app = (function () {
     	};
     }
 
-    // (37:2) {#if session.user }
+    // (39:2) {#if session.user }
     function create_if_block_1$2(ctx) {
     	var li0, a0, t_1, li1, a1, dispose;
 
@@ -1799,11 +1840,11 @@ var app = (function () {
     			a1 = element("a");
     			a1.textContent = "Create";
     			a0.href = "#inbox";
-    			add_location(a0, file$4, 37, 6, 925);
-    			add_location(li0, file$4, 37, 2, 921);
+    			add_location(a0, file$4, 39, 6, 963);
+    			add_location(li0, file$4, 39, 2, 959);
     			a1.href = "#create";
-    			add_location(a1, file$4, 38, 6, 986);
-    			add_location(li1, file$4, 38, 2, 982);
+    			add_location(a1, file$4, 40, 6, 1024);
+    			add_location(li1, file$4, 40, 2, 1020);
 
     			dispose = [
     				listen(a0, "click", ctx.selectTab),
@@ -1833,7 +1874,7 @@ var app = (function () {
     	};
     }
 
-    // (41:74) {:else}
+    // (43:74) {:else}
     function create_else_block$3(ctx) {
     	var t;
 
@@ -1854,7 +1895,7 @@ var app = (function () {
     	};
     }
 
-    // (41:48) {#if session.user }
+    // (43:48) {#if session.user }
     function create_if_block$3(ctx) {
     	var t;
 
@@ -1938,29 +1979,29 @@ var app = (function () {
     			t14 = space();
     			p1 = element("p");
     			a0.href = "#profile";
-    			add_location(a0, file$4, 40, 6, 1057);
-    			add_location(li0, file$4, 40, 2, 1053);
+    			add_location(a0, file$4, 42, 6, 1095);
+    			add_location(li0, file$4, 42, 2, 1091);
     			a1.href = "#about";
-    			add_location(a1, file$4, 41, 6, 1158);
-    			add_location(li1, file$4, 41, 2, 1154);
-    			add_location(ul, file$4, 31, 1, 688);
-    			add_location(header, file$4, 30, 0, 678);
+    			add_location(a1, file$4, 43, 6, 1196);
+    			add_location(li1, file$4, 43, 2, 1192);
+    			add_location(ul, file$4, 33, 1, 726);
+    			add_location(header, file$4, 32, 0, 716);
     			div0.className = "content";
-    			add_location(div0, file$4, 45, 0, 1231);
+    			add_location(div0, file$4, 47, 0, 1269);
     			hr.className = "separator";
-    			add_location(hr, file$4, 51, 0, 1365);
-    			add_location(h20, file$4, 54, 8, 1453);
-    			add_location(br0, file$4, 55, 16, 1493);
-    			add_location(br1, file$4, 55, 22, 1499);
-    			add_location(p0, file$4, 55, 8, 1485);
+    			add_location(hr, file$4, 53, 0, 1403);
+    			add_location(h20, file$4, 56, 8, 1491);
+    			add_location(br0, file$4, 57, 16, 1531);
+    			add_location(br1, file$4, 57, 22, 1537);
+    			add_location(p0, file$4, 57, 8, 1523);
     			div1.className = "left-column";
-    			add_location(div1, file$4, 53, 4, 1419);
-    			add_location(h21, file$4, 58, 8, 1562);
-    			add_location(p1, file$4, 59, 8, 1587);
+    			add_location(div1, file$4, 55, 4, 1457);
+    			add_location(h21, file$4, 60, 8, 1600);
+    			add_location(p1, file$4, 61, 8, 1625);
     			div2.className = "right-column";
-    			add_location(div2, file$4, 57, 4, 1527);
+    			add_location(div2, file$4, 59, 4, 1565);
     			footer.className = "content";
-    			add_location(footer, file$4, 52, 0, 1390);
+    			add_location(footer, file$4, 54, 0, 1428);
 
     			dispose = [
     				listen(a0, "click", ctx.selectTab),
@@ -2092,12 +2133,15 @@ var app = (function () {
     }
 
     function instance$4($$self, $$props, $$invalidate) {
-    	
-
     	let session = {};
-
-    	let active_tab = 'local';
+    	let active_tab;
         let pgi = pubgate_instance;
+
+        if (pgi) {
+            $$invalidate('active_tab', active_tab = 'local');
+        } else {
+            $$invalidate('active_tab', active_tab = 'about');
+        }
 
         function selectTab (event) {
             event.preventDefault();

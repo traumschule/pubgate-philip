@@ -1,16 +1,38 @@
 <script>
     export let active_tab;
+    export let session;
 	import Post from "./Post.svelte"
 
-	let pubgate_url_map = {
-	    'local': "/timeline/local?cached=1",
-	    'federated': "/timeline/federated?cached=1"
+	let pgi = pubgate_instance;
+
+	const fetchCollection = function(path, session={}) {
+	    let headers_set = {
+            "Accept": "application/activity+json"
+        };
+	    if (session.user) {
+            headers_set['Authorization'] = "Bearer" + session.user.token
+	    }
+	    return fetch(path, { headers: headers_set}).then(d => d.json())
+	        .then(d => d.first.orderedItems);
 	};
 
-	const fetchTimeline = (isLocal, path) => isLocal
-	?  fetch(base_url + path).then(d => d.json()).then(d => d.first).then(d => d.orderedItems) : [];
-
-    $: posts = fetchTimeline(pubgate_instance, pubgate_url_map[active_tab])
+	const getTimeline = function(tab, session) {
+        switch (tab) {
+          case 'local':
+            return pgi ? fetchCollection(base_url + "/timeline/local?cached=1"): [];
+          case 'federated':
+            return pgi ? fetchCollection(base_url + "/timeline/federated?cached=1"): [];
+          case 'inbox':
+            return pgi ? fetchCollection(session.user.inbox + "?cached=1", session):
+                fetchCollection(session.user.inbox, session);
+          case 'profile':
+            return pgi ? fetchCollection(session.user.outbox + "?cached=1"):
+                fetchCollection(session.user.outbox);
+          default:
+            return []
+        }
+	};
+    $: posts = getTimeline(active_tab, session)
 
 
 </script>

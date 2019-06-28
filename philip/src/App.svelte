@@ -1,12 +1,14 @@
 <script>
 	import Tab from "./Tab.svelte";
-
-	import { writable } from 'svelte/store';
-
 	let session = {};
-
-	let active_tab = 'local';
+	let active_tab;
     let pgi = pubgate_instance;
+
+    if (pgi) {
+        active_tab = 'local'
+    } else {
+        active_tab = 'about'
+    }
 
     function selectTab (event) {
         event.preventDefault();
