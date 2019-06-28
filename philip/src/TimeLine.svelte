@@ -7,12 +7,13 @@
 
 	const fetchCollection = function(path, session={}) {
 	    let headers_set = {
-            "Accept": "application/activity+json"
+            "Accept": "application/activity+json",
         };
 	    if (session.user) {
-            headers_set['Authorization'] = "Bearer" + session.user.token
+            headers_set['Authorization'] = "Bearer " + session.token
 	    }
-	    return fetch(path, { headers: headers_set}).then(d => d.json())
+	    return fetch(path, { headers: headers_set})
+	        .then(d => d.json())
 	        .then(d => d.first.orderedItems);
 	};
 
