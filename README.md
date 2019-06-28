@@ -5,7 +5,7 @@ Could be deployed as extension for [PubGate](https://github.com/autogestion/pubg
 
 ### Run as Pubgate Extension
 
-Requires PubGate >= 0.2.13
+Requires PubGate >= 0.2.14
 
  - Install PubGate
  - Install philip ```pip install git+https://github.com/autogestion/pubgate-philip.git```
@@ -29,4 +29,4 @@ CONTACT = 'https://mastodon.social/users/autogestion'
     var base_url = "https://<instance_domain>";
     var pubgate_instance = <true if running against remote pubgate instance>
   ```
-  - run ```cd fephilip && npm run dev```
+  - run ```cd philip && npm run dev```
