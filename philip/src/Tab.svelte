@@ -4,7 +4,8 @@
 
     export let active_tab;
     export let session;
-    import TimeLine from "./TimeLine.svelte"
+    import TimeLine from "./TimeLine.svelte";
+    import Publish from "./Publish.svelte";
 
     let username = '';
     let password = '';
@@ -50,8 +51,8 @@
             </button>
         </form>
     {/if}
-
-
+{:else if active_tab == 'create'}
+        <Publish session={session}/>
 {:else}
         <TimeLine active_tab={active_tab}
                   session={session}/>

@@ -5,7 +5,7 @@ Could be deployed as extension for [PubGate](https://github.com/autogestion/pubg
 
 ### Run as Pubgate Extension
 
-Requires PubGate >= 0.2.14
+Requires PubGate >= 0.2.15
 
  - Install PubGate
  - Install philip ```pip install git+https://github.com/autogestion/pubgate-philip.git```
