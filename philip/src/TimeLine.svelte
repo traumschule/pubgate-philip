@@ -42,7 +42,7 @@
 <ul class="post-list">
     {#each value as post}
 
-        <Post post={post} />
+        <Post post={post} session={session}/>
 
     {/each}
 </ul>

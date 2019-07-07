@@ -366,15 +366,15 @@ var app = (function () {
     	return child_ctx;
     }
 
-    // (9:0) {:else}
+    // (135:0) {:else}
     function create_else_block(ctx) {
-    	var div, a0, t0_value = ctx.post.type, t0, a0_href_value, t1, a1, t2_value = ctx.post.attributedTo.split('/').pop(), t2, a1_href_value, t3, span0, t5, span1, t6_value = ctx.post.published.replace("T", " ").replace("Z", " "), t6, t7, t8, p, raw_value = ctx.post.content;
+    	var div0, a0, t0_value = ctx.post.type, t0, a0_href_value, t1, a1, t2_value = ctx.post.attributedTo.split('/').pop(), t2, a1_href_value, t3, span0, t5, span1, t6_value = ctx.post.published.replace("T", " ").replace("Z", " "), t6, t7, t8, p, raw_value = ctx.post.content, t9, div9, div5, div4, div1, a2, span4, span3, span2, t11, div2, t12, div3, span5, a3, t14, span6, a4, t16, div8, div7, span7, a5, t18, span8, a6, t20, span10, span9, div6, a7;
 
     	var if_block = (ctx.post.tag) && create_if_block_1(ctx);
 
     	return {
     		c: function create() {
-    			div = element("div");
+    			div0 = element("div");
     			a0 = element("a");
     			t0 = text(t0_value);
     			t1 = text(" by user ");
@@ -390,35 +390,173 @@ var app = (function () {
     			if (if_block) if_block.c();
     			t8 = space();
     			p = element("p");
+    			t9 = space();
+    			div9 = element("div");
+    			div5 = element("div");
+    			div4 = element("div");
+    			div1 = element("div");
+    			a2 = element("a");
+    			span4 = element("span");
+    			span3 = element("span");
+    			span2 = element("span");
+    			span2.textContent = "248 likes";
+    			t11 = space();
+    			div2 = element("div");
+    			t12 = space();
+    			div3 = element("div");
+    			span5 = element("span");
+    			a3 = element("a");
+    			a3.textContent = "62 comments";
+    			t14 = space();
+    			span6 = element("span");
+    			a4 = element("a");
+    			a4.textContent = "7 announces";
+    			t16 = space();
+    			div8 = element("div");
+    			div7 = element("div");
+    			span7 = element("span");
+    			a5 = element("a");
+    			a5.textContent = "Like";
+    			t18 = space();
+    			span8 = element("span");
+    			a6 = element("a");
+    			a6.textContent = "Add comment";
+    			t20 = space();
+    			span10 = element("span");
+    			span9 = element("span");
+    			div6 = element("div");
+    			a7 = element("a");
+    			a7.textContent = "Announce";
     			a0.href = a0_href_value = ctx.post.id;
-    			add_location(a0, file, 10, 4, 127);
+    			add_location(a0, file, 136, 4, 2136);
     			a1.href = a1_href_value = ctx.post.attributedTo;
-    			add_location(a1, file, 10, 48, 171);
+    			add_location(a1, file, 136, 48, 2180);
     			span0.className = "metadata-seperator";
-    			add_location(span0, file, 11, 4, 250);
-    			add_location(span1, file, 12, 4, 296);
-    			div.className = "metadata";
-    			add_location(div, file, 9, 0, 100);
-    			add_location(p, file, 24, 0, 580);
+    			add_location(span0, file, 137, 4, 2259);
+    			add_location(span1, file, 138, 4, 2305);
+    			div0.className = "metadata";
+    			add_location(div0, file, 135, 0, 2109);
+    			add_location(p, file, 150, 0, 2589);
+    			span2.className = "_81hb";
+    			add_location(span2, file, 158, 28, 2950);
+    			span3.className = "_3dlh";
+    			add_location(span3, file, 157, 24, 2901);
+    			attr(span4, "aria-hidden", "true");
+    			span4.className = "_3dlg svelte-16gbtn";
+    			add_location(span4, file, 156, 20, 2837);
+    			a2.href = "";
+    			a2.rel = "dialog";
+    			a2.className = "_3dlf svelte-16gbtn";
+    			a2.tabIndex = "0";
+    			attr(a2, "role", "button");
+    			add_location(a2, file, 155, 16, 2751);
+    			div1.className = "rs_left svelte-16gbtn";
+    			add_location(div1, file, 154, 12, 2713);
+    			div2.className = "rs_center svelte-16gbtn";
+    			add_location(div2, file, 163, 12, 3100);
+    			a3.className = "_3hg- _42ft svelte-16gbtn";
+    			a3.dataset.ft = "";
+    			attr(a3, "role", "button");
+    			a3.href = "";
+    			add_location(a3, file, 166, 20, 3229);
+    			span5.className = "_1whp _4vn2 svelte-16gbtn";
+    			add_location(span5, file, 165, 16, 3181);
+    			a4.className = "_3rwx _42ft svelte-16gbtn";
+    			a4.href = "";
+    			a4.rel = "dialog";
+    			add_location(a4, file, 169, 20, 3409);
+    			span6.className = "_355t _4vn2 svelte-16gbtn";
+    			span6.dataset.hover = "tooltip";
+    			add_location(span6, file, 168, 16, 3341);
+    			div3.className = "rs_right svelte-16gbtn";
+    			add_location(div3, file, 164, 12, 3142);
+    			div4.className = "rs1 svelte-16gbtn";
+    			add_location(div4, file, 153, 8, 2683);
+    			div5.className = "reaction_stats svelte-16gbtn";
+    			add_location(div5, file, 152, 4, 2646);
+    			attr(a5, "aria-pressed", "false");
+    			a5.className = " _6a-y _3l2t  _18vj svelte-16gbtn";
+    			a5.href = "";
+    			attr(a5, "role", "button");
+    			a5.tabIndex = "-1";
+    			add_location(a5, file, 177, 16, 3650);
+    			span7.className = "ra_item svelte-16gbtn";
+    			add_location(span7, file, 176, 12, 3611);
+    			a6.className = " _666h  _18vj _18vk _42ft svelte-16gbtn";
+    			attr(a6, "role", "button");
+    			a6.tabIndex = "0";
+    			a6.href = "";
+    			add_location(a6, file, 181, 16, 3834);
+    			span8.className = "ra_item svelte-16gbtn";
+    			add_location(span8, file, 180, 12, 3795);
+    			a7.className = "_2nj7 _18vj _18vk _p svelte-16gbtn";
+    			a7.href = "";
+    			attr(a7, "role", "button");
+    			a7.tabIndex = "0";
+    			attr(a7, "aria-controls", "u_2b_0");
+    			add_location(a7, file, 187, 24, 4108);
+    			div6.className = "_6800 uiPopover _6a";
+    			add_location(div6, file, 186, 20, 4050);
+    			span9.className = "_1j6m svelte-16gbtn";
+    			add_location(span9, file, 185, 16, 4009);
+    			span10.className = "ra_item svelte-16gbtn";
+    			add_location(span10, file, 184, 12, 3970);
+    			div7.className = "ra1 svelte-16gbtn";
+    			add_location(div7, file, 175, 8, 3581);
+    			div8.className = "reaction_actions svelte-16gbtn";
+    			add_location(div8, file, 174, 4, 3542);
+    			div9.className = "reactionz svelte-16gbtn";
+    			add_location(div9, file, 151, 0, 2618);
     		},
 
     		m: function mount(target, anchor) {
-    			insert(target, div, anchor);
-    			append(div, a0);
+    			insert(target, div0, anchor);
+    			append(div0, a0);
     			append(a0, t0);
-    			append(div, t1);
-    			append(div, a1);
+    			append(div0, t1);
+    			append(div0, a1);
     			append(a1, t2);
-    			append(div, t3);
-    			append(div, span0);
-    			append(div, t5);
-    			append(div, span1);
+    			append(div0, t3);
+    			append(div0, span0);
+    			append(div0, t5);
+    			append(div0, span1);
     			append(span1, t6);
     			insert(target, t7, anchor);
     			if (if_block) if_block.m(target, anchor);
     			insert(target, t8, anchor);
     			insert(target, p, anchor);
     			p.innerHTML = raw_value;
+    			insert(target, t9, anchor);
+    			insert(target, div9, anchor);
+    			append(div9, div5);
+    			append(div5, div4);
+    			append(div4, div1);
+    			append(div1, a2);
+    			append(a2, span4);
+    			append(span4, span3);
+    			append(span3, span2);
+    			append(div4, t11);
+    			append(div4, div2);
+    			append(div4, t12);
+    			append(div4, div3);
+    			append(div3, span5);
+    			append(span5, a3);
+    			append(div3, t14);
+    			append(div3, span6);
+    			append(span6, a4);
+    			append(div9, t16);
+    			append(div9, div8);
+    			append(div8, div7);
+    			append(div7, span7);
+    			append(span7, a5);
+    			append(div7, t18);
+    			append(div7, span8);
+    			append(span8, a6);
+    			append(div7, t20);
+    			append(div7, span10);
+    			append(span10, span9);
+    			append(span9, div6);
+    			append(div6, a7);
     		},
 
     		p: function update(changed, ctx) {
@@ -462,7 +600,7 @@ var app = (function () {
 
     		d: function destroy(detaching) {
     			if (detaching) {
-    				detach(div);
+    				detach(div0);
     				detach(t7);
     			}
 
@@ -471,19 +609,21 @@ var app = (function () {
     			if (detaching) {
     				detach(t8);
     				detach(p);
+    				detach(t9);
+    				detach(div9);
     			}
     		}
     	};
     }
 
-    // (6:0) {#if typeof post === 'string'}
+    // (132:0) {#if typeof post === 'string'}
     function create_if_block(ctx) {
     	var p;
 
     	return {
     		c: function create() {
     			p = element("p");
-    			add_location(p, file, 6, 0, 70);
+    			add_location(p, file, 132, 0, 2079);
     		},
 
     		m: function mount(target, anchor) {
@@ -505,7 +645,7 @@ var app = (function () {
     	};
     }
 
-    // (15:0) {#if post.tag}
+    // (141:0) {#if post.tag}
     function create_if_block_1(ctx) {
     	var div;
 
@@ -525,7 +665,7 @@ var app = (function () {
     				each_blocks[i].c();
     			}
     			div.className = "tags";
-    			add_location(div, file, 15, 4, 389);
+    			add_location(div, file, 141, 4, 2398);
     		},
 
     		m: function mount(target, anchor) {
@@ -569,7 +709,7 @@ var app = (function () {
     	};
     }
 
-    // (18:8) {#if tag.type == 'Hashtag'}
+    // (144:8) {#if tag.type == 'Hashtag'}
     function create_if_block_2(ctx) {
     	var a, t_value = ctx.tag.name, t, a_href_value;
 
@@ -579,7 +719,7 @@ var app = (function () {
     			t = text(t_value);
     			a.className = "tag";
     			a.href = a_href_value = ctx.tag.href;
-    			add_location(a, file, 18, 12, 484);
+    			add_location(a, file, 144, 12, 2493);
     		},
 
     		m: function mount(target, anchor) {
@@ -605,7 +745,7 @@ var app = (function () {
     	};
     }
 
-    // (17:4) {#each post.tag as tag}
+    // (143:4) {#each post.tag as tag}
     function create_each_block(ctx) {
     	var if_block_anchor;
 
@@ -700,29 +840,33 @@ var app = (function () {
     }
 
     function instance($$self, $$props, $$invalidate) {
-    	let { post } = $$props;
+    	let { post, session } = $$props;
 
-    	const writable_props = ['post'];
+    	const writable_props = ['post', 'session'];
     	Object.keys($$props).forEach(key => {
     		if (!writable_props.includes(key)) console.warn(`<PostBody> was created with unknown prop '${key}'`);
     	});
 
     	$$self.$set = $$props => {
     		if ('post' in $$props) $$invalidate('post', post = $$props.post);
+    		if ('session' in $$props) $$invalidate('session', session = $$props.session);
     	};
 
-    	return { post };
+    	return { post, session };
     }
 
     class PostBody extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
-    		init(this, options, instance, create_fragment, safe_not_equal, ["post"]);
+    		init(this, options, instance, create_fragment, safe_not_equal, ["post", "session"]);
 
     		const { ctx } = this.$$;
     		const props = options.props || {};
     		if (ctx.post === undefined && !('post' in props)) {
     			console.warn("<PostBody> was created without expected prop 'post'");
+    		}
+    		if (ctx.session === undefined && !('session' in props)) {
+    			console.warn("<PostBody> was created without expected prop 'session'");
     		}
     	}
 
@@ -733,20 +877,31 @@ var app = (function () {
     	set post(value) {
     		throw new Error("<PostBody>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
     	}
+
+    	get session() {
+    		throw new Error("<PostBody>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set session(value) {
+    		throw new Error("<PostBody>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
     }
 
     /* src/Post.svelte generated by Svelte v3.4.3 */
 
     const file$1 = "src/Post.svelte";
 
-    // (36:0) {:else}
+    // (37:0) {:else}
     function create_else_block$1(ctx) {
     	var li, div0, h2, t1, a0, t2_value = ctx.post.type, t2, a0_href_value, t3, a1, t4_value = ctx.post.actor.split('/').slice(-1)[0], t4, a1_href_value, t5, span, t7, t8, div1, current;
 
     	var if_block = (ctx.post.published) && create_if_block_1$1(ctx);
 
     	var postbody = new PostBody({
-    		props: { post: ctx.post_object },
+    		props: {
+    		post: ctx.post_object,
+    		session: ctx.session
+    	},
     		$$inline: true
     	});
 
@@ -771,19 +926,19 @@ var app = (function () {
     			div1 = element("div");
     			postbody.$$.fragment.c();
     			h2.id = "";
-    			add_location(h2, file$1, 38, 8, 747);
+    			add_location(h2, file$1, 39, 8, 785);
     			a0.href = a0_href_value = ctx.post.id;
-    			add_location(a0, file$1, 39, 8, 774);
+    			add_location(a0, file$1, 40, 8, 812);
     			a1.href = a1_href_value = ctx.post.actor;
-    			add_location(a1, file$1, 39, 52, 818);
+    			add_location(a1, file$1, 40, 52, 856);
     			span.className = "metadata-seperator";
-    			add_location(span, file$1, 40, 8, 894);
+    			add_location(span, file$1, 41, 8, 932);
     			div0.className = "metadata";
-    			add_location(div0, file$1, 37, 4, 716);
+    			add_location(div0, file$1, 38, 4, 754);
     			div1.className = "reaction svelte-1gf6p2q";
-    			add_location(div1, file$1, 46, 4, 1072);
+    			add_location(div1, file$1, 47, 4, 1110);
     			li.className = "post";
-    			add_location(li, file$1, 36, 0, 694);
+    			add_location(li, file$1, 37, 0, 732);
     		},
 
     		m: function mount(target, anchor) {
@@ -838,6 +993,7 @@ var app = (function () {
 
     			var postbody_changes = {};
     			if (changed.post_object) postbody_changes.post = ctx.post_object;
+    			if (changed.session) postbody_changes.session = ctx.session;
     			postbody.$set(postbody_changes);
     		},
 
@@ -865,12 +1021,12 @@ var app = (function () {
     	};
     }
 
-    // (30:0) {#if fetched_post == false}
+    // (31:0) {#if fetched_post == false}
     function create_if_block$1(ctx) {
     	var li, h2, t_1, current;
 
     	var postbody = new PostBody({
-    		props: { post: ctx.post.object },
+    		props: { post: ctx.post.object, session: ctx.session },
     		$$inline: true
     	});
 
@@ -882,9 +1038,9 @@ var app = (function () {
     			t_1 = space();
     			postbody.$$.fragment.c();
     			h2.id = "";
-    			add_location(h2, file$1, 31, 4, 624);
+    			add_location(h2, file$1, 32, 4, 645);
     			li.className = "post";
-    			add_location(li, file$1, 30, 0, 602);
+    			add_location(li, file$1, 31, 0, 623);
     		},
 
     		m: function mount(target, anchor) {
@@ -898,6 +1054,7 @@ var app = (function () {
     		p: function update(changed, ctx) {
     			var postbody_changes = {};
     			if (changed.post) postbody_changes.post = ctx.post.object;
+    			if (changed.session) postbody_changes.session = ctx.session;
     			postbody.$set(postbody_changes);
     		},
 
@@ -923,7 +1080,7 @@ var app = (function () {
     	};
     }
 
-    // (43:8) {#if post.published }
+    // (44:8) {#if post.published }
     function create_if_block_1$1(ctx) {
     	var span, t_value = ctx.post.published.replace("T", " ").replace("Z", " "), t;
 
@@ -931,7 +1088,7 @@ var app = (function () {
     		c: function create() {
     			span = element("span");
     			t = text(t_value);
-    			add_location(span, file$1, 43, 8, 975);
+    			add_location(span, file$1, 44, 8, 1013);
     		},
 
     		m: function mount(target, anchor) {
@@ -1033,7 +1190,7 @@ var app = (function () {
     }
 
     function instance$1($$self, $$props, $$invalidate) {
-    	let { post } = $$props;
+    	let { post, session } = $$props;
 
     	let fpost;
     	let post_object;
@@ -1051,27 +1208,31 @@ var app = (function () {
     	    $$invalidate('fetched_post', fetched_post = true);
         }
 
-    	const writable_props = ['post'];
+    	const writable_props = ['post', 'session'];
     	Object.keys($$props).forEach(key => {
     		if (!writable_props.includes(key)) console.warn(`<Post> was created with unknown prop '${key}'`);
     	});
 
     	$$self.$set = $$props => {
     		if ('post' in $$props) $$invalidate('post', post = $$props.post);
+    		if ('session' in $$props) $$invalidate('session', session = $$props.session);
     	};
 
-    	return { post, post_object, fetched_post };
+    	return { post, session, post_object, fetched_post };
     }
 
     class Post extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
-    		init(this, options, instance$1, create_fragment$1, safe_not_equal, ["post"]);
+    		init(this, options, instance$1, create_fragment$1, safe_not_equal, ["post", "session"]);
 
     		const { ctx } = this.$$;
     		const props = options.props || {};
     		if (ctx.post === undefined && !('post' in props)) {
     			console.warn("<Post> was created without expected prop 'post'");
+    		}
+    		if (ctx.session === undefined && !('session' in props)) {
+    			console.warn("<Post> was created without expected prop 'session'");
     		}
     	}
 
@@ -1080,6 +1241,14 @@ var app = (function () {
     	}
 
     	set post(value) {
+    		throw new Error("<Post>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get session() {
+    		throw new Error("<Post>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set session(value) {
     		throw new Error("<Post>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
     	}
     }
@@ -1153,7 +1322,7 @@ var app = (function () {
     		},
 
     		p: function update(changed, ctx) {
-    			if (changed.posts) {
+    			if (changed.posts || changed.session) {
     				each_value = ctx.value;
 
     				for (var i = 0; i < each_value.length; i += 1) {
@@ -1205,7 +1374,10 @@ var app = (function () {
     	var current;
 
     	var post = new Post({
-    		props: { post: ctx.post },
+    		props: {
+    		post: ctx.post,
+    		session: ctx.session
+    	},
     		$$inline: true
     	});
 
@@ -1222,6 +1394,7 @@ var app = (function () {
     		p: function update(changed, ctx) {
     			var post_changes = {};
     			if (changed.posts) post_changes.post = ctx.post;
+    			if (changed.session) post_changes.session = ctx.session;
     			post.$set(post_changes);
     		},
 

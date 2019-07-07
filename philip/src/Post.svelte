@@ -1,6 +1,7 @@
 
 <script>
 	export let post;
+	export let session;
 	import PostBody from "./PostBody.svelte"
 
 	let fpost;
@@ -30,7 +31,7 @@
 {#if fetched_post == false}
 <li class="post">
     <h2 id=""> . </h2>
-    <PostBody post={post.object} />
+    <PostBody post={post.object} session={session}/>
 </li>
 
 {:else}
@@ -45,7 +46,7 @@
         {/if}
     </div>
     <div class="reaction">
-        <PostBody post={post_object} />
+        <PostBody post={post_object} session={session}/>
     </div>
 </li>
 {/if}
