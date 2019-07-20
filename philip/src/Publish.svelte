@@ -1,5 +1,5 @@
 <script>
-    export let reply;
+    export let reply = '';
     export let session;
 
     let inProgress = false;
@@ -22,7 +22,8 @@
                 "type": "Note",
                 "content": content,
                 "attachment": [],
-                "tag": tags
+                "tag": tags,
+                "inReplyTo": reply
             }
         };
         const response = await fetch(session.user.outbox, {
