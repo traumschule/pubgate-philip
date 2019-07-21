@@ -116,35 +116,34 @@
 </style>
 
 
-
-
-
 {#if typeof post === 'string'}
-<p>{@html post }</p>
+    <p>{@html post }</p>
 
 {:else}
-<div class="metadata">
-    <a href="{post.id}">{post.type}</a> by user <a href="{ post.attributedTo }">{ post.attributedTo.split('/').pop() }</a>
-    <span class="metadata-seperator">·</span>
-    <span>{ post.published.replace("T", " ").replace("Z", " ")}</span>
-</div>
-{#if post.tag}
-    <div class="tags">
-    {#each post.tag as tag}
-        {#if tag.type == 'Hashtag'}
-            <a class="tag" href="{ tag.href }">{ tag.name }</a>
-        {/if}
-    {/each}
+    <div class="metadata">
+        <a href="{post.id}">{post.type}</a> by user <a href="{ post.attributedTo }">{ post.attributedTo.split('/').pop() }</a>
+        <span class="metadata-seperator">·</span>
+        <span>{ post.published.replace("T", " ").replace("Z", " ")}</span>
     </div>
-{/if}
-
-<p>{@html post.content }</p>
-
-{#each post.attachment as attachment}
-    {#if attachment.type === "Document" && attachment.mediaType.startsWith("image")}
-        <img src={attachment.url} >
+    {#if post.tag}
+        <div class="tags">
+        {#each post.tag as tag}
+            {#if tag.type == 'Hashtag'}
+                <a class="tag" href="{ tag.href }">{ tag.name }</a>
+            {/if}
+        {/each}
+        </div>
     {/if}
-{/each}
+
+    <p>{@html post.content }</p>
+    {#if post.attachment}
+        {#each post.attachment as attachment}
+            {#if attachment.type === "Document" && attachment.mediaType.startsWith("image")}
+                <img src={attachment.url} >
+            {/if}
+        {/each}
+    {/if}
+{/if}
 
 <div class="reactionz">
     <div class="reaction_stats">
@@ -165,30 +164,30 @@
             </div>
         </div>
     </div>
-{#if session.user }
-    <div class="reaction_actions">
-        <div class="ra1">
-            <span class="ra_item">
-                <a aria-pressed="false" class="ra_like  _18vj"
-                href="" role="button" tabindex="-1">Like</a>
-            </span>
-            <span class="ra_item">
-                <a class="_18vj _42ft" role="button"
-                tabindex="0" href="">Add comment</a>
-            </span>
-            <span class="ra_item">
-                <span class="ra_announce">
-                    <div>
-                        <a class="_18vj" href="" role="button"
-                        tabindex="0" >Announce</a>
-                    </div>
+    {#if session.user }
+        <div class="reaction_actions">
+            <div class="ra1">
+                <span class="ra_item">
+                    <a aria-pressed="false" class="ra_like  _18vj"
+                    href="" role="button" tabindex="-1">Like</a>
                 </span>
-            </span>
+                <span class="ra_item">
+                    <a class="_18vj _42ft" role="button"
+                    tabindex="0" href="">Add comment</a>
+                </span>
+                <span class="ra_item">
+                    <span class="ra_announce">
+                        <div>
+                            <a class="_18vj" href="" role="button"
+                            tabindex="0" >Announce</a>
+                        </div>
+                    </span>
+                </span>
+            </div>
         </div>
-    </div>
-<Publish reply={post.id} session={session}/>
-{/if}
+        <Publish reply={post} session={session}/>
+    {/if}
 </div>
 
-{/if}
+
 

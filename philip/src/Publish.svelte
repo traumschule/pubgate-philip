@@ -1,5 +1,5 @@
 <script>
-    export let reply = '';
+    export let reply = null;
     export let session;
 
     let inProgress = false;
@@ -23,9 +23,13 @@
                 "content": content,
                 "attachment": [],
                 "tag": tags,
-                "inReplyTo": reply
             }
         };
+		if (reply){
+		    ap_object.object.inReplyTo = reply.id;
+		    ap_object.cc = [reply.attributedTo];
+		}
+
         const response = await fetch(session.user.outbox, {
             method: 'POST',
             body: JSON.stringify(ap_object),
