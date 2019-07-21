@@ -6,6 +6,7 @@
     export let session;
     import TimeLine from "./TimeLine.svelte";
     import Publish from "./Publish.svelte";
+    import SearchFollow from "./SearchFollow.svelte";
 
     let username = '';
     let password = '';
@@ -89,7 +90,7 @@
         <br>
         <form on:submit|preventDefault={register}>
             <fieldset class="form-group">
-                <input class="form-control form-control-lg" type="username" placeholder="Username" bind:value={username}>
+                <input class="form-control form-control-lg" type="text" placeholder="Username" bind:value={username}>
             </fieldset>
             <fieldset class="form-group">
                 <input class="form-control form-control-lg" type="password" placeholder="Password" bind:value={password}>
@@ -98,10 +99,10 @@
                 <textarea class="form-control" rows="8" placeholder="Profile Description" bind:value={description}/>
             </fieldset>
             <fieldset class="form-group">
-                <input class="form-control form-control-lg" type="username" placeholder="Avatar URL" bind:value={avatar}>
+                <input class="form-control form-control-lg" type="text" placeholder="Avatar URL" bind:value={avatar}>
             </fieldset>
             <fieldset class="form-group">
-                <input class="form-control form-control-lg" type="username" placeholder="Invite code" bind:value={invite}>
+                <input class="form-control form-control-lg" type="text" placeholder="Invite code" bind:value={invite}>
             </fieldset>
 
             <button class="btn btn-lg btn-primary pull-xs-right" type="submit" disabled='{!username || !password}'>
@@ -111,6 +112,8 @@
     {/if}
 {:else if active_tab == 'create'}
         <Publish session={session}/>
+{:else if active_tab == 'search'}
+        <SearchFollow session={session}/>
 {:else}
         <TimeLine active_tab={active_tab}
                   session={session}/>
