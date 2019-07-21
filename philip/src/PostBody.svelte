@@ -139,6 +139,13 @@
 {/if}
 
 <p>{@html post.content }</p>
+
+{#each post.attachment as attachment}
+    {#if attachment.type === "Document" && attachment.mediaType.startsWith("image")}
+        <img src={attachment.url} >
+    {/if}
+{/each}
+
 <div class="reactionz">
     <div class="reaction_stats">
         <div class="rs1">
