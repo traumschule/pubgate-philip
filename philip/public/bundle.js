@@ -42,6 +42,11 @@ var app = (function () {
     function detach(node) {
         node.parentNode.removeChild(node);
     }
+    function detach_between(before, after) {
+        while (before.nextSibling && before.nextSibling !== after) {
+            before.parentNode.removeChild(before.nextSibling);
+        }
+    }
     function destroy_each(iterations, detaching) {
         for (let i = 0; i < iterations.length; i += 1) {
             if (iterations[i])
@@ -2304,7 +2309,7 @@ var app = (function () {
 
     const file$5 = "src/Tab.svelte";
 
-    // (117:0) {:else}
+    // (121:0) {:else}
     function create_else_block_1(ctx) {
     	var current;
 
@@ -2351,7 +2356,37 @@ var app = (function () {
     	};
     }
 
-    // (115:33) 
+    // (119:32) 
+    function create_if_block_4$1(ctx) {
+    	var raw_before, raw_after;
+
+    	return {
+    		c: function create() {
+    			raw_before = element('noscript');
+    			raw_after = element('noscript');
+    		},
+
+    		m: function mount(target, anchor) {
+    			insert(target, raw_before, anchor);
+    			raw_before.insertAdjacentHTML("afterend", ctx.ab);
+    			insert(target, raw_after, anchor);
+    		},
+
+    		p: noop,
+    		i: noop,
+    		o: noop,
+
+    		d: function destroy(detaching) {
+    			if (detaching) {
+    				detach_between(raw_before, raw_after);
+    				detach(raw_before);
+    				detach(raw_after);
+    			}
+    		}
+    	};
+    }
+
+    // (117:33) 
     function create_if_block_3$1(ctx) {
     	var current;
 
@@ -2394,7 +2429,7 @@ var app = (function () {
     	};
     }
 
-    // (113:33) 
+    // (115:33) 
     function create_if_block_2$1(ctx) {
     	var current;
 
@@ -2437,7 +2472,7 @@ var app = (function () {
     	};
     }
 
-    // (69:0) {#if active_tab == 'profile'}
+    // (71:0) {#if active_tab == 'profile'}
     function create_if_block$3(ctx) {
     	var current_block_type_index, if_block, if_block_anchor, current;
 
@@ -2513,7 +2548,7 @@ var app = (function () {
     	};
     }
 
-    // (74:4) {:else}
+    // (76:4) {:else}
     function create_else_block$2(ctx) {
     	var t0, br0, t1, form0, fieldset0, input0, t2, fieldset1, input1, t3, button0, t4, button0_disabled_value, t5, br1, br2, t6, br3, t7, form1, fieldset2, input2, t8, fieldset3, input3, t9, fieldset4, textarea, t10, fieldset5, input4, t11, fieldset6, input5, t12, button1, t13, button1_disabled_value, dispose;
 
@@ -2555,62 +2590,62 @@ var app = (function () {
     			t12 = space();
     			button1 = element("button");
     			t13 = text("Register");
-    			add_location(br0, file$5, 75, 8, 2151);
+    			add_location(br0, file$5, 77, 8, 2184);
     			input0.className = "form-control form-control-lg";
     			attr(input0, "type", "username");
     			input0.placeholder = "Username";
-    			add_location(input0, file$5, 78, 16, 2262);
+    			add_location(input0, file$5, 80, 16, 2295);
     			fieldset0.className = "form-group";
-    			add_location(fieldset0, file$5, 77, 12, 2216);
+    			add_location(fieldset0, file$5, 79, 12, 2249);
     			input1.className = "form-control form-control-lg";
     			attr(input1, "type", "password");
     			input1.placeholder = "Password";
-    			add_location(input1, file$5, 81, 16, 2450);
+    			add_location(input1, file$5, 83, 16, 2483);
     			fieldset1.className = "form-group";
-    			add_location(fieldset1, file$5, 80, 12, 2404);
+    			add_location(fieldset1, file$5, 82, 12, 2437);
     			button0.className = "btn btn-lg btn-primary pull-xs-right";
     			button0.type = "submit";
     			button0.disabled = button0_disabled_value = !ctx.username || !ctx.password;
-    			add_location(button0, file$5, 83, 12, 2592);
-    			add_location(form0, file$5, 76, 8, 2164);
-    			add_location(br1, file$5, 87, 8, 2766);
-    			add_location(br2, file$5, 87, 12, 2770);
-    			add_location(br3, file$5, 89, 8, 2820);
+    			add_location(button0, file$5, 85, 12, 2625);
+    			add_location(form0, file$5, 78, 8, 2197);
+    			add_location(br1, file$5, 89, 8, 2799);
+    			add_location(br2, file$5, 89, 12, 2803);
+    			add_location(br3, file$5, 91, 8, 2853);
     			input2.className = "form-control form-control-lg";
     			attr(input2, "type", "text");
     			input2.placeholder = "Username";
-    			add_location(input2, file$5, 92, 16, 2934);
+    			add_location(input2, file$5, 94, 16, 2967);
     			fieldset2.className = "form-group";
-    			add_location(fieldset2, file$5, 91, 12, 2888);
+    			add_location(fieldset2, file$5, 93, 12, 2921);
     			input3.className = "form-control form-control-lg";
     			attr(input3, "type", "password");
     			input3.placeholder = "Password";
-    			add_location(input3, file$5, 95, 16, 3118);
+    			add_location(input3, file$5, 97, 16, 3151);
     			fieldset3.className = "form-group";
-    			add_location(fieldset3, file$5, 94, 12, 3072);
+    			add_location(fieldset3, file$5, 96, 12, 3105);
     			textarea.className = "form-control";
     			textarea.rows = "8";
     			textarea.placeholder = "Profile Description";
-    			add_location(textarea, file$5, 98, 16, 3306);
+    			add_location(textarea, file$5, 100, 16, 3339);
     			fieldset4.className = "form-group";
-    			add_location(fieldset4, file$5, 97, 12, 3260);
+    			add_location(fieldset4, file$5, 99, 12, 3293);
     			input4.className = "form-control form-control-lg";
     			attr(input4, "type", "text");
     			input4.placeholder = "Avatar URL";
-    			add_location(input4, file$5, 101, 16, 3489);
+    			add_location(input4, file$5, 103, 16, 3522);
     			fieldset5.className = "form-group";
-    			add_location(fieldset5, file$5, 100, 12, 3443);
+    			add_location(fieldset5, file$5, 102, 12, 3476);
     			input5.className = "form-control form-control-lg";
     			attr(input5, "type", "text");
     			input5.placeholder = "Invite code";
-    			add_location(input5, file$5, 104, 16, 3673);
+    			add_location(input5, file$5, 106, 16, 3706);
     			fieldset6.className = "form-group";
-    			add_location(fieldset6, file$5, 103, 12, 3627);
+    			add_location(fieldset6, file$5, 105, 12, 3660);
     			button1.className = "btn btn-lg btn-primary pull-xs-right";
     			button1.type = "submit";
     			button1.disabled = button1_disabled_value = !ctx.username || !ctx.password;
-    			add_location(button1, file$5, 107, 12, 3813);
-    			add_location(form1, file$5, 90, 8, 2833);
+    			add_location(button1, file$5, 109, 12, 3846);
+    			add_location(form1, file$5, 92, 8, 2866);
 
     			dispose = [
     				listen(input0, "input", ctx.input0_input_handler),
@@ -2727,7 +2762,7 @@ var app = (function () {
     	};
     }
 
-    // (70:4) {#if session.user }
+    // (72:4) {#if session.user }
     function create_if_block_1$2(ctx) {
     	var button, t_1, current, dispose;
 
@@ -2746,7 +2781,7 @@ var app = (function () {
     			t_1 = space();
     			timeline.$$.fragment.c();
     			button.className = "btn btn-sm";
-    			add_location(button, file$5, 70, 9, 1924);
+    			add_location(button, file$5, 72, 9, 1957);
     			dispose = listen(button, "click", ctx.logout);
     		},
 
@@ -2796,6 +2831,7 @@ var app = (function () {
     		create_if_block$3,
     		create_if_block_2$1,
     		create_if_block_3$1,
+    		create_if_block_4$1,
     		create_else_block_1
     	];
 
@@ -2805,7 +2841,8 @@ var app = (function () {
     		if (ctx.active_tab == 'profile') return 0;
     		if (ctx.active_tab == 'create') return 1;
     		if (ctx.active_tab == 'search') return 2;
-    		return 3;
+    		if (ctx.active_tab == 'about') return 3;
+    		return 4;
     	}
 
     	current_block_type_index = select_block_type(ctx);
@@ -2876,6 +2913,8 @@ var app = (function () {
     	const dispatch = createEventDispatcher();
 
         let { active_tab, session } = $$props;
+
+        let ab = about_description;
 
         let username = '';
         let password = '';
@@ -2981,6 +3020,7 @@ var app = (function () {
     	return {
     		active_tab,
     		session,
+    		ab,
     		username,
     		password,
     		login,
@@ -3188,7 +3228,7 @@ var app = (function () {
     }
 
     function create_fragment$6(ctx) {
-    	var header, ul, t0, t1, li0, a0, t2, li1, a1, t4, div0, t5, hr, t6, footer, div1, h20, t8, p0, t9, br0, t10, br1, t11, t12, div2, h21, t14, p1, current, dispose;
+    	var header, ul, t0, t1, li0, a0, t2, li1, a1, t4, div0, t5, hr, t6, footer, div1, h3, current, dispose;
 
     	var if_block0 = (ctx.pgi == true) && create_if_block_2$2(ctx);
 
@@ -3234,21 +3274,8 @@ var app = (function () {
     			t6 = space();
     			footer = element("footer");
     			div1 = element("div");
-    			h20 = element("h2");
-    			h20.textContent = "PubGate-Philip";
-    			t8 = space();
-    			p0 = element("p");
-    			t9 = text("Gotta");
-    			br0 = element("br");
-    			t10 = text("go");
-    			br1 = element("br");
-    			t11 = text("Fast");
-    			t12 = space();
-    			div2 = element("div");
-    			h21 = element("h2");
-    			h21.textContent = "Contact";
-    			t14 = space();
-    			p1 = element("p");
+    			h3 = element("h3");
+    			h3.textContent = "PubGate-Philip";
     			a0.href = "#profile";
     			add_location(a0, file$6, 43, 6, 1165);
     			add_location(li0, file$6, 43, 2, 1161);
@@ -3261,16 +3288,9 @@ var app = (function () {
     			add_location(div0, file$6, 48, 0, 1339);
     			hr.className = "separator";
     			add_location(hr, file$6, 54, 0, 1473);
-    			add_location(h20, file$6, 57, 8, 1561);
-    			add_location(br0, file$6, 58, 16, 1601);
-    			add_location(br1, file$6, 58, 22, 1607);
-    			add_location(p0, file$6, 58, 8, 1593);
+    			add_location(h3, file$6, 57, 8, 1561);
     			div1.className = "left-column";
     			add_location(div1, file$6, 56, 4, 1527);
-    			add_location(h21, file$6, 61, 8, 1670);
-    			add_location(p1, file$6, 62, 8, 1695);
-    			div2.className = "right-column";
-    			add_location(div2, file$6, 60, 4, 1635);
     			footer.className = "content";
     			add_location(footer, file$6, 55, 0, 1498);
 
@@ -3305,19 +3325,7 @@ var app = (function () {
     			insert(target, t6, anchor);
     			insert(target, footer, anchor);
     			append(footer, div1);
-    			append(div1, h20);
-    			append(div1, t8);
-    			append(div1, p0);
-    			append(p0, t9);
-    			append(p0, br0);
-    			append(p0, t10);
-    			append(p0, br1);
-    			append(p0, t11);
-    			append(footer, t12);
-    			append(footer, div2);
-    			append(div2, h21);
-    			append(div2, t14);
-    			append(div2, p1);
+    			append(div1, h3);
     			current = true;
     		},
 

@@ -8,6 +8,8 @@
     import Publish from "./Publish.svelte";
     import SearchFollow from "./SearchFollow.svelte";
 
+    let ab = about_description;
+
     let username = '';
     let password = '';
 
@@ -111,10 +113,12 @@
         </form>
     {/if}
 {:else if active_tab == 'create'}
-        <Publish session={session}/>
+     <Publish session={session}/>
 {:else if active_tab == 'search'}
-        <SearchFollow session={session}/>
+     <SearchFollow session={session}/>
+{:else if active_tab == 'about'}
+     {@html ab}
 {:else}
-        <TimeLine active_tab={active_tab}
-                  session={session}/>
+     <TimeLine active_tab={active_tab}
+               session={session}/>
 {/if}

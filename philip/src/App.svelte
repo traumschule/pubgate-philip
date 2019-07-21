@@ -55,12 +55,7 @@
 <hr class="separator" />
 <footer class="content">
     <div class="left-column">
-        <h2>PubGate-Philip</h2>
-        <p>Gotta<br>go<br>Fast</p>
-    </div>
-    <div class="right-column">
-        <h2>Contact</h2>
-        <p></p>
+        <h3>PubGate-Philip</h3>
     </div>
 </footer>
 
