@@ -23,3 +23,9 @@ async def home(request, **kwargs):
             conf=request.app.config,
         )
     )
+
+
+@philip_v1.route('/proxy', methods=['POST'])
+async def proxy(request, **kwargs):
+    result = await fetch(request.json["url"])
+    return response.json(result)

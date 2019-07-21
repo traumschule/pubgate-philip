@@ -1,6 +1,7 @@
 <script>
     export let active_tab;
     export let session;
+    export let outbox_collection = {};
 	import Post from "./Post.svelte"
 
 	let pgi = pubgate_instance;
@@ -9,7 +10,7 @@
 	    let headers_set = {
             "Accept": "application/activity+json",
         };
-	    if (session.user) {
+	    if (session.user && active_tab === 'inbox') {
             headers_set['Authorization'] = "Bearer " + session.token
 	    }
 	    return fetch(path, { headers: headers_set})
@@ -29,6 +30,8 @@
           case 'profile':
             return pgi ? fetchCollection(session.user.outbox + "?cached=1"):
                 fetchCollection(session.user.outbox);
+          case 'search':
+              return outbox_collection.orderedItems;
           default:
             return []
         }
@@ -42,7 +45,7 @@
 <ul class="post-list">
     {#each value as post}
 
-        <Post post={post} />
+        <Post post={post} session={session}/>
 
     {/each}
 </ul>

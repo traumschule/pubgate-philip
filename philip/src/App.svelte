@@ -39,6 +39,7 @@
 		{#if session.user }
 		<li><a href="#inbox" on:click="{selectTab}">Inbox</a></li>
 		<li><a href="#create" on:click="{selectTab}">Create</a></li>
+		<li><a href="#search" on:click="{selectTab}">Search/Follow</a></li>
 		{/if}
 		<li><a href="#profile" on:click="{selectTab}">{#if session.user }Profile{:else}Login{/if}</a></li>
 		<li><a href="#about" on:click="{selectTab}">About</a></li>
@@ -54,12 +55,7 @@
 <hr class="separator" />
 <footer class="content">
     <div class="left-column">
-        <h2>PubGate-Philip</h2>
-        <p>Gotta<br>go<br>Fast</p>
-    </div>
-    <div class="right-column">
-        <h2>Contact</h2>
-        <p></p>
+        <h3>PubGate-Philip</h3>
     </div>
 </footer>
 
