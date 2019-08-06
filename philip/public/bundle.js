@@ -5,12 +5,13 @@ var app = (function () {
 
     function noop() { }
     function assign(tar, src) {
+        // @ts-ignore
         for (const k in src)
             tar[k] = src[k];
         return tar;
     }
     function is_promise(value) {
-        return value && typeof value.then === 'function';
+        return value && typeof value === 'object' && typeof value.then === 'function';
     }
     function add_location(element, file, line, column, char) {
         element.__svelte_meta = {
@@ -41,11 +42,6 @@ var app = (function () {
     }
     function detach(node) {
         node.parentNode.removeChild(node);
-    }
-    function detach_between(before, after) {
-        while (before.nextSibling && before.nextSibling !== after) {
-            before.parentNode.removeChild(before.nextSibling);
-        }
     }
     function destroy_each(iterations, detaching) {
         for (let i = 0; i < iterations.length; i += 1) {
@@ -95,6 +91,31 @@ var app = (function () {
         e.initCustomEvent(type, false, false, detail);
         return e;
     }
+    class HtmlTag {
+        constructor(html, anchor = null) {
+            this.e = element('div');
+            this.a = anchor;
+            this.u(html);
+        }
+        m(target, anchor = null) {
+            for (let i = 0; i < this.n.length; i += 1) {
+                insert(target, this.n[i], anchor);
+            }
+            this.t = target;
+        }
+        u(html) {
+            this.e.innerHTML = html;
+            this.n = Array.from(this.e.childNodes);
+        }
+        p(html) {
+            this.d();
+            this.u(html);
+            this.m(this.t, this.a);
+        }
+        d() {
+            this.n.forEach(detach);
+        }
+    }
 
     let current_component;
     function set_current_component(component) {
@@ -116,11 +137,11 @@ var app = (function () {
     }
 
     const dirty_components = [];
-    const resolved_promise = Promise.resolve();
-    let update_scheduled = false;
     const binding_callbacks = [];
     const render_callbacks = [];
     const flush_callbacks = [];
+    const resolved_promise = Promise.resolve();
+    let update_scheduled = false;
     function schedule_update() {
         if (!update_scheduled) {
             update_scheduled = true;
@@ -141,18 +162,19 @@ var app = (function () {
                 update(component.$$);
             }
             while (binding_callbacks.length)
-                binding_callbacks.shift()();
+                binding_callbacks.pop()();
             // then, once components are updated, call
             // afterUpdate functions. This may cause
             // subsequent updates...
-            while (render_callbacks.length) {
-                const callback = render_callbacks.pop();
+            for (let i = 0; i < render_callbacks.length; i += 1) {
+                const callback = render_callbacks[i];
                 if (!seen_callbacks.has(callback)) {
                     callback();
                     // ...so guard against infinite loops
                     seen_callbacks.add(callback);
                 }
             }
+            render_callbacks.length = 0;
         } while (dirty_components.length);
         while (flush_callbacks.length) {
             flush_callbacks.pop()();
@@ -162,26 +184,48 @@ var app = (function () {
     function update($$) {
         if ($$.fragment) {
             $$.update($$.dirty);
-            run_all($$.before_render);
+            run_all($$.before_update);
             $$.fragment.p($$.dirty, $$.ctx);
             $$.dirty = null;
-            $$.after_render.forEach(add_render_callback);
+            $$.after_update.forEach(add_render_callback);
         }
     }
+    const outroing = new Set();
     let outros;
     function group_outros() {
         outros = {
-            remaining: 0,
-            callbacks: []
+            r: 0,
+            c: [],
+            p: outros // parent group
         };
     }
     function check_outros() {
-        if (!outros.remaining) {
-            run_all(outros.callbacks);
+        if (!outros.r) {
+            run_all(outros.c);
+        }
+        outros = outros.p;
+    }
+    function transition_in(block, local) {
+        if (block && block.i) {
+            outroing.delete(block);
+            block.i(local);
         }
     }
-    function on_outro(callback) {
-        outros.callbacks.push(callback);
+    function transition_out(block, local, detach, callback) {
+        if (block && block.o) {
+            if (outroing.has(block))
+                return;
+            outroing.add(block);
+            outros.c.push(() => {
+                outroing.delete(block);
+                if (callback) {
+                    if (detach)
+                        block.d(1);
+                    callback();
+                }
+            });
+            block.o(local);
+        }
     }
 
     function handle_promise(promise, info) {
@@ -197,11 +241,9 @@ var app = (function () {
                     info.blocks.forEach((block, i) => {
                         if (i !== index && block) {
                             group_outros();
-                            on_outro(() => {
-                                block.d(1);
+                            transition_out(block, 1, 1, () => {
                                 info.blocks[i] = null;
                             });
-                            block.o(1);
                             check_outros();
                         }
                     });
@@ -210,8 +252,7 @@ var app = (function () {
                     info.block.d(1);
                 }
                 block.c();
-                if (block.i)
-                    block.i(1);
+                transition_in(block, 1);
                 block.m(info.mount(), info.anchor);
                 flush();
             }
@@ -239,12 +280,12 @@ var app = (function () {
             info.resolved = { [info.value]: promise };
         }
     }
+
+    const globals = (typeof window !== 'undefined' ? window : global);
     function mount_component(component, target, anchor) {
-        const { fragment, on_mount, on_destroy, after_render } = component.$$;
+        const { fragment, on_mount, on_destroy, after_update } = component.$$;
         fragment.m(target, anchor);
-        // onMount happens after the initial afterUpdate. Because
-        // afterUpdate callbacks happen in reverse order (inner first)
-        // we schedule onMount callbacks before afterUpdate callbacks
+        // onMount happens before the initial afterUpdate
         add_render_callback(() => {
             const new_on_destroy = on_mount.map(run).filter(is_function);
             if (on_destroy) {
@@ -257,10 +298,10 @@ var app = (function () {
             }
             component.$$.on_mount = [];
         });
-        after_render.forEach(add_render_callback);
+        after_update.forEach(add_render_callback);
     }
-    function destroy(component, detaching) {
-        if (component.$$) {
+    function destroy_component(component, detaching) {
+        if (component.$$.fragment) {
             run_all(component.$$.on_destroy);
             component.$$.fragment.d(detaching);
             // TODO null out other refs, including component.$$ (but need to
@@ -277,7 +318,7 @@ var app = (function () {
         }
         component.$$.dirty[key] = true;
     }
-    function init(component, options, instance, create_fragment, not_equal$$1, prop_names) {
+    function init(component, options, instance, create_fragment, not_equal, prop_names) {
         const parent_component = current_component;
         set_current_component(component);
         const props = options.props || {};
@@ -287,13 +328,13 @@ var app = (function () {
             // state
             props: prop_names,
             update: noop,
-            not_equal: not_equal$$1,
+            not_equal,
             bound: blank_object(),
             // lifecycle
             on_mount: [],
             on_destroy: [],
-            before_render: [],
-            after_render: [],
+            before_update: [],
+            after_update: [],
             context: new Map(parent_component ? parent_component.$$.context : []),
             // everything else
             callbacks: blank_object(),
@@ -302,7 +343,7 @@ var app = (function () {
         let ready = false;
         $$.ctx = instance
             ? instance(component, props, (key, value) => {
-                if ($$.ctx && not_equal$$1($$.ctx[key], $$.ctx[key] = value)) {
+                if ($$.ctx && not_equal($$.ctx[key], $$.ctx[key] = value)) {
                     if ($$.bound[key])
                         $$.bound[key](value);
                     if (ready)
@@ -312,17 +353,19 @@ var app = (function () {
             : props;
         $$.update();
         ready = true;
-        run_all($$.before_render);
+        run_all($$.before_update);
         $$.fragment = create_fragment($$.ctx);
         if (options.target) {
             if (options.hydrate) {
+                // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
                 $$.fragment.l(children(options.target));
             }
             else {
+                // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
                 $$.fragment.c();
             }
-            if (options.intro && component.$$.fragment.i)
-                component.$$.fragment.i();
+            if (options.intro)
+                transition_in(component.$$.fragment);
             mount_component(component, options.target, options.anchor);
             flush();
         }
@@ -330,7 +373,7 @@ var app = (function () {
     }
     class SvelteComponent {
         $destroy() {
-            destroy(this, true);
+            destroy_component(this, 1);
             this.$destroy = noop;
         }
         $on(type, callback) {
@@ -361,38 +404,51 @@ var app = (function () {
         }
     }
 
-    /* src/Publish.svelte generated by Svelte v3.4.3 */
+    const getHashTag = name => ({
+      name,
+      href: "",
+      type: "Hashtag",
+    });
+
+    const getCreateObject = (content, tag) => ({
+      type: "Create",
+      object: {
+        type: "Note",
+        attachment: [],
+        tag,
+        content,
+      },
+    });
+
+    /* src/Publish.svelte generated by Svelte v3.7.1 */
+    const { console: console_1 } = globals;
 
     const file = "src/Publish.svelte";
 
     function create_fragment(ctx) {
-    	var form, fieldset1, fieldset0, textarea, t0, button, t1, button_disabled_value, dispose;
+    	var form, fieldset, textarea, t0, button, t1, button_disabled_value, dispose;
 
     	return {
     		c: function create() {
     			form = element("form");
-    			fieldset1 = element("fieldset");
-    			fieldset0 = element("fieldset");
+    			fieldset = element("fieldset");
     			textarea = element("textarea");
     			t0 = space();
     			button = element("button");
     			t1 = text("Publish");
-    			textarea.className = "form-control";
-    			textarea.rows = "8";
-    			textarea.placeholder = "Write your text here";
-    			add_location(textarea, file, 48, 12, 1236);
-    			fieldset0.className = "form-group";
-    			add_location(fieldset0, file, 47, 8, 1194);
-    			button.className = "btn btn-lg pull-xs-right btn-primary";
-    			button.type = "button";
-    			button.disabled = button_disabled_value = !ctx.content||ctx.inProgress;
-    			add_location(button, file, 51, 8, 1363);
-    			add_location(fieldset1, file, 45, 4, 1174);
-    			add_location(form, file, 44, 0, 1163);
+    			attr(textarea, "class", "form-control svelte-1fvj4fs");
+    			attr(textarea, "placeholder", "Write your text here");
+    			add_location(textarea, file, 60, 4, 1300);
+    			attr(fieldset, "class", "form-group");
+    			add_location(fieldset, file, 59, 2, 1266);
+    			attr(button, "class", "btn btn-lg pull-xs-right btn-primary");
+    			button.disabled = button_disabled_value = !ctx.content || ctx.inProgress;
+    			add_location(button, file, 66, 2, 1425);
+    			add_location(form, file, 57, 0, 1236);
 
     			dispose = [
     				listen(textarea, "input", ctx.textarea_input_handler),
-    				listen(button, "click", ctx.publish)
+    				listen(form, "submit", ctx.publish)
     			];
     		},
 
@@ -402,21 +458,20 @@ var app = (function () {
 
     		m: function mount(target, anchor) {
     			insert(target, form, anchor);
-    			append(form, fieldset1);
-    			append(fieldset1, fieldset0);
-    			append(fieldset0, textarea);
+    			append(form, fieldset);
+    			append(fieldset, textarea);
 
     			textarea.value = ctx.content;
 
-    			append(fieldset1, t0);
-    			append(fieldset1, button);
+    			append(form, t0);
+    			append(form, button);
     			append(button, t1);
     		},
 
     		p: function update(changed, ctx) {
     			if (changed.content) textarea.value = ctx.content;
 
-    			if ((changed.content || changed.inProgress) && button_disabled_value !== (button_disabled_value = !ctx.content||ctx.inProgress)) {
+    			if ((changed.content || changed.inProgress) && button_disabled_value !== (button_disabled_value = !ctx.content || ctx.inProgress)) {
     				button.disabled = button_disabled_value;
     			}
     		},
@@ -434,49 +489,56 @@ var app = (function () {
     	};
     }
 
+    const hashTagMatcher = /(^|\W)(#[a-z\d][\w-]*)/gi;
+
     function instance($$self, $$props, $$invalidate) {
     	let { reply = null, session } = $$props;
 
-        let inProgress = false;
-        let content = '';
-        async function publish(event) {
-    		$$invalidate('inProgress', inProgress = true);
-            let tags = [];
-    		let matches = content.match(/(^|\W)(#[a-z\d][\w-]*)/ig);
-    		if (matches) {
-    		    $$invalidate('content', content = content.replace(/(^|\W)(#[a-z\d][\w-]*)/ig, '$1<a href="" rel="tag">$2</a>'));
-    		    tags = matches.map(v => ({
-                           "href": "",
-                           "name": v.trim(),
-                           "type": "Hashtag"
-                       } ));
-    		}
-    		let ap_object = {
-                "type": "Create",
-                "object": {
-                    "type": "Note",
-                    "content": content,
-                    "attachment": [],
-                    "tag": tags,
-                }
-            };
-    		if (reply){
-    		    ap_object.object.inReplyTo = reply.id;
-    		    ap_object.cc = [reply.attributedTo];
-    		}
+      let inProgress = false;
+      let content = "";
 
-            const response = await fetch(session.user.outbox, {
-                method: 'POST',
-                body: JSON.stringify(ap_object),
-                headers : {'Authorization': "Bearer " + session.token}
-            }).then(d => d.json());
-    		$$invalidate('inProgress', inProgress = false);
-    		$$invalidate('content', content = '');
-    	}
+      const wrapHashTagsWithLink = text =>
+        text.match(hashTagMatcher)
+          ? text.replace(hashTagMatcher, '$1<a href="" rel="tag">$2</a>')
+          : text;
+
+      const getAllHashTags = text => text.match(hashTagMatcher) || [];
+
+      const publish = async ev => {
+        ev.preventDefault();
+
+        $$invalidate('inProgress', inProgress = true);
+        let tags = getAllHashTags(content)
+          .map(v => v.trim())
+          .map(getHashTag);
+
+        const data = wrapHashTagsWithLink(content);
+
+        let ap_object = getCreateObject(data, tags);
+
+        if (reply) {
+          ap_object.object.inReplyTo = reply.id;
+          ap_object.cc = [reply.attributedTo];
+        }
+
+        try {
+          const response = await fetch(session.user.outbox, {
+            method: "POST",
+            body: JSON.stringify(ap_object),
+            headers: { Authorization: "Bearer " + session.token },
+          });
+          const data = await response.json();
+        } catch (e) {
+          console.log(e);
+        }
+
+        $$invalidate('inProgress', inProgress = false);
+        $$invalidate('content', content = "");
+      };
 
     	const writable_props = ['reply', 'session'];
     	Object.keys($$props).forEach(key => {
-    		if (!writable_props.includes(key)) console.warn(`<Publish> was created with unknown prop '${key}'`);
+    		if (!writable_props.includes(key) && !key.startsWith('$$')) console_1.warn(`<Publish> was created with unknown prop '${key}'`);
     	});
 
     	function textarea_input_handler() {
@@ -507,7 +569,7 @@ var app = (function () {
     		const { ctx } = this.$$;
     		const props = options.props || {};
     		if (ctx.session === undefined && !('session' in props)) {
-    			console.warn("<Publish> was created without expected prop 'session'");
+    			console_1.warn("<Publish> was created without expected prop 'session'");
     		}
     	}
 
@@ -528,7 +590,7 @@ var app = (function () {
     	}
     }
 
-    /* src/PostBody.svelte generated by Svelte v3.4.3 */
+    /* src/PostBody.svelte generated by Svelte v3.7.1 */
 
     const file$1 = "src/PostBody.svelte";
 
@@ -573,14 +635,14 @@ var app = (function () {
     			t9 = space();
     			if (if_block1) if_block1.c();
     			if_block1_anchor = empty();
-    			a0.href = a0_href_value = ctx.post.id;
+    			attr(a0, "href", a0_href_value = ctx.post.id);
     			add_location(a0, file$1, 123, 8, 2025);
-    			a1.href = a1_href_value = ctx.post.attributedTo;
+    			attr(a1, "href", a1_href_value = ctx.post.attributedTo);
     			add_location(a1, file$1, 123, 52, 2069);
-    			span0.className = "metadata-seperator";
+    			attr(span0, "class", "metadata-seperator");
     			add_location(span0, file$1, 124, 8, 2152);
     			add_location(span1, file$1, 125, 8, 2202);
-    			div.className = "metadata";
+    			attr(div, "class", "metadata");
     			add_location(div, file$1, 122, 4, 1994);
     			add_location(p, file$1, 137, 4, 2530);
     		},
@@ -613,7 +675,7 @@ var app = (function () {
     			}
 
     			if ((changed.post) && a0_href_value !== (a0_href_value = ctx.post.id)) {
-    				a0.href = a0_href_value;
+    				attr(a0, "href", a0_href_value);
     			}
 
     			if ((changed.post) && t2_value !== (t2_value = ctx.post.attributedTo.split('/').pop())) {
@@ -621,7 +683,7 @@ var app = (function () {
     			}
 
     			if ((changed.post) && a1_href_value !== (a1_href_value = ctx.post.attributedTo)) {
-    				a1.href = a1_href_value;
+    				attr(a1, "href", a1_href_value);
     			}
 
     			if ((changed.post) && t6_value !== (t6_value = ctx.post.published.replace("T", " ").replace("Z", " "))) {
@@ -730,7 +792,7 @@ var app = (function () {
     			for (var i = 0; i < each_blocks.length; i += 1) {
     				each_blocks[i].c();
     			}
-    			div.className = "tags";
+    			attr(div, "class", "tags");
     			add_location(div, file$1, 128, 8, 2307);
     		},
 
@@ -783,8 +845,8 @@ var app = (function () {
     		c: function create() {
     			a = element("a");
     			t = text(t_value);
-    			a.className = "tag";
-    			a.href = a_href_value = ctx.tag.href;
+    			attr(a, "class", "tag");
+    			attr(a, "href", a_href_value = ctx.tag.href);
     			add_location(a, file$1, 131, 16, 2414);
     		},
 
@@ -799,7 +861,7 @@ var app = (function () {
     			}
 
     			if ((changed.post) && a_href_value !== (a_href_value = ctx.tag.href)) {
-    				a.href = a_href_value;
+    				attr(a, "href", a_href_value);
     			}
     		},
 
@@ -922,7 +984,7 @@ var app = (function () {
     	return {
     		c: function create() {
     			img = element("img");
-    			img.src = img_src_value = ctx.attachment.url;
+    			attr(img, "src", img_src_value = ctx.attachment.url);
     			add_location(img, file$1, 141, 16, 2740);
     		},
 
@@ -932,7 +994,7 @@ var app = (function () {
 
     		p: function update(changed, ctx) {
     			if ((changed.post) && img_src_value !== (img_src_value = ctx.attachment.url)) {
-    				img.src = img_src_value;
+    				attr(img, "src", img_src_value);
     			}
     		},
 
@@ -1018,33 +1080,33 @@ var app = (function () {
     			t5 = space();
     			publish.$$.fragment.c();
     			attr(a0, "aria-pressed", "false");
-    			a0.className = "ra_like  _18vj svelte-a0mw2f";
-    			a0.href = "";
+    			attr(a0, "class", "ra_like  _18vj svelte-a0mw2f");
+    			attr(a0, "href", "");
     			attr(a0, "role", "button");
-    			a0.tabIndex = "-1";
+    			attr(a0, "tabindex", "-1");
     			add_location(a0, file$1, 170, 20, 3700);
-    			span0.className = "ra_item svelte-a0mw2f";
+    			attr(span0, "class", "ra_item svelte-a0mw2f");
     			add_location(span0, file$1, 169, 16, 3657);
-    			a1.className = "_18vj _42ft svelte-a0mw2f";
+    			attr(a1, "class", "_18vj _42ft svelte-a0mw2f");
     			attr(a1, "role", "button");
-    			a1.tabIndex = "0";
-    			a1.href = "";
+    			attr(a1, "tabindex", "0");
+    			attr(a1, "href", "");
     			add_location(a1, file$1, 174, 20, 3895);
-    			span1.className = "ra_item svelte-a0mw2f";
+    			attr(span1, "class", "ra_item svelte-a0mw2f");
     			add_location(span1, file$1, 173, 16, 3852);
-    			a2.className = "_18vj svelte-a0mw2f";
-    			a2.href = "";
+    			attr(a2, "class", "_18vj svelte-a0mw2f");
+    			attr(a2, "href", "");
     			attr(a2, "role", "button");
-    			a2.tabIndex = "0";
+    			attr(a2, "tabindex", "0");
     			add_location(a2, file$1, 180, 28, 4157);
     			add_location(div0, file$1, 179, 24, 4123);
-    			span2.className = "ra_announce svelte-a0mw2f";
+    			attr(span2, "class", "ra_announce svelte-a0mw2f");
     			add_location(span2, file$1, 178, 20, 4072);
-    			span3.className = "ra_item svelte-a0mw2f";
+    			attr(span3, "class", "ra_item svelte-a0mw2f");
     			add_location(span3, file$1, 177, 16, 4029);
-    			div1.className = "ra1 svelte-a0mw2f";
+    			attr(div1, "class", "ra1 svelte-a0mw2f");
     			add_location(div1, file$1, 168, 12, 3623);
-    			div2.className = "reaction_actions svelte-a0mw2f";
+    			attr(div2, "class", "reaction_actions svelte-a0mw2f");
     			add_location(div2, file$1, 167, 8, 3580);
     		},
 
@@ -1075,13 +1137,13 @@ var app = (function () {
 
     		i: function intro(local) {
     			if (current) return;
-    			publish.$$.fragment.i(local);
+    			transition_in(publish.$$.fragment, local);
 
     			current = true;
     		},
 
     		o: function outro(local) {
-    			publish.$$.fragment.o(local);
+    			transition_out(publish.$$.fragment, local);
     			current = false;
     		},
 
@@ -1091,7 +1153,7 @@ var app = (function () {
     				detach(t5);
     			}
 
-    			publish.$destroy(detaching);
+    			destroy_component(publish, detaching);
     		}
     	};
     }
@@ -1134,38 +1196,38 @@ var app = (function () {
     			t7 = space();
     			if (if_block1) if_block1.c();
     			attr(span0, "aria-hidden", "true");
-    			span0.className = "rs_like2 svelte-a0mw2f";
+    			attr(span0, "class", "rs_like2 svelte-a0mw2f");
     			add_location(span0, file$1, 152, 20, 3040);
-    			a0.href = "";
-    			a0.rel = "dialog";
-    			a0.className = "rs_like svelte-a0mw2f";
-    			a0.tabIndex = "0";
+    			attr(a0, "href", "");
+    			attr(a0, "rel", "dialog");
+    			attr(a0, "class", "rs_like svelte-a0mw2f");
+    			attr(a0, "tabindex", "0");
     			attr(a0, "role", "button");
     			add_location(a0, file$1, 151, 16, 2952);
-    			div0.className = "rs_left svelte-a0mw2f";
+    			attr(div0, "class", "rs_left svelte-a0mw2f");
     			add_location(div0, file$1, 150, 12, 2914);
-    			div1.className = "rs_center svelte-a0mw2f";
+    			attr(div1, "class", "rs_center svelte-a0mw2f");
     			add_location(div1, file$1, 155, 12, 3150);
-    			a1.className = "_42ft svelte-a0mw2f";
-    			a1.dataset.ft = "";
+    			attr(a1, "class", "_42ft svelte-a0mw2f");
+    			attr(a1, "data-ft", "");
     			attr(a1, "role", "button");
-    			a1.href = "";
+    			attr(a1, "href", "");
     			add_location(a1, file$1, 158, 20, 3276);
-    			span1.className = "rs_right svelte-a0mw2f";
+    			attr(span1, "class", "rs_right svelte-a0mw2f");
     			add_location(span1, file$1, 157, 16, 3231);
-    			a2.className = "_42ft svelte-a0mw2f";
-    			a2.href = "";
-    			a2.rel = "dialog";
+    			attr(a2, "class", "_42ft svelte-a0mw2f");
+    			attr(a2, "href", "");
+    			attr(a2, "rel", "dialog");
     			add_location(a2, file$1, 161, 20, 3425);
-    			span2.className = "rs_right svelte-a0mw2f";
+    			attr(span2, "class", "rs_right svelte-a0mw2f");
     			add_location(span2, file$1, 160, 16, 3381);
-    			div2.className = "rs_right svelte-a0mw2f";
+    			attr(div2, "class", "rs_right svelte-a0mw2f");
     			add_location(div2, file$1, 156, 12, 3192);
-    			div3.className = "rs1 svelte-a0mw2f";
+    			attr(div3, "class", "rs1 svelte-a0mw2f");
     			add_location(div3, file$1, 149, 8, 2884);
-    			div4.className = "reaction_stats svelte-a0mw2f";
+    			attr(div4, "class", "reaction_stats svelte-a0mw2f");
     			add_location(div4, file$1, 148, 4, 2847);
-    			div5.className = "reactionz svelte-a0mw2f";
+    			attr(div5, "class", "reactionz svelte-a0mw2f");
     			add_location(div5, file$1, 147, 0, 2819);
     		},
 
@@ -1211,33 +1273,30 @@ var app = (function () {
     			if (ctx.session.user) {
     				if (if_block1) {
     					if_block1.p(changed, ctx);
-    					if_block1.i(1);
+    					transition_in(if_block1, 1);
     				} else {
     					if_block1 = create_if_block(ctx);
     					if_block1.c();
-    					if_block1.i(1);
+    					transition_in(if_block1, 1);
     					if_block1.m(div5, null);
     				}
     			} else if (if_block1) {
     				group_outros();
-    				on_outro(() => {
-    					if_block1.d(1);
+    				transition_out(if_block1, 1, 1, () => {
     					if_block1 = null;
     				});
-
-    				if_block1.o(1);
     				check_outros();
     			}
     		},
 
     		i: function intro(local) {
     			if (current) return;
-    			if (if_block1) if_block1.i();
+    			transition_in(if_block1);
     			current = true;
     		},
 
     		o: function outro(local) {
-    			if (if_block1) if_block1.o();
+    			transition_out(if_block1);
     			current = false;
     		},
 
@@ -1259,7 +1318,7 @@ var app = (function () {
 
     	const writable_props = ['post', 'session'];
     	Object.keys($$props).forEach(key => {
-    		if (!writable_props.includes(key)) console.warn(`<PostBody> was created with unknown prop '${key}'`);
+    		if (!writable_props.includes(key) && !key.startsWith('$$')) console.warn(`<PostBody> was created with unknown prop '${key}'`);
     	});
 
     	$$self.$set = $$props => {
@@ -1302,7 +1361,7 @@ var app = (function () {
     	}
     }
 
-    /* src/Post.svelte generated by Svelte v3.4.3 */
+    /* src/Post.svelte generated by Svelte v3.7.1 */
 
     const file$2 = "src/Post.svelte";
 
@@ -1340,19 +1399,19 @@ var app = (function () {
     			t8 = space();
     			div1 = element("div");
     			postbody.$$.fragment.c();
-    			h2.id = "";
+    			attr(h2, "id", "");
     			add_location(h2, file$2, 39, 8, 785);
-    			a0.href = a0_href_value = ctx.post.id;
+    			attr(a0, "href", a0_href_value = ctx.post.id);
     			add_location(a0, file$2, 40, 8, 812);
-    			a1.href = a1_href_value = ctx.post.actor;
+    			attr(a1, "href", a1_href_value = ctx.post.actor);
     			add_location(a1, file$2, 40, 52, 856);
-    			span.className = "metadata-seperator";
+    			attr(span, "class", "metadata-seperator");
     			add_location(span, file$2, 41, 8, 932);
-    			div0.className = "metadata";
+    			attr(div0, "class", "metadata");
     			add_location(div0, file$2, 38, 4, 754);
-    			div1.className = "reaction svelte-1gf6p2q";
+    			attr(div1, "class", "reaction svelte-1gf6p2q");
     			add_location(div1, file$2, 47, 4, 1110);
-    			li.className = "post";
+    			attr(li, "class", "post");
     			add_location(li, file$2, 37, 0, 732);
     		},
 
@@ -1382,7 +1441,7 @@ var app = (function () {
     			}
 
     			if ((!current || changed.post) && a0_href_value !== (a0_href_value = ctx.post.id)) {
-    				a0.href = a0_href_value;
+    				attr(a0, "href", a0_href_value);
     			}
 
     			if ((!current || changed.post) && t4_value !== (t4_value = ctx.post.actor.split('/').slice(-1)[0])) {
@@ -1390,7 +1449,7 @@ var app = (function () {
     			}
 
     			if ((!current || changed.post) && a1_href_value !== (a1_href_value = ctx.post.actor)) {
-    				a1.href = a1_href_value;
+    				attr(a1, "href", a1_href_value);
     			}
 
     			if (ctx.post.published) {
@@ -1414,13 +1473,13 @@ var app = (function () {
 
     		i: function intro(local) {
     			if (current) return;
-    			postbody.$$.fragment.i(local);
+    			transition_in(postbody.$$.fragment, local);
 
     			current = true;
     		},
 
     		o: function outro(local) {
-    			postbody.$$.fragment.o(local);
+    			transition_out(postbody.$$.fragment, local);
     			current = false;
     		},
 
@@ -1431,7 +1490,7 @@ var app = (function () {
 
     			if (if_block) if_block.d();
 
-    			postbody.$destroy();
+    			destroy_component(postbody);
     		}
     	};
     }
@@ -1452,9 +1511,9 @@ var app = (function () {
     			h2.textContent = ".";
     			t_1 = space();
     			postbody.$$.fragment.c();
-    			h2.id = "";
+    			attr(h2, "id", "");
     			add_location(h2, file$2, 32, 4, 645);
-    			li.className = "post";
+    			attr(li, "class", "post");
     			add_location(li, file$2, 31, 0, 623);
     		},
 
@@ -1475,13 +1534,13 @@ var app = (function () {
 
     		i: function intro(local) {
     			if (current) return;
-    			postbody.$$.fragment.i(local);
+    			transition_in(postbody.$$.fragment, local);
 
     			current = true;
     		},
 
     		o: function outro(local) {
-    			postbody.$$.fragment.o(local);
+    			transition_out(postbody.$$.fragment, local);
     			current = false;
     		},
 
@@ -1490,7 +1549,7 @@ var app = (function () {
     				detach(li);
     			}
 
-    			postbody.$destroy();
+    			destroy_component(postbody);
     		}
     	};
     }
@@ -1566,11 +1625,9 @@ var app = (function () {
     				if_blocks[current_block_type_index].p(changed, ctx);
     			} else {
     				group_outros();
-    				on_outro(() => {
-    					if_blocks[previous_block_index].d(1);
+    				transition_out(if_blocks[previous_block_index], 1, 1, () => {
     					if_blocks[previous_block_index] = null;
     				});
-    				if_block.o(1);
     				check_outros();
 
     				if_block = if_blocks[current_block_type_index];
@@ -1578,19 +1635,19 @@ var app = (function () {
     					if_block = if_blocks[current_block_type_index] = if_block_creators[current_block_type_index](ctx);
     					if_block.c();
     				}
-    				if_block.i(1);
+    				transition_in(if_block, 1);
     				if_block.m(if_block_anchor.parentNode, if_block_anchor);
     			}
     		},
 
     		i: function intro(local) {
     			if (current) return;
-    			if (if_block) if_block.i();
+    			transition_in(if_block);
     			current = true;
     		},
 
     		o: function outro(local) {
-    			if (if_block) if_block.o();
+    			transition_out(if_block);
     			current = false;
     		},
 
@@ -1612,9 +1669,9 @@ var app = (function () {
     	let fetched_post = false;
     	if (["Announce", "Like"].includes(post.type)) {
     	    if (pubgate_instance == false) {
-                $$invalidate('fpost', fpost = fetch(post.object, { headers: {
+                fpost = fetch(post.object, { headers: {
                     "Accept": "application/activity+json"
-                }}).then(d => d.json()));
+                }}).then(d => d.json());
                 $$invalidate('post_object', post_object = fpost => fpost.object);
     	    } else {
     	        $$invalidate('post_object', post_object = post.object);
@@ -1625,7 +1682,7 @@ var app = (function () {
 
     	const writable_props = ['post', 'session'];
     	Object.keys($$props).forEach(key => {
-    		if (!writable_props.includes(key)) console.warn(`<Post> was created with unknown prop '${key}'`);
+    		if (!writable_props.includes(key) && !key.startsWith('$$')) console.warn(`<Post> was created with unknown prop '${key}'`);
     	});
 
     	$$self.$set = $$props => {
@@ -1668,7 +1725,7 @@ var app = (function () {
     	}
     }
 
-    /* src/TimeLine.svelte generated by Svelte v3.4.3 */
+    /* src/TimeLine.svelte generated by Svelte v3.7.1 */
 
     const file$3 = "src/TimeLine.svelte";
 
@@ -1702,18 +1759,9 @@ var app = (function () {
     		each_blocks[i] = create_each_block$1(get_each_context$1(ctx, each_value, i));
     	}
 
-    	function outro_block(i, detaching, local) {
-    		if (each_blocks[i]) {
-    			if (detaching) {
-    				on_outro(() => {
-    					each_blocks[i].d(detaching);
-    					each_blocks[i] = null;
-    				});
-    			}
-
-    			each_blocks[i].o(local);
-    		}
-    	}
+    	const out = i => transition_out(each_blocks[i], 1, 1, () => {
+    		each_blocks[i] = null;
+    	});
 
     	return {
     		c: function create() {
@@ -1722,7 +1770,7 @@ var app = (function () {
     			for (var i = 0; i < each_blocks.length; i += 1) {
     				each_blocks[i].c();
     			}
-    			ul.className = "post-list";
+    			attr(ul, "class", "post-list");
     			add_location(ul, file$3, 44, 0, 1402);
     		},
 
@@ -1745,31 +1793,31 @@ var app = (function () {
 
     					if (each_blocks[i]) {
     						each_blocks[i].p(changed, child_ctx);
-    						each_blocks[i].i(1);
+    						transition_in(each_blocks[i], 1);
     					} else {
     						each_blocks[i] = create_each_block$1(child_ctx);
     						each_blocks[i].c();
-    						each_blocks[i].i(1);
+    						transition_in(each_blocks[i], 1);
     						each_blocks[i].m(ul, null);
     					}
     				}
 
     				group_outros();
-    				for (; i < each_blocks.length; i += 1) outro_block(i, 1, 1);
+    				for (i = each_value.length; i < each_blocks.length; i += 1) out(i);
     				check_outros();
     			}
     		},
 
     		i: function intro(local) {
     			if (current) return;
-    			for (var i = 0; i < each_value.length; i += 1) each_blocks[i].i();
+    			for (var i = 0; i < each_value.length; i += 1) transition_in(each_blocks[i]);
 
     			current = true;
     		},
 
     		o: function outro(local) {
     			each_blocks = each_blocks.filter(Boolean);
-    			for (let i = 0; i < each_blocks.length; i += 1) outro_block(i, 0);
+    			for (let i = 0; i < each_blocks.length; i += 1) transition_out(each_blocks[i]);
 
     			current = false;
     		},
@@ -1815,18 +1863,18 @@ var app = (function () {
 
     		i: function intro(local) {
     			if (current) return;
-    			post.$$.fragment.i(local);
+    			transition_in(post.$$.fragment, local);
 
     			current = true;
     		},
 
     		o: function outro(local) {
-    			post.$$.fragment.o(local);
+    			transition_out(post.$$.fragment, local);
     			current = false;
     		},
 
     		d: function destroy(detaching) {
-    			post.$destroy(detaching);
+    			destroy_component(post, detaching);
     		}
     	};
     }
@@ -1849,12 +1897,13 @@ var app = (function () {
     	let info = {
     		ctx,
     		current: null,
+    		token: null,
     		pending: create_pending_block,
     		then: create_then_block,
     		catch: create_catch_block,
     		value: 'value',
     		error: 'null',
-    		blocks: Array(3)
+    		blocks: [,,,]
     	};
 
     	handle_promise(promise = ctx.posts, info);
@@ -1891,14 +1940,14 @@ var app = (function () {
 
     		i: function intro(local) {
     			if (current) return;
-    			info.block.i();
+    			transition_in(info.block);
     			current = true;
     		},
 
     		o: function outro(local) {
     			for (let i = 0; i < 3; i += 1) {
     				const block = info.blocks[i];
-    				if (block) block.o();
+    				transition_out(block);
     			}
 
     			current = false;
@@ -1910,6 +1959,7 @@ var app = (function () {
     			}
 
     			info.block.d(detaching);
+    			info.token = null;
     			info = null;
     		}
     	};
@@ -1953,7 +2003,7 @@ var app = (function () {
 
     	const writable_props = ['active_tab', 'session', 'outbox_collection'];
     	Object.keys($$props).forEach(key => {
-    		if (!writable_props.includes(key)) console.warn(`<TimeLine> was created with unknown prop '${key}'`);
+    		if (!writable_props.includes(key) && !key.startsWith('$$')) console.warn(`<TimeLine> was created with unknown prop '${key}'`);
     	});
 
     	$$self.$set = $$props => {
@@ -2016,7 +2066,7 @@ var app = (function () {
     	}
     }
 
-    /* src/SearchFollow.svelte generated by Svelte v3.4.3 */
+    /* src/SearchFollow.svelte generated by Svelte v3.7.1 */
 
     const file$4 = "src/SearchFollow.svelte";
 
@@ -2039,7 +2089,7 @@ var app = (function () {
     			button.textContent = "Follow";
     			t_1 = space();
     			timeline.$$.fragment.c();
-    			button.className = "btn btn-sm";
+    			attr(button, "class", "btn btn-sm");
     			add_location(button, file$4, 74, 4, 2357);
     			dispose = listen(button, "click", ctx.follow);
     		},
@@ -2060,13 +2110,13 @@ var app = (function () {
 
     		i: function intro(local) {
     			if (current) return;
-    			timeline.$$.fragment.i(local);
+    			transition_in(timeline.$$.fragment, local);
 
     			current = true;
     		},
 
     		o: function outro(local) {
-    			timeline.$$.fragment.o(local);
+    			transition_out(timeline.$$.fragment, local);
     			current = false;
     		},
 
@@ -2076,7 +2126,7 @@ var app = (function () {
     				detach(t_1);
     			}
 
-    			timeline.$destroy(detaching);
+    			destroy_component(timeline, detaching);
 
     			dispose();
     		}
@@ -2105,14 +2155,14 @@ var app = (function () {
     			if (if_block) if_block.c();
     			if_block_anchor = empty();
     			add_location(br0, file$4, 62, 0, 1959);
-    			input.className = "form-control form-control-lg";
+    			attr(input, "class", "form-control form-control-lg");
     			attr(input, "type", "text");
-    			input.placeholder = "Search format: username@domain";
+    			attr(input, "placeholder", "Search format: username@domain");
     			add_location(input, file$4, 65, 8, 2047);
-    			fieldset.className = "form-group";
+    			attr(fieldset, "class", "form-group");
     			add_location(fieldset, file$4, 64, 4, 2009);
-    			button.className = "btn btn-lg btn-primary pull-xs-right";
-    			button.type = "submit";
+    			attr(button, "class", "btn btn-lg btn-primary pull-xs-right");
+    			attr(button, "type", "submit");
     			button.disabled = button_disabled_value = !ctx.username;
     			add_location(button, file$4, 67, 4, 2191);
     			add_location(form, file$4, 63, 0, 1964);
@@ -2160,33 +2210,30 @@ var app = (function () {
     			if (ctx.outbox_collection) {
     				if (if_block) {
     					if_block.p(changed, ctx);
-    					if_block.i(1);
+    					transition_in(if_block, 1);
     				} else {
     					if_block = create_if_block$2(ctx);
     					if_block.c();
-    					if_block.i(1);
+    					transition_in(if_block, 1);
     					if_block.m(if_block_anchor.parentNode, if_block_anchor);
     				}
     			} else if (if_block) {
     				group_outros();
-    				on_outro(() => {
-    					if_block.d(1);
+    				transition_out(if_block, 1, 1, () => {
     					if_block = null;
     				});
-
-    				if_block.o(1);
     				check_outros();
     			}
     		},
 
     		i: function intro(local) {
     			if (current) return;
-    			if (if_block) if_block.i();
+    			transition_in(if_block);
     			current = true;
     		},
 
     		o: function outro(local) {
-    			if (if_block) if_block.o();
+    			transition_out(if_block);
     			current = false;
     		},
 
@@ -2229,7 +2276,7 @@ var app = (function () {
                     body: JSON.stringify({url: profile_url})
                 }).then(d => d.json());
 
-                $: $$invalidate('searched_profile', searched_profile = profile);
+                $: searched_profile = profile;
                 const outbox = await fetch(base_url + "/proxy", {
                     method: 'POST',
                     body: JSON.stringify({url: profile.outbox})
@@ -2273,7 +2320,7 @@ var app = (function () {
 
     	const writable_props = ['session'];
     	Object.keys($$props).forEach(key => {
-    		if (!writable_props.includes(key)) console.warn(`<SearchFollow> was created with unknown prop '${key}'`);
+    		if (!writable_props.includes(key) && !key.startsWith('$$')) console.warn(`<SearchFollow> was created with unknown prop '${key}'`);
     	});
 
     	function input_input_handler() {
@@ -2316,7 +2363,7 @@ var app = (function () {
     	}
     }
 
-    /* src/Tab.svelte generated by Svelte v3.4.3 */
+    /* src/Tab.svelte generated by Svelte v3.7.1 */
 
     const file$5 = "src/Tab.svelte";
 
@@ -2351,36 +2398,33 @@ var app = (function () {
 
     		i: function intro(local) {
     			if (current) return;
-    			timeline.$$.fragment.i(local);
+    			transition_in(timeline.$$.fragment, local);
 
     			current = true;
     		},
 
     		o: function outro(local) {
-    			timeline.$$.fragment.o(local);
+    			transition_out(timeline.$$.fragment, local);
     			current = false;
     		},
 
     		d: function destroy(detaching) {
-    			timeline.$destroy(detaching);
+    			destroy_component(timeline, detaching);
     		}
     	};
     }
 
     // (119:32) 
     function create_if_block_4$1(ctx) {
-    	var raw_before, raw_after;
+    	var html_tag;
 
     	return {
     		c: function create() {
-    			raw_before = element('noscript');
-    			raw_after = element('noscript');
+    			html_tag = new HtmlTag(ctx.ab, null);
     		},
 
     		m: function mount(target, anchor) {
-    			insert(target, raw_before, anchor);
-    			raw_before.insertAdjacentHTML("afterend", ctx.ab);
-    			insert(target, raw_after, anchor);
+    			html_tag.m(target, anchor);
     		},
 
     		p: noop,
@@ -2389,9 +2433,7 @@ var app = (function () {
 
     		d: function destroy(detaching) {
     			if (detaching) {
-    				detach_between(raw_before, raw_after);
-    				detach(raw_before);
-    				detach(raw_after);
+    				html_tag.d();
     			}
     		}
     	};
@@ -2424,18 +2466,18 @@ var app = (function () {
 
     		i: function intro(local) {
     			if (current) return;
-    			searchfollow.$$.fragment.i(local);
+    			transition_in(searchfollow.$$.fragment, local);
 
     			current = true;
     		},
 
     		o: function outro(local) {
-    			searchfollow.$$.fragment.o(local);
+    			transition_out(searchfollow.$$.fragment, local);
     			current = false;
     		},
 
     		d: function destroy(detaching) {
-    			searchfollow.$destroy(detaching);
+    			destroy_component(searchfollow, detaching);
     		}
     	};
     }
@@ -2467,18 +2509,18 @@ var app = (function () {
 
     		i: function intro(local) {
     			if (current) return;
-    			publish.$$.fragment.i(local);
+    			transition_in(publish.$$.fragment, local);
 
     			current = true;
     		},
 
     		o: function outro(local) {
-    			publish.$$.fragment.o(local);
+    			transition_out(publish.$$.fragment, local);
     			current = false;
     		},
 
     		d: function destroy(detaching) {
-    			publish.$destroy(detaching);
+    			destroy_component(publish, detaching);
     		}
     	};
     }
@@ -2521,11 +2563,9 @@ var app = (function () {
     				if_blocks[current_block_type_index].p(changed, ctx);
     			} else {
     				group_outros();
-    				on_outro(() => {
-    					if_blocks[previous_block_index].d(1);
+    				transition_out(if_blocks[previous_block_index], 1, 1, () => {
     					if_blocks[previous_block_index] = null;
     				});
-    				if_block.o(1);
     				check_outros();
 
     				if_block = if_blocks[current_block_type_index];
@@ -2533,19 +2573,19 @@ var app = (function () {
     					if_block = if_blocks[current_block_type_index] = if_block_creators[current_block_type_index](ctx);
     					if_block.c();
     				}
-    				if_block.i(1);
+    				transition_in(if_block, 1);
     				if_block.m(if_block_anchor.parentNode, if_block_anchor);
     			}
     		},
 
     		i: function intro(local) {
     			if (current) return;
-    			if (if_block) if_block.i();
+    			transition_in(if_block);
     			current = true;
     		},
 
     		o: function outro(local) {
-    			if (if_block) if_block.o();
+    			transition_out(if_block);
     			current = false;
     		},
 
@@ -2602,58 +2642,58 @@ var app = (function () {
     			button1 = element("button");
     			t13 = text("Register");
     			add_location(br0, file$5, 77, 8, 2184);
-    			input0.className = "form-control form-control-lg";
+    			attr(input0, "class", "form-control form-control-lg");
     			attr(input0, "type", "username");
-    			input0.placeholder = "Username";
+    			attr(input0, "placeholder", "Username");
     			add_location(input0, file$5, 80, 16, 2295);
-    			fieldset0.className = "form-group";
+    			attr(fieldset0, "class", "form-group");
     			add_location(fieldset0, file$5, 79, 12, 2249);
-    			input1.className = "form-control form-control-lg";
+    			attr(input1, "class", "form-control form-control-lg");
     			attr(input1, "type", "password");
-    			input1.placeholder = "Password";
+    			attr(input1, "placeholder", "Password");
     			add_location(input1, file$5, 83, 16, 2483);
-    			fieldset1.className = "form-group";
+    			attr(fieldset1, "class", "form-group");
     			add_location(fieldset1, file$5, 82, 12, 2437);
-    			button0.className = "btn btn-lg btn-primary pull-xs-right";
-    			button0.type = "submit";
+    			attr(button0, "class", "btn btn-lg btn-primary pull-xs-right");
+    			attr(button0, "type", "submit");
     			button0.disabled = button0_disabled_value = !ctx.username || !ctx.password;
     			add_location(button0, file$5, 85, 12, 2625);
     			add_location(form0, file$5, 78, 8, 2197);
     			add_location(br1, file$5, 89, 8, 2799);
     			add_location(br2, file$5, 89, 12, 2803);
     			add_location(br3, file$5, 91, 8, 2853);
-    			input2.className = "form-control form-control-lg";
+    			attr(input2, "class", "form-control form-control-lg");
     			attr(input2, "type", "text");
-    			input2.placeholder = "Username";
+    			attr(input2, "placeholder", "Username");
     			add_location(input2, file$5, 94, 16, 2967);
-    			fieldset2.className = "form-group";
+    			attr(fieldset2, "class", "form-group");
     			add_location(fieldset2, file$5, 93, 12, 2921);
-    			input3.className = "form-control form-control-lg";
+    			attr(input3, "class", "form-control form-control-lg");
     			attr(input3, "type", "password");
-    			input3.placeholder = "Password";
+    			attr(input3, "placeholder", "Password");
     			add_location(input3, file$5, 97, 16, 3151);
-    			fieldset3.className = "form-group";
+    			attr(fieldset3, "class", "form-group");
     			add_location(fieldset3, file$5, 96, 12, 3105);
-    			textarea.className = "form-control";
-    			textarea.rows = "8";
-    			textarea.placeholder = "Profile Description";
+    			attr(textarea, "class", "form-control");
+    			attr(textarea, "rows", "8");
+    			attr(textarea, "placeholder", "Profile Description");
     			add_location(textarea, file$5, 100, 16, 3339);
-    			fieldset4.className = "form-group";
+    			attr(fieldset4, "class", "form-group");
     			add_location(fieldset4, file$5, 99, 12, 3293);
-    			input4.className = "form-control form-control-lg";
+    			attr(input4, "class", "form-control form-control-lg");
     			attr(input4, "type", "text");
-    			input4.placeholder = "Avatar URL";
+    			attr(input4, "placeholder", "Avatar URL");
     			add_location(input4, file$5, 103, 16, 3522);
-    			fieldset5.className = "form-group";
+    			attr(fieldset5, "class", "form-group");
     			add_location(fieldset5, file$5, 102, 12, 3476);
-    			input5.className = "form-control form-control-lg";
+    			attr(input5, "class", "form-control form-control-lg");
     			attr(input5, "type", "text");
-    			input5.placeholder = "Invite code";
+    			attr(input5, "placeholder", "Invite code");
     			add_location(input5, file$5, 106, 16, 3706);
-    			fieldset6.className = "form-group";
+    			attr(fieldset6, "class", "form-group");
     			add_location(fieldset6, file$5, 105, 12, 3660);
-    			button1.className = "btn btn-lg btn-primary pull-xs-right";
-    			button1.type = "submit";
+    			attr(button1, "class", "btn btn-lg btn-primary pull-xs-right");
+    			attr(button1, "type", "submit");
     			button1.disabled = button1_disabled_value = !ctx.username || !ctx.password;
     			add_location(button1, file$5, 109, 12, 3846);
     			add_location(form1, file$5, 92, 8, 2866);
@@ -2733,14 +2773,14 @@ var app = (function () {
 
     		p: function update(changed, ctx) {
     			if (changed.username) input0.value = ctx.username;
-    			if (changed.password) input1.value = ctx.password;
+    			if (changed.password && (input1.value !== ctx.password)) input1.value = ctx.password;
 
     			if ((changed.username || changed.password) && button0_disabled_value !== (button0_disabled_value = !ctx.username || !ctx.password)) {
     				button0.disabled = button0_disabled_value;
     			}
 
     			if (changed.username && (input2.value !== ctx.username)) input2.value = ctx.username;
-    			if (changed.password) input3.value = ctx.password;
+    			if (changed.password && (input3.value !== ctx.password)) input3.value = ctx.password;
     			if (changed.description) textarea.value = ctx.description;
     			if (changed.avatar && (input4.value !== ctx.avatar)) input4.value = ctx.avatar;
     			if (changed.invite && (input5.value !== ctx.invite)) input5.value = ctx.invite;
@@ -2791,7 +2831,7 @@ var app = (function () {
     			button.textContent = "Logout";
     			t_1 = space();
     			timeline.$$.fragment.c();
-    			button.className = "btn btn-sm";
+    			attr(button, "class", "btn btn-sm");
     			add_location(button, file$5, 72, 9, 1957);
     			dispose = listen(button, "click", ctx.logout);
     		},
@@ -2812,13 +2852,13 @@ var app = (function () {
 
     		i: function intro(local) {
     			if (current) return;
-    			timeline.$$.fragment.i(local);
+    			transition_in(timeline.$$.fragment, local);
 
     			current = true;
     		},
 
     		o: function outro(local) {
-    			timeline.$$.fragment.o(local);
+    			transition_out(timeline.$$.fragment, local);
     			current = false;
     		},
 
@@ -2828,7 +2868,7 @@ var app = (function () {
     				detach(t_1);
     			}
 
-    			timeline.$destroy(detaching);
+    			destroy_component(timeline, detaching);
 
     			dispose();
     		}
@@ -2882,11 +2922,9 @@ var app = (function () {
     				if_blocks[current_block_type_index].p(changed, ctx);
     			} else {
     				group_outros();
-    				on_outro(() => {
-    					if_blocks[previous_block_index].d(1);
+    				transition_out(if_blocks[previous_block_index], 1, 1, () => {
     					if_blocks[previous_block_index] = null;
     				});
-    				if_block.o(1);
     				check_outros();
 
     				if_block = if_blocks[current_block_type_index];
@@ -2894,19 +2932,19 @@ var app = (function () {
     					if_block = if_blocks[current_block_type_index] = if_block_creators[current_block_type_index](ctx);
     					if_block.c();
     				}
-    				if_block.i(1);
+    				transition_in(if_block, 1);
     				if_block.m(if_block_anchor.parentNode, if_block_anchor);
     			}
     		},
 
     		i: function intro(local) {
     			if (current) return;
-    			if (if_block) if_block.i();
+    			transition_in(if_block);
     			current = true;
     		},
 
     		o: function outro(local) {
-    			if (if_block) if_block.o();
+    			transition_out(if_block);
     			current = false;
     		},
 
@@ -2979,13 +3017,13 @@ var app = (function () {
             }).then(d => d.json());
 
             if (create_user.profile) {
-                await login({});
+                await login();
             }
         }
 
     	const writable_props = ['active_tab', 'session'];
     	Object.keys($$props).forEach(key => {
-    		if (!writable_props.includes(key)) console.warn(`<Tab> was created with unknown prop '${key}'`);
+    		if (!writable_props.includes(key) && !key.startsWith('$$')) console.warn(`<Tab> was created with unknown prop '${key}'`);
     	});
 
     	function input0_input_handler() {
@@ -3082,11 +3120,11 @@ var app = (function () {
     	}
     }
 
-    /* src/App.svelte generated by Svelte v3.4.3 */
+    /* src/App.svelte generated by Svelte v3.7.1 */
 
     const file$6 = "src/App.svelte";
 
-    // (35:5) {#if pgi == true }
+    // (38:4) {#if pgi == true}
     function create_if_block_2$2(ctx) {
     	var li0, a0, t_1, li1, a1, dispose;
 
@@ -3099,13 +3137,13 @@ var app = (function () {
     			li1 = element("li");
     			a1 = element("a");
     			a1.textContent = "Federated Timeline";
-    			a0.href = "#local";
-    			a0.className = "header-selected";
-    			add_location(a0, file$6, 35, 6, 761);
-    			add_location(li0, file$6, 35, 2, 757);
-    			a1.href = "#federated";
-    			add_location(a1, file$6, 36, 6, 855);
-    			add_location(li1, file$6, 36, 2, 851);
+    			attr(a0, "href", "#local");
+    			attr(a0, "class", "header-selected");
+    			add_location(a0, file$6, 39, 8, 736);
+    			add_location(li0, file$6, 38, 6, 723);
+    			attr(a1, "href", "#federated");
+    			add_location(a1, file$6, 44, 8, 868);
+    			add_location(li1, file$6, 43, 6, 855);
 
     			dispose = [
     				listen(a0, "click", ctx.selectTab),
@@ -3121,8 +3159,6 @@ var app = (function () {
     			append(li1, a1);
     		},
 
-    		p: noop,
-
     		d: function destroy(detaching) {
     			if (detaching) {
     				detach(li0);
@@ -3135,7 +3171,7 @@ var app = (function () {
     	};
     }
 
-    // (39:2) {#if session.user }
+    // (48:4) {#if session.user}
     function create_if_block_1$3(ctx) {
     	var li0, a0, t1, li1, a1, t3, li2, a2, dispose;
 
@@ -3152,15 +3188,15 @@ var app = (function () {
     			li2 = element("li");
     			a2 = element("a");
     			a2.textContent = "Search/Follow";
-    			a0.href = "#inbox";
-    			add_location(a0, file$6, 39, 6, 963);
-    			add_location(li0, file$6, 39, 2, 959);
-    			a1.href = "#create";
-    			add_location(a1, file$6, 40, 6, 1024);
-    			add_location(li1, file$6, 40, 2, 1020);
-    			a2.href = "#search";
-    			add_location(a2, file$6, 41, 6, 1087);
-    			add_location(li2, file$6, 41, 2, 1083);
+    			attr(a0, "href", "#inbox");
+    			add_location(a0, file$6, 49, 8, 997);
+    			add_location(li0, file$6, 48, 6, 984);
+    			attr(a1, "href", "#create");
+    			add_location(a1, file$6, 52, 8, 1076);
+    			add_location(li1, file$6, 51, 6, 1063);
+    			attr(a2, "href", "#search");
+    			add_location(a2, file$6, 55, 8, 1157);
+    			add_location(li2, file$6, 54, 6, 1144);
 
     			dispose = [
     				listen(a0, "click", ctx.selectTab),
@@ -3180,8 +3216,6 @@ var app = (function () {
     			append(li2, a2);
     		},
 
-    		p: noop,
-
     		d: function destroy(detaching) {
     			if (detaching) {
     				detach(li0);
@@ -3196,7 +3230,7 @@ var app = (function () {
     	};
     }
 
-    // (44:74) {:else}
+    // (61:33) {:else}
     function create_else_block$3(ctx) {
     	var t;
 
@@ -3217,7 +3251,7 @@ var app = (function () {
     	};
     }
 
-    // (44:48) {#if session.user }
+    // (61:8) {#if session.user}
     function create_if_block$4(ctx) {
     	var t;
 
@@ -3287,23 +3321,23 @@ var app = (function () {
     			div1 = element("div");
     			h3 = element("h3");
     			h3.textContent = "PubGate-Philip";
-    			a0.href = "#profile";
-    			add_location(a0, file$6, 43, 6, 1165);
-    			add_location(li0, file$6, 43, 2, 1161);
-    			a1.href = "#about";
-    			add_location(a1, file$6, 44, 6, 1266);
-    			add_location(li1, file$6, 44, 2, 1262);
-    			add_location(ul, file$6, 33, 1, 726);
-    			add_location(header, file$6, 32, 0, 716);
-    			div0.className = "content";
-    			add_location(div0, file$6, 48, 0, 1339);
-    			hr.className = "separator";
-    			add_location(hr, file$6, 54, 0, 1473);
-    			add_location(h3, file$6, 57, 8, 1561);
-    			div1.className = "left-column";
-    			add_location(div1, file$6, 56, 4, 1527);
-    			footer.className = "content";
-    			add_location(footer, file$6, 55, 0, 1498);
+    			attr(a0, "href", "#profile");
+    			add_location(a0, file$6, 59, 6, 1251);
+    			add_location(li0, file$6, 58, 4, 1240);
+    			attr(a1, "href", "#about");
+    			add_location(a1, file$6, 64, 6, 1379);
+    			add_location(li1, file$6, 63, 4, 1368);
+    			add_location(ul, file$6, 36, 2, 690);
+    			add_location(header, file$6, 35, 0, 679);
+    			attr(div0, "class", "content");
+    			add_location(div0, file$6, 69, 0, 1456);
+    			attr(hr, "class", "separator");
+    			add_location(hr, file$6, 73, 0, 1552);
+    			add_location(h3, file$6, 76, 4, 1634);
+    			attr(div1, "class", "left-column");
+    			add_location(div1, file$6, 75, 2, 1604);
+    			attr(footer, "class", "content");
+    			add_location(footer, file$6, 74, 0, 1577);
 
     			dispose = [
     				listen(a0, "click", ctx.selectTab),
@@ -3342,9 +3376,7 @@ var app = (function () {
 
     		p: function update(changed, ctx) {
     			if (ctx.pgi == true) {
-    				if (if_block0) {
-    					if_block0.p(changed, ctx);
-    				} else {
+    				if (!if_block0) {
     					if_block0 = create_if_block_2$2(ctx);
     					if_block0.c();
     					if_block0.m(ul, t0);
@@ -3355,9 +3387,7 @@ var app = (function () {
     			}
 
     			if (ctx.session.user) {
-    				if (if_block1) {
-    					if_block1.p(changed, ctx);
-    				} else {
+    				if (!if_block1) {
     					if_block1 = create_if_block_1$3(ctx);
     					if_block1.c();
     					if_block1.m(ul, t1);
@@ -3384,13 +3414,13 @@ var app = (function () {
 
     		i: function intro(local) {
     			if (current) return;
-    			tab.$$.fragment.i(local);
+    			transition_in(tab.$$.fragment, local);
 
     			current = true;
     		},
 
     		o: function outro(local) {
-    			tab.$$.fragment.o(local);
+    			transition_out(tab.$$.fragment, local);
     			current = false;
     		},
 
@@ -3408,7 +3438,7 @@ var app = (function () {
     				detach(div0);
     			}
 
-    			tab.$destroy();
+    			destroy_component(tab);
 
     			if (detaching) {
     				detach(t5);
@@ -3424,29 +3454,32 @@ var app = (function () {
 
     function instance$6($$self, $$props, $$invalidate) {
     	let session = {};
-    	let active_tab;
-        let pgi = pubgate_instance;
+      let active_tab;
+      let pgi = pubgate_instance;
 
-        if (pgi) {
-            $$invalidate('active_tab', active_tab = 'local');
-        } else {
-            $$invalidate('active_tab', active_tab = 'about');
-        }
+      if (pgi) {
+        $$invalidate('active_tab', active_tab = "local");
+      } else {
+        $$invalidate('active_tab', active_tab = "about");
+      }
 
-        function selectTab (event) {
-            event.preventDefault();
-            $$invalidate('active_tab', active_tab = this.href.split('#')[1]);
-            Array.prototype.forEach.call(this.parentNode.parentNode.children, (el, i) => {
-                if (el.firstChild.href.split('#')[1] !== active_tab) {
-                    el.firstChild.classList.remove('header-selected');
-                }
-            });
-            this.classList.add('header-selected');
-        }
+      function selectTab(event) {
+        event.preventDefault();
+        $$invalidate('active_tab', active_tab = this.href.split("#")[1]);
+        Array.prototype.forEach.call(
+          this.parentNode.parentNode.children,
+          (el, i) => {
+            if (el.firstChild.href.split("#")[1] !== active_tab) {
+              el.firstChild.classList.remove("header-selected");
+            }
+          }
+        );
+        this.classList.add("header-selected");
+      }
 
-        const updateSession = e => {
-            $: $$invalidate('session', session = e.detail);
-        };
+      const updateSession = e => {
+        $: $$invalidate('session', session = e.detail);
+      };
 
     	return {
     		session,
@@ -3465,8 +3498,8 @@ var app = (function () {
     }
 
     const app = new App({
-    	target: document.body,
-    	props: {}
+      target: document.body,
+      props: {},
     });
 
     return app;

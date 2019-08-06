@@ -1,56 +1,73 @@
 <script>
-    export let reply = null;
-    export let session;
+  import { getCreateObject, getHashTag } from "./utils/pubGate";
 
-    let inProgress = false;
-    let content = '';
-    async function publish(event) {
-		inProgress = true;
-        let tags = [];
-		let matches = content.match(/(^|\W)(#[a-z\d][\w-]*)/ig);
-		if (matches) {
-		    content = content.replace(/(^|\W)(#[a-z\d][\w-]*)/ig, '$1<a href="" rel="tag">$2</a>');
-		    tags = matches.map(v => ({
-                       "href": "",
-                       "name": v.trim(),
-                       "type": "Hashtag"
-                   } ))
-		}
-		let ap_object = {
-            "type": "Create",
-            "object": {
-                "type": "Note",
-                "content": content,
-                "attachment": [],
-                "tag": tags,
-            }
-        };
-		if (reply){
-		    ap_object.object.inReplyTo = reply.id;
-		    ap_object.cc = [reply.attributedTo];
-		}
+  export let reply = null;
+  export let session;
 
-        const response = await fetch(session.user.outbox, {
-            method: 'POST',
-            body: JSON.stringify(ap_object),
-            headers : {'Authorization': "Bearer " + session.token}
-        }).then(d => d.json());
-		inProgress = false;
-		content = ''
-	}
+  let inProgress = false;
+  let content = "";
 
+  const hashTagMatcher = /(^|\W)(#[a-z\d][\w-]*)/gi;
+
+  const wrapHashTagsWithLink = text =>
+    text.match(hashTagMatcher)
+      ? text.replace(hashTagMatcher, '$1<a href="" rel="tag">$2</a>')
+      : text;
+
+  const getAllHashTags = text => text.match(hashTagMatcher) || [];
+
+  const publish = async ev => {
+    ev.preventDefault();
+
+    inProgress = true;
+    let tags = getAllHashTags(content)
+      .map(v => v.trim())
+      .map(getHashTag);
+
+    const data = wrapHashTagsWithLink(content);
+
+    let ap_object = getCreateObject(data, tags);
+
+    if (reply) {
+      ap_object.object.inReplyTo = reply.id;
+      ap_object.cc = [reply.attributedTo];
+    }
+
+    try {
+      const response = await fetch(session.user.outbox, {
+        method: "POST",
+        body: JSON.stringify(ap_object),
+        headers: { Authorization: "Bearer " + session.token },
+      });
+      const data = await response.json();
+    } catch (e) {
+      console.log(e);
+    }
+
+    inProgress = false;
+    content = "";
+  };
 </script>
 
+<style>
+  textarea {
+    width: 100%;
+  }
+</style>
 
-<form>
-    <fieldset>
+<form on:submit={publish}>
 
-        <fieldset class="form-group">
-            <textarea class="form-control" rows="8" placeholder="Write your text here" bind:value={content}/>
-        </fieldset>
+  <fieldset class="form-group">
+    <textarea
+      class="form-control"
+      placeholder="Write your text here"
+      bind:value={content} />
+  </fieldset>
 
-        <button class="btn btn-lg pull-xs-right btn-primary" type="button" disabled={!content||inProgress} on:click={publish}>
-            Publish
-        </button>
-    </fieldset>
+  <button
+    class="btn btn-lg pull-xs-right btn-primary"
+    disabled={!content || inProgress}>
+    Publish
+  </button>
+
 </form>
