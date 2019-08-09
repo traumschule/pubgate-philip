@@ -5,7 +5,7 @@ from jinja2 import Environment, PackageLoader
 
 from pubgate.utils.networking import fetch
 
-philip_v1 = Blueprint('philip')
+philip_v1 = Blueprint('index')
 
 philip_dir = os.path.dirname(os.path.abspath(__file__))
 philip_v1.static('/static', f'{philip_dir}/public')

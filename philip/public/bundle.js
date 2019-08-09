@@ -404,6 +404,23 @@ var app = (function () {
         }
     }
 
+    function xhr(url, options = {}, accept = "application/activity+json") {
+        let defaultOptions = {
+            headers: {
+                "Accept": accept
+            }
+        };
+
+        return fetch(url, Object.assign(defaultOptions, options)).then(response => {
+            if (!response.ok) {
+                throw Error(response.statusText);
+            }
+
+            return response;
+        })
+        .then(response => response.json());
+    }
+
     const getHashTag = name => ({
       name,
       href: "",
@@ -441,7 +458,7 @@ var app = (function () {
     			add_location(textarea, file, 60, 4, 1300);
     			attr(fieldset, "class", "form-group");
     			add_location(fieldset, file, 59, 2, 1266);
-    			attr(button, "class", "btn btn-lg pull-xs-right btn-primary");
+    			attr(button, "class", "btn btn-sm pull-xs-right btn-info");
     			button.disabled = button_disabled_value = !ctx.content || ctx.inProgress;
     			add_location(button, file, 66, 2, 1425);
     			add_location(form, file, 57, 0, 1236);
@@ -1365,7 +1382,7 @@ var app = (function () {
 
     const file$2 = "src/Post.svelte";
 
-    // (37:0) {:else}
+    // (40:0) {:else}
     function create_else_block$1(ctx) {
     	var li, div0, h2, t1, a0, t2_value = ctx.post.type, t2, a0_href_value, t3, a1, t4_value = ctx.post.actor.split('/').slice(-1)[0], t4, a1_href_value, t5, span, t7, t8, div1, current;
 
@@ -1400,19 +1417,19 @@ var app = (function () {
     			div1 = element("div");
     			postbody.$$.fragment.c();
     			attr(h2, "id", "");
-    			add_location(h2, file$2, 39, 8, 785);
+    			add_location(h2, file$2, 42, 8, 870);
     			attr(a0, "href", a0_href_value = ctx.post.id);
-    			add_location(a0, file$2, 40, 8, 812);
+    			add_location(a0, file$2, 43, 8, 897);
     			attr(a1, "href", a1_href_value = ctx.post.actor);
-    			add_location(a1, file$2, 40, 52, 856);
+    			add_location(a1, file$2, 43, 52, 941);
     			attr(span, "class", "metadata-seperator");
-    			add_location(span, file$2, 41, 8, 932);
+    			add_location(span, file$2, 44, 8, 1017);
     			attr(div0, "class", "metadata");
-    			add_location(div0, file$2, 38, 4, 754);
-    			attr(div1, "class", "reaction svelte-1gf6p2q");
-    			add_location(div1, file$2, 47, 4, 1110);
+    			add_location(div0, file$2, 41, 4, 839);
+    			attr(div1, "class", "reaction svelte-1rfnwxy");
+    			add_location(div1, file$2, 50, 4, 1195);
     			attr(li, "class", "post");
-    			add_location(li, file$2, 37, 0, 732);
+    			add_location(li, file$2, 40, 0, 817);
     		},
 
     		m: function mount(target, anchor) {
@@ -1495,7 +1512,7 @@ var app = (function () {
     	};
     }
 
-    // (31:0) {#if fetched_post == false}
+    // (34:0) {#if fetched_post == false}
     function create_if_block$1(ctx) {
     	var li, h2, t_1, current;
 
@@ -1512,9 +1529,9 @@ var app = (function () {
     			t_1 = space();
     			postbody.$$.fragment.c();
     			attr(h2, "id", "");
-    			add_location(h2, file$2, 32, 4, 645);
+    			add_location(h2, file$2, 35, 4, 730);
     			attr(li, "class", "post");
-    			add_location(li, file$2, 31, 0, 623);
+    			add_location(li, file$2, 34, 0, 708);
     		},
 
     		m: function mount(target, anchor) {
@@ -1554,7 +1571,7 @@ var app = (function () {
     	};
     }
 
-    // (44:8) {#if post.published }
+    // (47:8) {#if post.published }
     function create_if_block_1$1(ctx) {
     	var span, t_value = ctx.post.published.replace("T", " ").replace("Z", " "), t;
 
@@ -1562,7 +1579,7 @@ var app = (function () {
     		c: function create() {
     			span = element("span");
     			t = text(t_value);
-    			add_location(span, file$2, 44, 8, 1013);
+    			add_location(span, file$2, 47, 8, 1098);
     		},
 
     		m: function mount(target, anchor) {
@@ -1667,11 +1684,14 @@ var app = (function () {
     	let fpost;
     	let post_object;
     	let fetched_post = false;
+
     	if (["Announce", "Like"].includes(post.type)) {
-    	    if (pubgate_instance == false) {
-                fpost = fetch(post.object, { headers: {
-                    "Accept": "application/activity+json"
-                }}).then(d => d.json());
+    	    if (typeof post.object === "string") {
+    	        fpost = xhr(post.object);
+
+                // fpost = fetch(post.object, { headers: {
+                //     "Accept": "application/activity+json"
+                // }}).then(d => d.json());
                 $$invalidate('post_object', post_object = fpost => fpost.object);
     	    } else {
     	        $$invalidate('post_object', post_object = post.object);
@@ -1771,7 +1791,7 @@ var app = (function () {
     				each_blocks[i].c();
     			}
     			attr(ul, "class", "post-list");
-    			add_location(ul, file$3, 44, 0, 1402);
+    			add_location(ul, file$3, 44, 0, 1403);
     		},
 
     		m: function mount(target, anchor) {
@@ -2364,10 +2384,11 @@ var app = (function () {
     }
 
     /* src/Tab.svelte generated by Svelte v3.7.1 */
+    const { console: console_1$1 } = globals;
 
     const file$5 = "src/Tab.svelte";
 
-    // (121:0) {:else}
+    // (123:0) {:else}
     function create_else_block_1(ctx) {
     	var current;
 
@@ -2414,7 +2435,7 @@ var app = (function () {
     	};
     }
 
-    // (119:32) 
+    // (121:32) 
     function create_if_block_4$1(ctx) {
     	var html_tag;
 
@@ -2439,7 +2460,7 @@ var app = (function () {
     	};
     }
 
-    // (117:33) 
+    // (119:33) 
     function create_if_block_3$1(ctx) {
     	var current;
 
@@ -2482,7 +2503,7 @@ var app = (function () {
     	};
     }
 
-    // (115:33) 
+    // (117:33) 
     function create_if_block_2$1(ctx) {
     	var current;
 
@@ -2525,7 +2546,7 @@ var app = (function () {
     	};
     }
 
-    // (71:0) {#if active_tab == 'profile'}
+    // (73:0) {#if active_tab == 'profile'}
     function create_if_block$3(ctx) {
     	var current_block_type_index, if_block, if_block_anchor, current;
 
@@ -2599,14 +2620,14 @@ var app = (function () {
     	};
     }
 
-    // (76:4) {:else}
+    // (78:4) {:else}
     function create_else_block$2(ctx) {
-    	var t0, br0, t1, form0, fieldset0, input0, t2, fieldset1, input1, t3, button0, t4, button0_disabled_value, t5, br1, br2, t6, br3, t7, form1, fieldset2, input2, t8, fieldset3, input3, t9, fieldset4, textarea, t10, fieldset5, input4, t11, fieldset6, input5, t12, button1, t13, button1_disabled_value, dispose;
+    	var div, t1, form0, fieldset0, input0, t2, fieldset1, input1, t3, button0, t4, button0_disabled_value, t5, br0, br1, t6, br2, t7, form1, fieldset2, input2, t8, fieldset3, input3, t9, fieldset4, textarea, t10, fieldset5, input4, t11, fieldset6, input5, t12, button1, t13, button1_disabled_value, dispose;
 
     	return {
     		c: function create() {
-    			t0 = text("Sign-in ( ActivityPub compatible, OAuth2 password grant )\n        ");
-    			br0 = element("br");
+    			div = element("div");
+    			div.textContent = "Sign-in ( ActivityPub compatible, OAuth2 password grant )";
     			t1 = space();
     			form0 = element("form");
     			fieldset0 = element("fieldset");
@@ -2618,10 +2639,10 @@ var app = (function () {
     			button0 = element("button");
     			t4 = text("Sign in");
     			t5 = space();
+    			br0 = element("br");
     			br1 = element("br");
-    			br2 = element("br");
     			t6 = text("\n        or register ( PubGate only )\n        ");
-    			br3 = element("br");
+    			br2 = element("br");
     			t7 = space();
     			form1 = element("form");
     			fieldset2 = element("fieldset");
@@ -2641,62 +2662,63 @@ var app = (function () {
     			t12 = space();
     			button1 = element("button");
     			t13 = text("Register");
-    			add_location(br0, file$5, 77, 8, 2184);
+    			attr(div, "class", "form-group");
+    			add_location(div, file$5, 78, 8, 2114);
     			attr(input0, "class", "form-control form-control-lg");
     			attr(input0, "type", "username");
     			attr(input0, "placeholder", "Username");
-    			add_location(input0, file$5, 80, 16, 2295);
+    			add_location(input0, file$5, 82, 16, 2309);
     			attr(fieldset0, "class", "form-group");
-    			add_location(fieldset0, file$5, 79, 12, 2249);
+    			add_location(fieldset0, file$5, 81, 12, 2263);
     			attr(input1, "class", "form-control form-control-lg");
     			attr(input1, "type", "password");
     			attr(input1, "placeholder", "Password");
-    			add_location(input1, file$5, 83, 16, 2483);
+    			add_location(input1, file$5, 85, 16, 2497);
     			attr(fieldset1, "class", "form-group");
-    			add_location(fieldset1, file$5, 82, 12, 2437);
+    			add_location(fieldset1, file$5, 84, 12, 2451);
     			attr(button0, "class", "btn btn-lg btn-primary pull-xs-right");
     			attr(button0, "type", "submit");
     			button0.disabled = button0_disabled_value = !ctx.username || !ctx.password;
-    			add_location(button0, file$5, 85, 12, 2625);
-    			add_location(form0, file$5, 78, 8, 2197);
-    			add_location(br1, file$5, 89, 8, 2799);
-    			add_location(br2, file$5, 89, 12, 2803);
-    			add_location(br3, file$5, 91, 8, 2853);
+    			add_location(button0, file$5, 87, 12, 2639);
+    			add_location(form0, file$5, 80, 8, 2211);
+    			add_location(br0, file$5, 91, 8, 2813);
+    			add_location(br1, file$5, 91, 12, 2817);
+    			add_location(br2, file$5, 93, 8, 2867);
     			attr(input2, "class", "form-control form-control-lg");
     			attr(input2, "type", "text");
     			attr(input2, "placeholder", "Username");
-    			add_location(input2, file$5, 94, 16, 2967);
+    			add_location(input2, file$5, 96, 16, 2981);
     			attr(fieldset2, "class", "form-group");
-    			add_location(fieldset2, file$5, 93, 12, 2921);
+    			add_location(fieldset2, file$5, 95, 12, 2935);
     			attr(input3, "class", "form-control form-control-lg");
     			attr(input3, "type", "password");
     			attr(input3, "placeholder", "Password");
-    			add_location(input3, file$5, 97, 16, 3151);
+    			add_location(input3, file$5, 99, 16, 3165);
     			attr(fieldset3, "class", "form-group");
-    			add_location(fieldset3, file$5, 96, 12, 3105);
+    			add_location(fieldset3, file$5, 98, 12, 3119);
     			attr(textarea, "class", "form-control");
     			attr(textarea, "rows", "8");
     			attr(textarea, "placeholder", "Profile Description");
-    			add_location(textarea, file$5, 100, 16, 3339);
+    			add_location(textarea, file$5, 102, 16, 3353);
     			attr(fieldset4, "class", "form-group");
-    			add_location(fieldset4, file$5, 99, 12, 3293);
+    			add_location(fieldset4, file$5, 101, 12, 3307);
     			attr(input4, "class", "form-control form-control-lg");
     			attr(input4, "type", "text");
     			attr(input4, "placeholder", "Avatar URL");
-    			add_location(input4, file$5, 103, 16, 3522);
+    			add_location(input4, file$5, 105, 16, 3536);
     			attr(fieldset5, "class", "form-group");
-    			add_location(fieldset5, file$5, 102, 12, 3476);
+    			add_location(fieldset5, file$5, 104, 12, 3490);
     			attr(input5, "class", "form-control form-control-lg");
     			attr(input5, "type", "text");
     			attr(input5, "placeholder", "Invite code");
-    			add_location(input5, file$5, 106, 16, 3706);
+    			add_location(input5, file$5, 108, 16, 3720);
     			attr(fieldset6, "class", "form-group");
-    			add_location(fieldset6, file$5, 105, 12, 3660);
+    			add_location(fieldset6, file$5, 107, 12, 3674);
     			attr(button1, "class", "btn btn-lg btn-primary pull-xs-right");
     			attr(button1, "type", "submit");
     			button1.disabled = button1_disabled_value = !ctx.username || !ctx.password;
-    			add_location(button1, file$5, 109, 12, 3846);
-    			add_location(form1, file$5, 92, 8, 2866);
+    			add_location(button1, file$5, 111, 12, 3860);
+    			add_location(form1, file$5, 94, 8, 2880);
 
     			dispose = [
     				listen(input0, "input", ctx.input0_input_handler),
@@ -2712,8 +2734,7 @@ var app = (function () {
     		},
 
     		m: function mount(target, anchor) {
-    			insert(target, t0, anchor);
-    			insert(target, br0, anchor);
+    			insert(target, div, anchor);
     			insert(target, t1, anchor);
     			insert(target, form0, anchor);
     			append(form0, fieldset0);
@@ -2731,10 +2752,10 @@ var app = (function () {
     			append(form0, button0);
     			append(button0, t4);
     			insert(target, t5, anchor);
+    			insert(target, br0, anchor);
     			insert(target, br1, anchor);
-    			insert(target, br2, anchor);
     			insert(target, t6, anchor);
-    			insert(target, br3, anchor);
+    			insert(target, br2, anchor);
     			insert(target, t7, anchor);
     			insert(target, form1, anchor);
     			append(form1, fieldset2);
@@ -2795,15 +2816,14 @@ var app = (function () {
 
     		d: function destroy(detaching) {
     			if (detaching) {
-    				detach(t0);
-    				detach(br0);
+    				detach(div);
     				detach(t1);
     				detach(form0);
     				detach(t5);
+    				detach(br0);
     				detach(br1);
-    				detach(br2);
     				detach(t6);
-    				detach(br3);
+    				detach(br2);
     				detach(t7);
     				detach(form1);
     			}
@@ -2813,7 +2833,7 @@ var app = (function () {
     	};
     }
 
-    // (72:4) {#if session.user }
+    // (74:4) {#if session.user }
     function create_if_block_1$2(ctx) {
     	var button, t_1, current, dispose;
 
@@ -2831,8 +2851,8 @@ var app = (function () {
     			button.textContent = "Logout";
     			t_1 = space();
     			timeline.$$.fragment.c();
-    			attr(button, "class", "btn btn-sm");
-    			add_location(button, file$5, 72, 9, 1957);
+    			attr(button, "class", "btn btn-primary btn-sm");
+    			add_location(button, file$5, 74, 9, 1941);
     			dispose = listen(button, "click", ctx.logout);
     		},
 
@@ -2959,7 +2979,9 @@ var app = (function () {
     }
 
     function instance$5($$self, $$props, $$invalidate) {
-    	const dispatch = createEventDispatcher();
+    	
+
+        const dispatch = createEventDispatcher();
 
         let { active_tab, session } = $$props;
 
@@ -2969,14 +2991,14 @@ var app = (function () {
         let password = '';
 
         async function login(event) {
-            const profile = await fetch(base_url + "/@" + username, { headers: {
-                "Accept": "application/activity+json"
-            }}).then(d => d.json());
+            const profile = await xhr(base_url + "/@" + username).catch(error => {
+                console.log('abc', error);
+            });
 
-            const token = await fetch(profile.endpoints.oauthTokenEndpoint, {
+            const token = await xhr(profile.endpoints.oauthTokenEndpoint, {
                 method: 'POST',
                 body: JSON.stringify({username: username, password:password})
-            }).then(d => d.json());
+            });
 
             if (token.access_token) {
                 $: session.user = profile; $$invalidate('session', session);
@@ -3023,7 +3045,7 @@ var app = (function () {
 
     	const writable_props = ['active_tab', 'session'];
     	Object.keys($$props).forEach(key => {
-    		if (!writable_props.includes(key) && !key.startsWith('$$')) console.warn(`<Tab> was created with unknown prop '${key}'`);
+    		if (!writable_props.includes(key) && !key.startsWith('$$')) console_1$1.warn(`<Tab> was created with unknown prop '${key}'`);
     	});
 
     	function input0_input_handler() {
@@ -3096,10 +3118,10 @@ var app = (function () {
     		const { ctx } = this.$$;
     		const props = options.props || {};
     		if (ctx.active_tab === undefined && !('active_tab' in props)) {
-    			console.warn("<Tab> was created without expected prop 'active_tab'");
+    			console_1$1.warn("<Tab> was created without expected prop 'active_tab'");
     		}
     		if (ctx.session === undefined && !('session' in props)) {
-    			console.warn("<Tab> was created without expected prop 'session'");
+    			console_1$1.warn("<Tab> was created without expected prop 'session'");
     		}
     	}
 
@@ -3139,11 +3161,11 @@ var app = (function () {
     			a1.textContent = "Federated Timeline";
     			attr(a0, "href", "#local");
     			attr(a0, "class", "header-selected");
-    			add_location(a0, file$6, 39, 8, 736);
-    			add_location(li0, file$6, 38, 6, 723);
+    			add_location(a0, file$6, 39, 8, 700);
+    			add_location(li0, file$6, 38, 6, 687);
     			attr(a1, "href", "#federated");
-    			add_location(a1, file$6, 44, 8, 868);
-    			add_location(li1, file$6, 43, 6, 855);
+    			add_location(a1, file$6, 44, 8, 832);
+    			add_location(li1, file$6, 43, 6, 819);
 
     			dispose = [
     				listen(a0, "click", ctx.selectTab),
@@ -3189,14 +3211,14 @@ var app = (function () {
     			a2 = element("a");
     			a2.textContent = "Search/Follow";
     			attr(a0, "href", "#inbox");
-    			add_location(a0, file$6, 49, 8, 997);
-    			add_location(li0, file$6, 48, 6, 984);
+    			add_location(a0, file$6, 49, 8, 961);
+    			add_location(li0, file$6, 48, 6, 948);
     			attr(a1, "href", "#create");
-    			add_location(a1, file$6, 52, 8, 1076);
-    			add_location(li1, file$6, 51, 6, 1063);
+    			add_location(a1, file$6, 52, 8, 1040);
+    			add_location(li1, file$6, 51, 6, 1027);
     			attr(a2, "href", "#search");
-    			add_location(a2, file$6, 55, 8, 1157);
-    			add_location(li2, file$6, 54, 6, 1144);
+    			add_location(a2, file$6, 55, 8, 1121);
+    			add_location(li2, file$6, 54, 6, 1108);
 
     			dispose = [
     				listen(a0, "click", ctx.selectTab),
@@ -3322,22 +3344,22 @@ var app = (function () {
     			h3 = element("h3");
     			h3.textContent = "PubGate-Philip";
     			attr(a0, "href", "#profile");
-    			add_location(a0, file$6, 59, 6, 1251);
-    			add_location(li0, file$6, 58, 4, 1240);
+    			add_location(a0, file$6, 59, 6, 1215);
+    			add_location(li0, file$6, 58, 4, 1204);
     			attr(a1, "href", "#about");
-    			add_location(a1, file$6, 64, 6, 1379);
-    			add_location(li1, file$6, 63, 4, 1368);
-    			add_location(ul, file$6, 36, 2, 690);
-    			add_location(header, file$6, 35, 0, 679);
+    			add_location(a1, file$6, 64, 6, 1343);
+    			add_location(li1, file$6, 63, 4, 1332);
+    			add_location(ul, file$6, 36, 2, 654);
+    			add_location(header, file$6, 35, 0, 643);
     			attr(div0, "class", "content");
-    			add_location(div0, file$6, 69, 0, 1456);
+    			add_location(div0, file$6, 69, 0, 1420);
     			attr(hr, "class", "separator");
-    			add_location(hr, file$6, 73, 0, 1552);
-    			add_location(h3, file$6, 76, 4, 1634);
+    			add_location(hr, file$6, 73, 0, 1516);
+    			add_location(h3, file$6, 76, 4, 1598);
     			attr(div1, "class", "left-column");
-    			add_location(div1, file$6, 75, 2, 1604);
+    			add_location(div1, file$6, 75, 2, 1568);
     			attr(footer, "class", "content");
-    			add_location(footer, file$6, 74, 0, 1577);
+    			add_location(footer, file$6, 74, 0, 1541);
 
     			dispose = [
     				listen(a0, "click", ctx.selectTab),
@@ -3457,15 +3479,13 @@ var app = (function () {
       let active_tab;
       let pgi = pubgate_instance;
 
-      if (pgi) {
-        $$invalidate('active_tab', active_tab = "local");
-      } else {
-        $$invalidate('active_tab', active_tab = "about");
-      }
+      $$invalidate('active_tab', active_tab = pgi ? "local" : "about");
 
       function selectTab(event) {
         event.preventDefault();
+
         $$invalidate('active_tab', active_tab = this.href.split("#")[1]);
+
         Array.prototype.forEach.call(
           this.parentNode.parentNode.children,
           (el, i) => {
@@ -3474,6 +3494,7 @@ var app = (function () {
             }
           }
         );
+
         this.classList.add("header-selected");
       }
 

@@ -2,7 +2,7 @@
     export let active_tab;
     export let session;
     export let outbox_collection = {};
-	import Post from "./Post.svelte"
+	import Post from "./Post.svelte";
 
 	let pgi = pubgate_instance;
 

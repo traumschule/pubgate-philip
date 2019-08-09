@@ -65,7 +65,7 @@
   </fieldset>
 
   <button
-    class="btn btn-lg pull-xs-right btn-primary"
+    class="btn btn-sm pull-xs-right btn-info"
     disabled={!content || inProgress}>
     Publish
   </button>

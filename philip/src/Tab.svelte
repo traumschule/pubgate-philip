@@ -1,5 +1,7 @@
 <script>
     import { createEventDispatcher } from "svelte";
+    import xhr from "./utils/xhr";
+
     const dispatch = createEventDispatcher();
 
     export let active_tab;
@@ -14,14 +16,14 @@
     let password = '';
 
     async function login(event) {
-        const profile = await fetch(base_url + "/@" + username, { headers: {
-            "Accept": "application/activity+json"
-        }}).then(d => d.json());
+        const profile = await xhr(base_url + "/@" + username).catch(error => {
+            console.log('abc', error);
+        });
 
-        const token = await fetch(profile.endpoints.oauthTokenEndpoint, {
+        const token = await xhr(profile.endpoints.oauthTokenEndpoint, {
             method: 'POST',
             body: JSON.stringify({username: username, password:password})
-        }).then(d => d.json());
+        });
 
         if (token.access_token) {
             $: session.user = profile;
@@ -70,12 +72,12 @@
 
 {#if active_tab == 'profile'}
     {#if session.user }
-         <button class="btn btn-sm" on:click={logout}>Logout</button>
+         <button class="btn btn-primary btn-sm" on:click={logout}>Logout</button>
         <TimeLine active_tab={active_tab}
                   session={session}/>
     {:else}
-        Sign-in ( ActivityPub compatible, OAuth2 password grant )
-        <br>
+        <div class="form-group">Sign-in ( ActivityPub compatible, OAuth2 password grant )</div>
+
         <form on:submit|preventDefault={login}>
             <fieldset class="form-group">
                 <input class="form-control form-control-lg" type="username" placeholder="Username" bind:value={username}>
