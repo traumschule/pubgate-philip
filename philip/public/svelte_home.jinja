@@ -6,10 +6,10 @@
 	<title>{{ conf.TITLE }}</title>
     <meta name="description" content="{{ conf.DESCRIPTION }}" />
 
-	<link rel='icon' type='image/png' href='{{ static_url }}favicon.png'>
-	<link rel='stylesheet' href='{{ static_url }}base.css'>
-	<link rel='stylesheet' href='{{ static_url }}home.css'>
-	<link rel='stylesheet' href='{{ static_url }}bundle.css'>
+	<link rel='icon' type='image/png' href='{{ conf.base_url }}/static/favicon.png'>
+	<link rel='stylesheet' href='{{ conf.base_url }}/static/base.css'>
+	<link rel='stylesheet' href='{{ conf.base_url }}/static/home.css'>
+	<link rel='stylesheet' href='{{ conf.base_url }}/static/bundle.css'>
 </head>
 
 <body>
@@ -18,7 +18,7 @@
 	var pubgate_instance = true;
 	var about_description = "{{ conf.DESCRIPTION }}";
     </script>
-	<script src='{{ static_url }}bundle.js'></script>
+	<script src='{{ conf.base_url }}/static/bundle.js'></script>
 </body>
 </html>
 

@@ -5,12 +5,17 @@ export default function xhr(url, options = {}, accept = "application/activity+js
         }
     };
 
-    return fetch(url, Object.assign(defaultOptions, options)).then(response => {
-        if (!response.ok) {
-            throw Error(response.statusText);
-        }
+    return fetch(url, Object.assign(defaultOptions, options))
+        .then(handleErrors)
+        .then(response => response.json());
+}
 
-        return response;
-    })
-    .then(response => response.json());
+function handleErrors(response) {
+    if (!response.ok) {
+        return response.json().then(error => {
+            return Promise.reject(error);
+        });
+    }
+
+    return response;
 }

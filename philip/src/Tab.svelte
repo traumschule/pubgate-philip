@@ -17,12 +17,12 @@
 
     async function login(event) {
         const profile = await xhr(base_url + "/@" + username).catch(error => {
-            console.log('abc', error);
+            console.log(error);
         });
 
         const token = await xhr(profile.endpoints.oauthTokenEndpoint, {
             method: 'POST',
-            body: JSON.stringify({username: username, password:password})
+            body: JSON.stringify({username: username, password: password})
         });
 
         if (token.access_token) {
