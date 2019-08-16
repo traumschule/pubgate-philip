@@ -1,18 +1,17 @@
 <script>
   import Tab from "./Tab.svelte";
+
   let session = {};
   let active_tab;
   let pgi = pubgate_instance;
 
-  if (pgi) {
-    active_tab = "local";
-  } else {
-    active_tab = "about";
-  }
+  active_tab = pgi ? "local" : "about";
 
   function selectTab(event) {
     event.preventDefault();
+
     active_tab = this.href.split("#")[1];
+
     Array.prototype.forEach.call(
       this.parentNode.parentNode.children,
       (el, i) => {
@@ -21,6 +20,7 @@
         }
       }
     );
+
     this.classList.add("header-selected");
   }
 

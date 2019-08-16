@@ -1,5 +1,6 @@
 <script>
 	export let session;
+	import xhr from "./utils/xhr";
 	import TimeLine from "./TimeLine.svelte";
 
 	let username = '';
