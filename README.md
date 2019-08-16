@@ -11,6 +11,7 @@ Requires PubGate >= 0.2.15
  - Install philip ```pip install git+https://github.com/autogestion/pubgate-philip.git```
  - Update conf.cfg with
 ```
+APPLY_CASHING = True
 UI_APP = "philip"
 TITLE = 'Lightweight ActivityPub Blogging Server'
 DESCRIPTION = 'minimalist blogging UI based on Code of philip-trauner.me website.'
