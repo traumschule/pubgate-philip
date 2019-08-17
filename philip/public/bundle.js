@@ -632,13 +632,13 @@ var app = (function () {
     	return child_ctx;
     }
 
-    // (122:0) {:else}
+    // (49:0) {:else}
     function create_else_block(ctx) {
     	var div, a0, t0_value = ctx.post.type, t0, a0_href_value, t1, a1, t2_value = ctx.post.attributedTo.split('/').pop(), t2, a1_href_value, t3, span0, t5, span1, t6_value = ctx.post.published.replace("T", " ").replace("Z", " "), t6, t7, t8, p, raw_value = ctx.post.content, t9, if_block1_anchor;
 
-    	var if_block0 = (ctx.post.tag) && create_if_block_4(ctx);
+    	var if_block0 = (ctx.post.tag) && create_if_block_5(ctx);
 
-    	var if_block1 = (ctx.post.attachment) && create_if_block_2(ctx);
+    	var if_block1 = (ctx.post.attachment) && create_if_block_3(ctx);
 
     	return {
     		c: function create() {
@@ -662,15 +662,15 @@ var app = (function () {
     			if (if_block1) if_block1.c();
     			if_block1_anchor = empty();
     			attr(a0, "href", a0_href_value = ctx.post.id);
-    			add_location(a0, file$1, 124, 8, 2026);
+    			add_location(a0, file$1, 51, 8, 734);
     			attr(a1, "href", a1_href_value = ctx.post.attributedTo);
-    			add_location(a1, file$1, 124, 52, 2070);
+    			add_location(a1, file$1, 51, 52, 778);
     			attr(span0, "class", "metadata-seperator");
-    			add_location(span0, file$1, 125, 8, 2153);
-    			add_location(span1, file$1, 126, 8, 2203);
+    			add_location(span0, file$1, 52, 8, 861);
+    			add_location(span1, file$1, 53, 8, 911);
     			attr(div, "class", "metadata");
-    			add_location(div, file$1, 122, 4, 1994);
-    			add_location(p, file$1, 138, 4, 2531);
+    			add_location(div, file$1, 49, 4, 702);
+    			add_location(p, file$1, 65, 4, 1239);
     		},
 
     		m: function mount(target, anchor) {
@@ -720,7 +720,7 @@ var app = (function () {
     				if (if_block0) {
     					if_block0.p(changed, ctx);
     				} else {
-    					if_block0 = create_if_block_4(ctx);
+    					if_block0 = create_if_block_5(ctx);
     					if_block0.c();
     					if_block0.m(t8.parentNode, t8);
     				}
@@ -737,7 +737,7 @@ var app = (function () {
     				if (if_block1) {
     					if_block1.p(changed, ctx);
     				} else {
-    					if_block1 = create_if_block_2(ctx);
+    					if_block1 = create_if_block_3(ctx);
     					if_block1.c();
     					if_block1.m(if_block1_anchor.parentNode, if_block1_anchor);
     				}
@@ -770,14 +770,14 @@ var app = (function () {
     	};
     }
 
-    // (119:0) {#if typeof post === 'string'}
-    function create_if_block_1(ctx) {
+    // (46:0) {#if typeof post === 'string'}
+    function create_if_block_2(ctx) {
     	var p;
 
     	return {
     		c: function create() {
     			p = element("p");
-    			add_location(p, file$1, 119, 4, 1960);
+    			add_location(p, file$1, 46, 4, 668);
     		},
 
     		m: function mount(target, anchor) {
@@ -799,8 +799,8 @@ var app = (function () {
     	};
     }
 
-    // (129:4) {#if post.tag}
-    function create_if_block_4(ctx) {
+    // (56:4) {#if post.tag}
+    function create_if_block_5(ctx) {
     	var div;
 
     	var each_value_1 = ctx.post.tag;
@@ -819,7 +819,7 @@ var app = (function () {
     				each_blocks[i].c();
     			}
     			attr(div, "class", "tags");
-    			add_location(div, file$1, 129, 8, 2308);
+    			add_location(div, file$1, 56, 8, 1016);
     		},
 
     		m: function mount(target, anchor) {
@@ -863,8 +863,8 @@ var app = (function () {
     	};
     }
 
-    // (132:12) {#if tag.type == 'Hashtag'}
-    function create_if_block_5(ctx) {
+    // (59:12) {#if tag.type == 'Hashtag'}
+    function create_if_block_6(ctx) {
     	var a, t_value = ctx.tag.name, t, a_href_value;
 
     	return {
@@ -873,7 +873,7 @@ var app = (function () {
     			t = text(t_value);
     			attr(a, "class", "tag");
     			attr(a, "href", a_href_value = ctx.tag.href);
-    			add_location(a, file$1, 132, 16, 2415);
+    			add_location(a, file$1, 59, 16, 1123);
     		},
 
     		m: function mount(target, anchor) {
@@ -899,11 +899,11 @@ var app = (function () {
     	};
     }
 
-    // (131:8) {#each post.tag as tag}
+    // (58:8) {#each post.tag as tag}
     function create_each_block_1(ctx) {
     	var if_block_anchor;
 
-    	var if_block = (ctx.tag.type == 'Hashtag') && create_if_block_5(ctx);
+    	var if_block = (ctx.tag.type == 'Hashtag') && create_if_block_6(ctx);
 
     	return {
     		c: function create() {
@@ -921,7 +921,7 @@ var app = (function () {
     				if (if_block) {
     					if_block.p(changed, ctx);
     				} else {
-    					if_block = create_if_block_5(ctx);
+    					if_block = create_if_block_6(ctx);
     					if_block.c();
     					if_block.m(if_block_anchor.parentNode, if_block_anchor);
     				}
@@ -941,8 +941,8 @@ var app = (function () {
     	};
     }
 
-    // (140:4) {#if post.attachment}
-    function create_if_block_2(ctx) {
+    // (67:4) {#if post.attachment}
+    function create_if_block_3(ctx) {
     	var each_1_anchor;
 
     	var each_value = ctx.post.attachment;
@@ -1003,15 +1003,15 @@ var app = (function () {
     	};
     }
 
-    // (142:12) {#if attachment.type === "Document" && attachment.mediaType.startsWith("image")}
-    function create_if_block_3(ctx) {
+    // (69:12) {#if attachment.type === "Document" && attachment.mediaType.startsWith("image")}
+    function create_if_block_4(ctx) {
     	var img, img_src_value;
 
     	return {
     		c: function create() {
     			img = element("img");
     			attr(img, "src", img_src_value = ctx.attachment.url);
-    			add_location(img, file$1, 142, 16, 2741);
+    			add_location(img, file$1, 69, 16, 1449);
     		},
 
     		m: function mount(target, anchor) {
@@ -1032,11 +1032,11 @@ var app = (function () {
     	};
     }
 
-    // (141:8) {#each post.attachment as attachment}
+    // (68:8) {#each post.attachment as attachment}
     function create_each_block(ctx) {
     	var if_block_anchor;
 
-    	var if_block = (ctx.attachment.type === "Document" && ctx.attachment.mediaType.startsWith("image")) && create_if_block_3(ctx);
+    	var if_block = (ctx.attachment.type === "Document" && ctx.attachment.mediaType.startsWith("image")) && create_if_block_4(ctx);
 
     	return {
     		c: function create() {
@@ -1054,7 +1054,7 @@ var app = (function () {
     				if (if_block) {
     					if_block.p(changed, ctx);
     				} else {
-    					if_block = create_if_block_3(ctx);
+    					if_block = create_if_block_4(ctx);
     					if_block.c();
     					if_block.m(if_block_anchor.parentNode, if_block_anchor);
     				}
@@ -1074,9 +1074,104 @@ var app = (function () {
     	};
     }
 
-    // (168:4) {#if session.user }
+    // (82:4) {#if session.user }
     function create_if_block(ctx) {
-    	var div2, div1, span0, a0, t1, span1, a1, t3, span3, span2, div0, a2, t5, current;
+    	var div, a0, t1, a1, t3, a2, t5, if_block_anchor, current, dispose;
+
+    	var if_block = (ctx.showPublish) && create_if_block_1(ctx);
+
+    	return {
+    		c: function create() {
+    			div = element("div");
+    			a0 = element("a");
+    			a0.textContent = "Like";
+    			t1 = space();
+    			a1 = element("a");
+    			a1.textContent = "Add comment";
+    			t3 = space();
+    			a2 = element("a");
+    			a2.textContent = "Announce";
+    			t5 = space();
+    			if (if_block) if_block.c();
+    			if_block_anchor = empty();
+    			attr(a0, "class", "ra_item svelte-uuxpp3");
+    			attr(a0, "href", "");
+    			add_location(a0, file$1, 83, 12, 1804);
+    			attr(a1, "class", "ra_item svelte-uuxpp3");
+    			attr(a1, "href", "");
+    			add_location(a1, file$1, 84, 17, 1857);
+    			attr(a2, "class", "ra_item svelte-uuxpp3");
+    			attr(a2, "href", "");
+    			add_location(a2, file$1, 85, 17, 1942);
+    			attr(div, "class", "ra svelte-uuxpp3");
+    			add_location(div, file$1, 82, 8, 1775);
+    			dispose = listen(a1, "click", ctx.togglePublish);
+    		},
+
+    		m: function mount(target, anchor) {
+    			insert(target, div, anchor);
+    			append(div, a0);
+    			append(div, t1);
+    			append(div, a1);
+    			append(div, t3);
+    			append(div, a2);
+    			insert(target, t5, anchor);
+    			if (if_block) if_block.m(target, anchor);
+    			insert(target, if_block_anchor, anchor);
+    			current = true;
+    		},
+
+    		p: function update(changed, ctx) {
+    			if (ctx.showPublish) {
+    				if (if_block) {
+    					if_block.p(changed, ctx);
+    					transition_in(if_block, 1);
+    				} else {
+    					if_block = create_if_block_1(ctx);
+    					if_block.c();
+    					transition_in(if_block, 1);
+    					if_block.m(if_block_anchor.parentNode, if_block_anchor);
+    				}
+    			} else if (if_block) {
+    				group_outros();
+    				transition_out(if_block, 1, 1, () => {
+    					if_block = null;
+    				});
+    				check_outros();
+    			}
+    		},
+
+    		i: function intro(local) {
+    			if (current) return;
+    			transition_in(if_block);
+    			current = true;
+    		},
+
+    		o: function outro(local) {
+    			transition_out(if_block);
+    			current = false;
+    		},
+
+    		d: function destroy(detaching) {
+    			if (detaching) {
+    				detach(div);
+    				detach(t5);
+    			}
+
+    			if (if_block) if_block.d(detaching);
+
+    			if (detaching) {
+    				detach(if_block_anchor);
+    			}
+
+    			dispose();
+    		}
+    	};
+    }
+
+    // (88:8) {#if showPublish}
+    function create_if_block_1(ctx) {
+    	var current;
 
     	var publish = new Publish({
     		props: {
@@ -1088,68 +1183,10 @@ var app = (function () {
 
     	return {
     		c: function create() {
-    			div2 = element("div");
-    			div1 = element("div");
-    			span0 = element("span");
-    			a0 = element("a");
-    			a0.textContent = "Like";
-    			t1 = space();
-    			span1 = element("span");
-    			a1 = element("a");
-    			a1.textContent = "Add comment";
-    			t3 = space();
-    			span3 = element("span");
-    			span2 = element("span");
-    			div0 = element("div");
-    			a2 = element("a");
-    			a2.textContent = "Announce";
-    			t5 = space();
     			publish.$$.fragment.c();
-    			attr(a0, "aria-pressed", "false");
-    			attr(a0, "class", "ra_like  _18vj svelte-a0mw2f");
-    			attr(a0, "href", "");
-    			attr(a0, "role", "button");
-    			attr(a0, "tabindex", "-1");
-    			add_location(a0, file$1, 171, 20, 3701);
-    			attr(span0, "class", "ra_item svelte-a0mw2f");
-    			add_location(span0, file$1, 170, 16, 3658);
-    			attr(a1, "class", "_18vj _42ft svelte-a0mw2f");
-    			attr(a1, "role", "button");
-    			attr(a1, "tabindex", "0");
-    			attr(a1, "href", "");
-    			add_location(a1, file$1, 175, 20, 3896);
-    			attr(span1, "class", "ra_item svelte-a0mw2f");
-    			add_location(span1, file$1, 174, 16, 3853);
-    			attr(a2, "class", "_18vj svelte-a0mw2f");
-    			attr(a2, "href", "");
-    			attr(a2, "role", "button");
-    			attr(a2, "tabindex", "0");
-    			add_location(a2, file$1, 181, 28, 4158);
-    			add_location(div0, file$1, 180, 24, 4124);
-    			attr(span2, "class", "ra_announce svelte-a0mw2f");
-    			add_location(span2, file$1, 179, 20, 4073);
-    			attr(span3, "class", "ra_item svelte-a0mw2f");
-    			add_location(span3, file$1, 178, 16, 4030);
-    			attr(div1, "class", "ra1 svelte-a0mw2f");
-    			add_location(div1, file$1, 169, 12, 3624);
-    			attr(div2, "class", "reaction_actions svelte-a0mw2f");
-    			add_location(div2, file$1, 168, 8, 3581);
     		},
 
     		m: function mount(target, anchor) {
-    			insert(target, div2, anchor);
-    			append(div2, div1);
-    			append(div1, span0);
-    			append(span0, a0);
-    			append(div1, t1);
-    			append(div1, span1);
-    			append(span1, a1);
-    			append(div1, t3);
-    			append(div1, span3);
-    			append(span3, span2);
-    			append(span2, div0);
-    			append(div0, a2);
-    			insert(target, t5, anchor);
     			mount_component(publish, target, anchor);
     			current = true;
     		},
@@ -1174,21 +1211,16 @@ var app = (function () {
     		},
 
     		d: function destroy(detaching) {
-    			if (detaching) {
-    				detach(div2);
-    				detach(t5);
-    			}
-
     			destroy_component(publish, detaching);
     		}
     	};
     }
 
     function create_fragment$1(ctx) {
-    	var t0, div5, div4, div3, div0, a0, span0, t2, div1, t3, div2, span1, a1, t5, span2, a2, t7, current;
+    	var t0, div1, div0, a0, t2, a1, t4, a2, t6, current;
 
     	function select_block_type(ctx) {
-    		if (typeof ctx.post === 'string') return create_if_block_1;
+    		if (typeof ctx.post === 'string') return create_if_block_2;
     		return create_else_block;
     	}
 
@@ -1201,60 +1233,31 @@ var app = (function () {
     		c: function create() {
     			if_block0.c();
     			t0 = space();
-    			div5 = element("div");
-    			div4 = element("div");
-    			div3 = element("div");
+    			div1 = element("div");
     			div0 = element("div");
     			a0 = element("a");
-    			span0 = element("span");
-    			span0.textContent = "N likes";
+    			a0.textContent = "N likes";
     			t2 = space();
-    			div1 = element("div");
-    			t3 = space();
-    			div2 = element("div");
-    			span1 = element("span");
     			a1 = element("a");
     			a1.textContent = "N comments";
-    			t5 = space();
-    			span2 = element("span");
+    			t4 = space();
     			a2 = element("a");
     			a2.textContent = "N announces";
-    			t7 = space();
+    			t6 = space();
     			if (if_block1) if_block1.c();
-    			attr(span0, "aria-hidden", "true");
-    			attr(span0, "class", "rs_like2 svelte-a0mw2f");
-    			add_location(span0, file$1, 153, 20, 3041);
+    			attr(a0, "class", "rs_left svelte-uuxpp3");
     			attr(a0, "href", "");
-    			attr(a0, "rel", "dialog");
-    			attr(a0, "class", "rs_like svelte-a0mw2f");
-    			attr(a0, "tabindex", "0");
-    			attr(a0, "role", "button");
-    			add_location(a0, file$1, 152, 16, 2953);
-    			attr(div0, "class", "rs_left svelte-a0mw2f");
-    			add_location(div0, file$1, 151, 12, 2915);
-    			attr(div1, "class", "rs_center svelte-a0mw2f");
-    			add_location(div1, file$1, 156, 12, 3151);
-    			attr(a1, "class", "_42ft svelte-a0mw2f");
-    			attr(a1, "data-ft", "");
-    			attr(a1, "role", "button");
+    			add_location(a0, file$1, 77, 11, 1584);
+    			attr(a1, "class", "rs_right svelte-uuxpp3");
     			attr(a1, "href", "");
-    			add_location(a1, file$1, 159, 20, 3277);
-    			attr(span1, "class", "rs_right svelte-a0mw2f");
-    			add_location(span1, file$1, 158, 16, 3232);
-    			attr(a2, "class", "_42ft svelte-a0mw2f");
+    			add_location(a1, file$1, 78, 11, 1634);
+    			attr(a2, "class", "rs_right svelte-uuxpp3");
     			attr(a2, "href", "");
-    			attr(a2, "rel", "dialog");
-    			add_location(a2, file$1, 162, 20, 3426);
-    			attr(span2, "class", "rs_right svelte-a0mw2f");
-    			add_location(span2, file$1, 161, 16, 3382);
-    			attr(div2, "class", "rs_right svelte-a0mw2f");
-    			add_location(div2, file$1, 157, 12, 3193);
-    			attr(div3, "class", "rs1 svelte-a0mw2f");
-    			add_location(div3, file$1, 150, 8, 2885);
-    			attr(div4, "class", "reaction_stats svelte-a0mw2f");
-    			add_location(div4, file$1, 149, 4, 2848);
-    			attr(div5, "class", "reactionz svelte-a0mw2f");
-    			add_location(div5, file$1, 148, 0, 2820);
+    			add_location(a2, file$1, 79, 11, 1688);
+    			attr(div0, "class", "rs svelte-uuxpp3");
+    			add_location(div0, file$1, 76, 4, 1556);
+    			attr(div1, "class", "reactionz svelte-uuxpp3");
+    			add_location(div1, file$1, 75, 0, 1528);
     		},
 
     		l: function claim(nodes) {
@@ -1264,23 +1267,15 @@ var app = (function () {
     		m: function mount(target, anchor) {
     			if_block0.m(target, anchor);
     			insert(target, t0, anchor);
-    			insert(target, div5, anchor);
-    			append(div5, div4);
-    			append(div4, div3);
-    			append(div3, div0);
+    			insert(target, div1, anchor);
+    			append(div1, div0);
     			append(div0, a0);
-    			append(a0, span0);
-    			append(div3, t2);
-    			append(div3, div1);
-    			append(div3, t3);
-    			append(div3, div2);
-    			append(div2, span1);
-    			append(span1, a1);
-    			append(div2, t5);
-    			append(div2, span2);
-    			append(span2, a2);
-    			append(div5, t7);
-    			if (if_block1) if_block1.m(div5, null);
+    			append(div0, t2);
+    			append(div0, a1);
+    			append(div0, t4);
+    			append(div0, a2);
+    			append(div1, t6);
+    			if (if_block1) if_block1.m(div1, null);
     			current = true;
     		},
 
@@ -1304,7 +1299,7 @@ var app = (function () {
     					if_block1 = create_if_block(ctx);
     					if_block1.c();
     					transition_in(if_block1, 1);
-    					if_block1.m(div5, null);
+    					if_block1.m(div1, null);
     				}
     			} else if (if_block1) {
     				group_outros();
@@ -1331,7 +1326,7 @@ var app = (function () {
 
     			if (detaching) {
     				detach(t0);
-    				detach(div5);
+    				detach(div1);
     			}
 
     			if (if_block1) if_block1.d();
@@ -1341,6 +1336,12 @@ var app = (function () {
 
     function instance$1($$self, $$props, $$invalidate) {
     	let { post, session } = $$props;
+
+        let showPublish = false;
+        const togglePublish = ev => {
+            ev.preventDefault();
+            $$invalidate('showPublish', showPublish = !showPublish);
+        };
 
     	const writable_props = ['post', 'session'];
     	Object.keys($$props).forEach(key => {
@@ -1352,7 +1353,12 @@ var app = (function () {
     		if ('session' in $$props) $$invalidate('session', session = $$props.session);
     	};
 
-    	return { post, session };
+    	return {
+    		post,
+    		session,
+    		showPublish,
+    		togglePublish
+    	};
     }
 
     class PostBody extends SvelteComponentDev {
@@ -1405,7 +1411,7 @@ var app = (function () {
     	var if_blocks = [];
 
     	function select_block_type_1(ctx) {
-    		if (ctx.post_object == true) return 0;
+    		if (ctx.post_object.id) return 0;
     		return 1;
     	}
 
@@ -1639,7 +1645,7 @@ var app = (function () {
     			a = element("a");
     			t = text(t_value);
     			attr(a, "href", a_href_value = ctx.post.object);
-    			add_location(a, file$2, 53, 12, 1340);
+    			add_location(a, file$2, 53, 12, 1335);
     		},
 
     		m: function mount(target, anchor) {
@@ -1668,7 +1674,7 @@ var app = (function () {
     	};
     }
 
-    // (51:8) {#if post_object == true}
+    // (51:8) {#if post_object.id}
     function create_if_block_1$1(ctx) {
     	var current;
 
@@ -3266,7 +3272,7 @@ var app = (function () {
 
     const file$6 = "src/App.svelte";
 
-    // (38:4) {#if pgi == true}
+    // (42:4) {#if pgi == true}
     function create_if_block_2$3(ctx) {
     	var li0, a0, t_1, li1, a1, dispose;
 
@@ -3281,11 +3287,11 @@ var app = (function () {
     			a1.textContent = "Federated Timeline";
     			attr(a0, "href", "#local");
     			attr(a0, "class", "header-selected");
-    			add_location(a0, file$6, 39, 8, 700);
-    			add_location(li0, file$6, 38, 6, 687);
+    			add_location(a0, file$6, 43, 8, 765);
+    			add_location(li0, file$6, 42, 6, 752);
     			attr(a1, "href", "#federated");
-    			add_location(a1, file$6, 44, 8, 832);
-    			add_location(li1, file$6, 43, 6, 819);
+    			add_location(a1, file$6, 48, 8, 897);
+    			add_location(li1, file$6, 47, 6, 884);
 
     			dispose = [
     				listen(a0, "click", ctx.selectTab),
@@ -3313,7 +3319,7 @@ var app = (function () {
     	};
     }
 
-    // (48:4) {#if session.user}
+    // (52:4) {#if session.user}
     function create_if_block_1$3(ctx) {
     	var li0, a0, t1, li1, a1, t3, li2, a2, dispose;
 
@@ -3331,14 +3337,14 @@ var app = (function () {
     			a2 = element("a");
     			a2.textContent = "Search/Follow";
     			attr(a0, "href", "#inbox");
-    			add_location(a0, file$6, 49, 8, 961);
-    			add_location(li0, file$6, 48, 6, 948);
+    			add_location(a0, file$6, 53, 8, 1026);
+    			add_location(li0, file$6, 52, 6, 1013);
     			attr(a1, "href", "#create");
-    			add_location(a1, file$6, 52, 8, 1040);
-    			add_location(li1, file$6, 51, 6, 1027);
+    			add_location(a1, file$6, 56, 8, 1105);
+    			add_location(li1, file$6, 55, 6, 1092);
     			attr(a2, "href", "#search");
-    			add_location(a2, file$6, 55, 8, 1121);
-    			add_location(li2, file$6, 54, 6, 1108);
+    			add_location(a2, file$6, 59, 8, 1186);
+    			add_location(li2, file$6, 58, 6, 1173);
 
     			dispose = [
     				listen(a0, "click", ctx.selectTab),
@@ -3372,7 +3378,7 @@ var app = (function () {
     	};
     }
 
-    // (61:33) {:else}
+    // (65:33) {:else}
     function create_else_block$3(ctx) {
     	var t;
 
@@ -3393,7 +3399,7 @@ var app = (function () {
     	};
     }
 
-    // (61:8) {#if session.user}
+    // (65:8) {#if session.user}
     function create_if_block$4(ctx) {
     	var t;
 
@@ -3464,22 +3470,22 @@ var app = (function () {
     			h3 = element("h3");
     			h3.textContent = "PubGate-Philip";
     			attr(a0, "href", "#profile");
-    			add_location(a0, file$6, 59, 6, 1215);
-    			add_location(li0, file$6, 58, 4, 1204);
+    			add_location(a0, file$6, 63, 6, 1280);
+    			add_location(li0, file$6, 62, 4, 1269);
     			attr(a1, "href", "#about");
-    			add_location(a1, file$6, 64, 6, 1343);
-    			add_location(li1, file$6, 63, 4, 1332);
-    			add_location(ul, file$6, 36, 2, 654);
-    			add_location(header, file$6, 35, 0, 643);
+    			add_location(a1, file$6, 68, 6, 1408);
+    			add_location(li1, file$6, 67, 4, 1397);
+    			add_location(ul, file$6, 40, 2, 719);
+    			add_location(header, file$6, 39, 0, 708);
     			attr(div0, "class", "content");
-    			add_location(div0, file$6, 69, 0, 1420);
+    			add_location(div0, file$6, 73, 0, 1485);
     			attr(hr, "class", "separator");
-    			add_location(hr, file$6, 73, 0, 1516);
-    			add_location(h3, file$6, 76, 4, 1598);
+    			add_location(hr, file$6, 77, 0, 1581);
+    			add_location(h3, file$6, 80, 4, 1663);
     			attr(div1, "class", "left-column");
-    			add_location(div1, file$6, 75, 2, 1568);
+    			add_location(div1, file$6, 79, 2, 1633);
     			attr(footer, "class", "content");
-    			add_location(footer, file$6, 74, 0, 1541);
+    			add_location(footer, file$6, 78, 0, 1606);
 
     			dispose = [
     				listen(a0, "click", ctx.selectTab),
@@ -3599,7 +3605,11 @@ var app = (function () {
       let active_tab;
       let pgi = pubgate_instance;
 
-      $$invalidate('active_tab', active_tab = pgi ? "local" : "about");
+      if(session.user) {
+          $$invalidate('active_tab', active_tab = 'inbox');
+      } else {
+        $$invalidate('active_tab', active_tab = pgi ? "local" : "about");
+      }
 
       function selectTab(event) {
         event.preventDefault();

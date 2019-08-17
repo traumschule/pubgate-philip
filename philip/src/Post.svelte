@@ -48,7 +48,7 @@
         {/if}
     </div>
     <div class="reaction">
-        {#if post_object == true}
+        {#if post_object.id}
             <PostBody post={post_object} session={session}/>
         {:else}
             <a href="{post.object}">{post.object}</a>
