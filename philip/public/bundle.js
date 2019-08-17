@@ -413,11 +413,22 @@ var app = (function () {
 
         return fetch(url, Object.assign(defaultOptions, options))
             // .then(handleErrors)
-            .then(response => response.json())
+            .then(d => d.json())
             .catch((error) => {
-              console.log(error);
+                console.log(error);
+                console.log('fetching');
+                return fetch(base_url + "/proxy", {
+                    method: 'POST',
+                    body: JSON.stringify({url: url})
+                })
+                    .then(d => d.json())
+                    .catch((error) => {
+                        console.log(error);
+                    });
+
             });
     }
+
 
     // function handleErrors(response) {
     //     console.log(response);
@@ -632,13 +643,13 @@ var app = (function () {
     	return child_ctx;
     }
 
-    // (49:0) {:else}
+    // (60:0) {:else}
     function create_else_block(ctx) {
     	var div, a0, t0_value = ctx.post.type, t0, a0_href_value, t1, a1, t2_value = ctx.post.attributedTo.split('/').pop(), t2, a1_href_value, t3, span0, t5, span1, t6_value = ctx.post.published.replace("T", " ").replace("Z", " "), t6, t7, t8, p, raw_value = ctx.post.content, t9, if_block1_anchor;
 
-    	var if_block0 = (ctx.post.tag) && create_if_block_5(ctx);
+    	var if_block0 = (ctx.post.tag) && create_if_block_7(ctx);
 
-    	var if_block1 = (ctx.post.attachment) && create_if_block_3(ctx);
+    	var if_block1 = (ctx.post.attachment) && create_if_block_5(ctx);
 
     	return {
     		c: function create() {
@@ -662,15 +673,15 @@ var app = (function () {
     			if (if_block1) if_block1.c();
     			if_block1_anchor = empty();
     			attr(a0, "href", a0_href_value = ctx.post.id);
-    			add_location(a0, file$1, 51, 8, 734);
+    			add_location(a0, file$1, 62, 8, 891);
     			attr(a1, "href", a1_href_value = ctx.post.attributedTo);
-    			add_location(a1, file$1, 51, 52, 778);
+    			add_location(a1, file$1, 62, 52, 935);
     			attr(span0, "class", "metadata-seperator");
-    			add_location(span0, file$1, 52, 8, 861);
-    			add_location(span1, file$1, 53, 8, 911);
+    			add_location(span0, file$1, 63, 8, 1018);
+    			add_location(span1, file$1, 64, 8, 1068);
     			attr(div, "class", "metadata");
-    			add_location(div, file$1, 49, 4, 702);
-    			add_location(p, file$1, 65, 4, 1239);
+    			add_location(div, file$1, 60, 4, 859);
+    			add_location(p, file$1, 76, 4, 1396);
     		},
 
     		m: function mount(target, anchor) {
@@ -720,7 +731,7 @@ var app = (function () {
     				if (if_block0) {
     					if_block0.p(changed, ctx);
     				} else {
-    					if_block0 = create_if_block_5(ctx);
+    					if_block0 = create_if_block_7(ctx);
     					if_block0.c();
     					if_block0.m(t8.parentNode, t8);
     				}
@@ -737,7 +748,7 @@ var app = (function () {
     				if (if_block1) {
     					if_block1.p(changed, ctx);
     				} else {
-    					if_block1 = create_if_block_3(ctx);
+    					if_block1 = create_if_block_5(ctx);
     					if_block1.c();
     					if_block1.m(if_block1_anchor.parentNode, if_block1_anchor);
     				}
@@ -770,14 +781,14 @@ var app = (function () {
     	};
     }
 
-    // (46:0) {#if typeof post === 'string'}
-    function create_if_block_2(ctx) {
+    // (57:0) {#if typeof post === 'string'}
+    function create_if_block_4(ctx) {
     	var p;
 
     	return {
     		c: function create() {
     			p = element("p");
-    			add_location(p, file$1, 46, 4, 668);
+    			add_location(p, file$1, 57, 4, 825);
     		},
 
     		m: function mount(target, anchor) {
@@ -799,8 +810,8 @@ var app = (function () {
     	};
     }
 
-    // (56:4) {#if post.tag}
-    function create_if_block_5(ctx) {
+    // (67:4) {#if post.tag}
+    function create_if_block_7(ctx) {
     	var div;
 
     	var each_value_1 = ctx.post.tag;
@@ -819,7 +830,7 @@ var app = (function () {
     				each_blocks[i].c();
     			}
     			attr(div, "class", "tags");
-    			add_location(div, file$1, 56, 8, 1016);
+    			add_location(div, file$1, 67, 8, 1173);
     		},
 
     		m: function mount(target, anchor) {
@@ -863,8 +874,8 @@ var app = (function () {
     	};
     }
 
-    // (59:12) {#if tag.type == 'Hashtag'}
-    function create_if_block_6(ctx) {
+    // (70:12) {#if tag.type == 'Hashtag'}
+    function create_if_block_8(ctx) {
     	var a, t_value = ctx.tag.name, t, a_href_value;
 
     	return {
@@ -873,7 +884,7 @@ var app = (function () {
     			t = text(t_value);
     			attr(a, "class", "tag");
     			attr(a, "href", a_href_value = ctx.tag.href);
-    			add_location(a, file$1, 59, 16, 1123);
+    			add_location(a, file$1, 70, 16, 1280);
     		},
 
     		m: function mount(target, anchor) {
@@ -899,11 +910,11 @@ var app = (function () {
     	};
     }
 
-    // (58:8) {#each post.tag as tag}
+    // (69:8) {#each post.tag as tag}
     function create_each_block_1(ctx) {
     	var if_block_anchor;
 
-    	var if_block = (ctx.tag.type == 'Hashtag') && create_if_block_6(ctx);
+    	var if_block = (ctx.tag.type == 'Hashtag') && create_if_block_8(ctx);
 
     	return {
     		c: function create() {
@@ -921,7 +932,7 @@ var app = (function () {
     				if (if_block) {
     					if_block.p(changed, ctx);
     				} else {
-    					if_block = create_if_block_6(ctx);
+    					if_block = create_if_block_8(ctx);
     					if_block.c();
     					if_block.m(if_block_anchor.parentNode, if_block_anchor);
     				}
@@ -941,8 +952,8 @@ var app = (function () {
     	};
     }
 
-    // (67:4) {#if post.attachment}
-    function create_if_block_3(ctx) {
+    // (78:4) {#if post.attachment}
+    function create_if_block_5(ctx) {
     	var each_1_anchor;
 
     	var each_value = ctx.post.attachment;
@@ -1003,15 +1014,15 @@ var app = (function () {
     	};
     }
 
-    // (69:12) {#if attachment.type === "Document" && attachment.mediaType.startsWith("image")}
-    function create_if_block_4(ctx) {
+    // (80:12) {#if attachment.type === "Document" && attachment.mediaType.startsWith("image")}
+    function create_if_block_6(ctx) {
     	var img, img_src_value;
 
     	return {
     		c: function create() {
     			img = element("img");
     			attr(img, "src", img_src_value = ctx.attachment.url);
-    			add_location(img, file$1, 69, 16, 1449);
+    			add_location(img, file$1, 80, 16, 1606);
     		},
 
     		m: function mount(target, anchor) {
@@ -1032,11 +1043,11 @@ var app = (function () {
     	};
     }
 
-    // (68:8) {#each post.attachment as attachment}
+    // (79:8) {#each post.attachment as attachment}
     function create_each_block(ctx) {
     	var if_block_anchor;
 
-    	var if_block = (ctx.attachment.type === "Document" && ctx.attachment.mediaType.startsWith("image")) && create_if_block_4(ctx);
+    	var if_block = (ctx.attachment.type === "Document" && ctx.attachment.mediaType.startsWith("image")) && create_if_block_6(ctx);
 
     	return {
     		c: function create() {
@@ -1054,7 +1065,7 @@ var app = (function () {
     				if (if_block) {
     					if_block.p(changed, ctx);
     				} else {
-    					if_block = create_if_block_4(ctx);
+    					if_block = create_if_block_6(ctx);
     					if_block.c();
     					if_block.m(if_block_anchor.parentNode, if_block_anchor);
     				}
@@ -1074,68 +1085,100 @@ var app = (function () {
     	};
     }
 
-    // (82:4) {#if session.user }
+    // (93:4) {#if session.user }
     function create_if_block(ctx) {
-    	var div, a0, t1, a1, t3, a2, t5, if_block_anchor, current, dispose;
+    	var div, a0, t0, t1, a1, t3, a2, t4, t5, if_block2_anchor, current, dispose;
 
-    	var if_block = (ctx.showPublish) && create_if_block_1(ctx);
+    	var if_block0 = (ctx.liked) && create_if_block_3();
+
+    	var if_block1 = (ctx.announced) && create_if_block_2();
+
+    	var if_block2 = (ctx.showPublish) && create_if_block_1(ctx);
 
     	return {
     		c: function create() {
     			div = element("div");
     			a0 = element("a");
-    			a0.textContent = "Like";
+    			t0 = text("Like");
+    			if (if_block0) if_block0.c();
     			t1 = space();
     			a1 = element("a");
     			a1.textContent = "Add comment";
     			t3 = space();
     			a2 = element("a");
-    			a2.textContent = "Announce";
+    			t4 = text("Announce");
+    			if (if_block1) if_block1.c();
     			t5 = space();
-    			if (if_block) if_block.c();
-    			if_block_anchor = empty();
+    			if (if_block2) if_block2.c();
+    			if_block2_anchor = empty();
     			attr(a0, "class", "ra_item svelte-uuxpp3");
     			attr(a0, "href", "");
-    			add_location(a0, file$1, 83, 12, 1804);
+    			add_location(a0, file$1, 94, 12, 2030);
     			attr(a1, "class", "ra_item svelte-uuxpp3");
     			attr(a1, "href", "");
-    			add_location(a1, file$1, 84, 17, 1857);
+    			add_location(a1, file$1, 95, 17, 2100);
     			attr(a2, "class", "ra_item svelte-uuxpp3");
     			attr(a2, "href", "");
-    			add_location(a2, file$1, 85, 17, 1942);
+    			add_location(a2, file$1, 96, 17, 2185);
     			attr(div, "class", "ra svelte-uuxpp3");
-    			add_location(div, file$1, 82, 8, 1775);
+    			add_location(div, file$1, 93, 8, 2001);
     			dispose = listen(a1, "click", ctx.togglePublish);
     		},
 
     		m: function mount(target, anchor) {
     			insert(target, div, anchor);
     			append(div, a0);
+    			append(a0, t0);
+    			if (if_block0) if_block0.m(a0, null);
     			append(div, t1);
     			append(div, a1);
     			append(div, t3);
     			append(div, a2);
+    			append(a2, t4);
+    			if (if_block1) if_block1.m(a2, null);
     			insert(target, t5, anchor);
-    			if (if_block) if_block.m(target, anchor);
-    			insert(target, if_block_anchor, anchor);
+    			if (if_block2) if_block2.m(target, anchor);
+    			insert(target, if_block2_anchor, anchor);
     			current = true;
     		},
 
     		p: function update(changed, ctx) {
-    			if (ctx.showPublish) {
-    				if (if_block) {
-    					if_block.p(changed, ctx);
-    					transition_in(if_block, 1);
-    				} else {
-    					if_block = create_if_block_1(ctx);
-    					if_block.c();
-    					transition_in(if_block, 1);
-    					if_block.m(if_block_anchor.parentNode, if_block_anchor);
+    			if (ctx.liked) {
+    				if (!if_block0) {
+    					if_block0 = create_if_block_3();
+    					if_block0.c();
+    					if_block0.m(a0, null);
     				}
-    			} else if (if_block) {
+    			} else if (if_block0) {
+    				if_block0.d(1);
+    				if_block0 = null;
+    			}
+
+    			if (ctx.announced) {
+    				if (!if_block1) {
+    					if_block1 = create_if_block_2();
+    					if_block1.c();
+    					if_block1.m(a2, null);
+    				}
+    			} else if (if_block1) {
+    				if_block1.d(1);
+    				if_block1 = null;
+    			}
+
+    			if (ctx.showPublish) {
+    				if (if_block2) {
+    					if_block2.p(changed, ctx);
+    					transition_in(if_block2, 1);
+    				} else {
+    					if_block2 = create_if_block_1(ctx);
+    					if_block2.c();
+    					transition_in(if_block2, 1);
+    					if_block2.m(if_block2_anchor.parentNode, if_block2_anchor);
+    				}
+    			} else if (if_block2) {
     				group_outros();
-    				transition_out(if_block, 1, 1, () => {
-    					if_block = null;
+    				transition_out(if_block2, 1, 1, () => {
+    					if_block2 = null;
     				});
     				check_outros();
     			}
@@ -1143,25 +1186,31 @@ var app = (function () {
 
     		i: function intro(local) {
     			if (current) return;
-    			transition_in(if_block);
+    			transition_in(if_block2);
     			current = true;
     		},
 
     		o: function outro(local) {
-    			transition_out(if_block);
+    			transition_out(if_block2);
     			current = false;
     		},
 
     		d: function destroy(detaching) {
     			if (detaching) {
     				detach(div);
+    			}
+
+    			if (if_block0) if_block0.d();
+    			if (if_block1) if_block1.d();
+
+    			if (detaching) {
     				detach(t5);
     			}
 
-    			if (if_block) if_block.d(detaching);
+    			if (if_block2) if_block2.d(detaching);
 
     			if (detaching) {
-    				detach(if_block_anchor);
+    				detach(if_block2_anchor);
     			}
 
     			dispose();
@@ -1169,7 +1218,49 @@ var app = (function () {
     	};
     }
 
-    // (88:8) {#if showPublish}
+    // (95:43) {#if liked}
+    function create_if_block_3(ctx) {
+    	var t;
+
+    	return {
+    		c: function create() {
+    			t = text("d");
+    		},
+
+    		m: function mount(target, anchor) {
+    			insert(target, t, anchor);
+    		},
+
+    		d: function destroy(detaching) {
+    			if (detaching) {
+    				detach(t);
+    			}
+    		}
+    	};
+    }
+
+    // (97:53) {#if announced}
+    function create_if_block_2(ctx) {
+    	var t;
+
+    	return {
+    		c: function create() {
+    			t = text("d");
+    		},
+
+    		m: function mount(target, anchor) {
+    			insert(target, t, anchor);
+    		},
+
+    		d: function destroy(detaching) {
+    			if (detaching) {
+    				detach(t);
+    			}
+    		}
+    	};
+    }
+
+    // (99:8) {#if showPublish}
     function create_if_block_1(ctx) {
     	var current;
 
@@ -1217,10 +1308,10 @@ var app = (function () {
     }
 
     function create_fragment$1(ctx) {
-    	var t0, div1, div0, a0, t2, a1, t4, a2, t6, current;
+    	var t0, div1, div0, a0, t2, a1, t4, a2, t6, current, dispose;
 
     	function select_block_type(ctx) {
-    		if (typeof ctx.post === 'string') return create_if_block_2;
+    		if (typeof ctx.post === 'string') return create_if_block_4;
     		return create_else_block;
     	}
 
@@ -1247,17 +1338,23 @@ var app = (function () {
     			if (if_block1) if_block1.c();
     			attr(a0, "class", "rs_left svelte-uuxpp3");
     			attr(a0, "href", "");
-    			add_location(a0, file$1, 77, 11, 1584);
+    			add_location(a0, file$1, 88, 11, 1741);
     			attr(a1, "class", "rs_right svelte-uuxpp3");
     			attr(a1, "href", "");
-    			add_location(a1, file$1, 78, 11, 1634);
+    			add_location(a1, file$1, 89, 11, 1814);
     			attr(a2, "class", "rs_right svelte-uuxpp3");
     			attr(a2, "href", "");
-    			add_location(a2, file$1, 79, 11, 1688);
+    			add_location(a2, file$1, 90, 11, 1891);
     			attr(div0, "class", "rs svelte-uuxpp3");
-    			add_location(div0, file$1, 76, 4, 1556);
+    			add_location(div0, file$1, 87, 4, 1713);
     			attr(div1, "class", "reactionz svelte-uuxpp3");
-    			add_location(div1, file$1, 75, 0, 1528);
+    			add_location(div1, file$1, 86, 0, 1685);
+
+    			dispose = [
+    				listen(a0, "click", ctx.toggleLists),
+    				listen(a1, "click", ctx.toggleLists),
+    				listen(a2, "click", ctx.toggleLists)
+    			];
     		},
 
     		l: function claim(nodes) {
@@ -1330,6 +1427,7 @@ var app = (function () {
     			}
 
     			if (if_block1) if_block1.d();
+    			run_all(dispose);
     		}
     	};
     }
@@ -1342,6 +1440,13 @@ var app = (function () {
             ev.preventDefault();
             $$invalidate('showPublish', showPublish = !showPublish);
         };
+
+        const toggleLists = ev => {
+            ev.preventDefault();
+        };
+
+        let liked;
+        let announced;
 
     	const writable_props = ['post', 'session'];
     	Object.keys($$props).forEach(key => {
@@ -1357,7 +1462,10 @@ var app = (function () {
     		post,
     		session,
     		showPublish,
-    		togglePublish
+    		togglePublish,
+    		toggleLists,
+    		liked,
+    		announced
     	};
     }
 
@@ -2206,11 +2314,12 @@ var app = (function () {
     }
 
     /* src/SearchFollow.svelte generated by Svelte v3.7.1 */
+    const { console: console_1$1 } = globals;
 
     const file$4 = "src/SearchFollow.svelte";
 
-    // (75:0) {#if outbox_collection}
-    function create_if_block$2(ctx) {
+    // (98:0) {#if outbox_collection}
+    function create_if_block_1$2(ctx) {
     	var button, t0, t1, t2, current, dispose;
 
     	var timeline = new TimeLine({
@@ -2230,7 +2339,7 @@ var app = (function () {
     			t2 = space();
     			timeline.$$.fragment.c();
     			attr(button, "class", "btn btn-sm pull-xs-right btn-info");
-    			add_location(button, file$4, 75, 4, 2386);
+    			add_location(button, file$4, 98, 4, 3066);
     			dispose = listen(button, "click", ctx.follow);
     		},
 
@@ -2279,45 +2388,164 @@ var app = (function () {
     	};
     }
 
-    function create_fragment$4(ctx) {
-    	var br0, t0, form, fieldset, input, t1, button, t2, button_disabled_value, t3, br1, br2, t4, if_block_anchor, current, dispose;
+    // (109:0) {:else}
+    function create_else_block$2(ctx) {
+    	var t;
 
-    	var if_block = (ctx.outbox_collection) && create_if_block$2(ctx);
+    	return {
+    		c: function create() {
+    			t = text(ctx.loadedPost);
+    		},
+
+    		m: function mount(target, anchor) {
+    			insert(target, t, anchor);
+    		},
+
+    		p: function update(changed, ctx) {
+    			if (changed.loadedPost) {
+    				set_data(t, ctx.loadedPost);
+    			}
+    		},
+
+    		i: noop,
+    		o: noop,
+
+    		d: function destroy(detaching) {
+    			if (detaching) {
+    				detach(t);
+    			}
+    		}
+    	};
+    }
+
+    // (106:0) {#if typeof loadedPost === 'object'}
+    function create_if_block$2(ctx) {
+    	var current;
+
+    	var postbody = new PostBody({
+    		props: {
+    		post: ctx.loadedPost,
+    		session: ctx.session
+    	},
+    		$$inline: true
+    	});
+
+    	return {
+    		c: function create() {
+    			postbody.$$.fragment.c();
+    		},
+
+    		m: function mount(target, anchor) {
+    			mount_component(postbody, target, anchor);
+    			current = true;
+    		},
+
+    		p: function update(changed, ctx) {
+    			var postbody_changes = {};
+    			if (changed.loadedPost) postbody_changes.post = ctx.loadedPost;
+    			if (changed.session) postbody_changes.session = ctx.session;
+    			postbody.$set(postbody_changes);
+    		},
+
+    		i: function intro(local) {
+    			if (current) return;
+    			transition_in(postbody.$$.fragment, local);
+
+    			current = true;
+    		},
+
+    		o: function outro(local) {
+    			transition_out(postbody.$$.fragment, local);
+    			current = false;
+    		},
+
+    		d: function destroy(detaching) {
+    			destroy_component(postbody, detaching);
+    		}
+    	};
+    }
+
+    function create_fragment$4(ctx) {
+    	var br0, t0, form0, fieldset0, input0, t1, button0, t2, button0_disabled_value, t3, br1, br2, t4, form1, fieldset1, input1, t5, button1, t6, button1_disabled_value, t7, br3, br4, t8, t9, current_block_type_index, if_block1, if_block1_anchor, current, dispose;
+
+    	var if_block0 = (ctx.outbox_collection) && create_if_block_1$2(ctx);
+
+    	var if_block_creators = [
+    		create_if_block$2,
+    		create_else_block$2
+    	];
+
+    	var if_blocks = [];
+
+    	function select_block_type(ctx) {
+    		if (typeof ctx.loadedPost === 'object') return 0;
+    		return 1;
+    	}
+
+    	current_block_type_index = select_block_type(ctx);
+    	if_block1 = if_blocks[current_block_type_index] = if_block_creators[current_block_type_index](ctx);
 
     	return {
     		c: function create() {
     			br0 = element("br");
-    			t0 = space();
-    			form = element("form");
-    			fieldset = element("fieldset");
-    			input = element("input");
+    			t0 = text("\nSearch accounts\n");
+    			form0 = element("form");
+    			fieldset0 = element("fieldset");
+    			input0 = element("input");
     			t1 = space();
-    			button = element("button");
-    			t2 = text("Search");
+    			button0 = element("button");
+    			t2 = text("Search user");
     			t3 = space();
     			br1 = element("br");
     			br2 = element("br");
-    			t4 = space();
-    			if (if_block) if_block.c();
-    			if_block_anchor = empty();
-    			add_location(br0, file$4, 63, 0, 1991);
-    			attr(input, "class", "form-control form-control-lg");
-    			attr(input, "type", "text");
-    			attr(input, "placeholder", "Search format: username@domain");
-    			add_location(input, file$4, 66, 8, 2079);
-    			attr(fieldset, "class", "form-group");
-    			add_location(fieldset, file$4, 65, 4, 2041);
-    			attr(button, "class", "btn btn-sm pull-xs-right btn-info");
-    			attr(button, "type", "submit");
-    			button.disabled = button_disabled_value = !ctx.username;
-    			add_location(button, file$4, 68, 4, 2223);
-    			add_location(form, file$4, 64, 0, 1996);
-    			add_location(br1, file$4, 72, 0, 2348);
-    			add_location(br2, file$4, 72, 4, 2352);
+    			t4 = text("\n\nLoad Post by link\n");
+    			form1 = element("form");
+    			fieldset1 = element("fieldset");
+    			input1 = element("input");
+    			t5 = space();
+    			button1 = element("button");
+    			t6 = text("Load post");
+    			t7 = space();
+    			br3 = element("br");
+    			br4 = element("br");
+    			t8 = space();
+    			if (if_block0) if_block0.c();
+    			t9 = space();
+    			if_block1.c();
+    			if_block1_anchor = empty();
+    			add_location(br0, file$4, 74, 0, 2279);
+    			attr(input0, "class", "form-control form-control-lg");
+    			attr(input0, "type", "text");
+    			attr(input0, "placeholder", "Search format: username@domain");
+    			add_location(input0, file$4, 78, 8, 2383);
+    			attr(fieldset0, "class", "form-group");
+    			add_location(fieldset0, file$4, 77, 4, 2345);
+    			attr(button0, "class", "btn btn-sm pull-xs-right btn-info");
+    			attr(button0, "type", "submit");
+    			button0.disabled = button0_disabled_value = !ctx.username;
+    			add_location(button0, file$4, 80, 4, 2527);
+    			add_location(form0, file$4, 76, 0, 2300);
+    			add_location(br1, file$4, 84, 0, 2657);
+    			add_location(br2, file$4, 84, 4, 2661);
+    			attr(input1, "class", "form-control form-control-lg");
+    			attr(input1, "type", "text");
+    			attr(input1, "placeholder", "Copy a link here");
+    			add_location(input1, file$4, 89, 8, 2770);
+    			attr(fieldset1, "class", "form-group");
+    			add_location(fieldset1, file$4, 88, 4, 2732);
+    			attr(button1, "class", "btn btn-sm pull-xs-right btn-info");
+    			attr(button1, "type", "submit");
+    			button1.disabled = button1_disabled_value = !ctx.postLink;
+    			add_location(button1, file$4, 91, 4, 2900);
+    			add_location(form1, file$4, 87, 0, 2685);
+    			add_location(br3, file$4, 95, 0, 3028);
+    			add_location(br4, file$4, 95, 4, 3032);
 
     			dispose = [
-    				listen(input, "input", ctx.input_input_handler),
-    				listen(form, "submit", prevent_default(ctx.search))
+    				listen(input0, "input", ctx.input0_input_handler),
+    				listen(form0, "submit", prevent_default(ctx.search)),
+    				listen(input1, "input", ctx.input1_input_handler),
+    				listen(form1, "submit", prevent_default(ctx.loadPost))
     			];
     		},
 
@@ -2328,58 +2556,101 @@ var app = (function () {
     		m: function mount(target, anchor) {
     			insert(target, br0, anchor);
     			insert(target, t0, anchor);
-    			insert(target, form, anchor);
-    			append(form, fieldset);
-    			append(fieldset, input);
+    			insert(target, form0, anchor);
+    			append(form0, fieldset0);
+    			append(fieldset0, input0);
 
-    			input.value = ctx.username;
+    			input0.value = ctx.username;
 
-    			append(form, t1);
-    			append(form, button);
-    			append(button, t2);
+    			append(form0, t1);
+    			append(form0, button0);
+    			append(button0, t2);
     			insert(target, t3, anchor);
     			insert(target, br1, anchor);
     			insert(target, br2, anchor);
     			insert(target, t4, anchor);
-    			if (if_block) if_block.m(target, anchor);
-    			insert(target, if_block_anchor, anchor);
+    			insert(target, form1, anchor);
+    			append(form1, fieldset1);
+    			append(fieldset1, input1);
+
+    			input1.value = ctx.postLink;
+
+    			append(form1, t5);
+    			append(form1, button1);
+    			append(button1, t6);
+    			insert(target, t7, anchor);
+    			insert(target, br3, anchor);
+    			insert(target, br4, anchor);
+    			insert(target, t8, anchor);
+    			if (if_block0) if_block0.m(target, anchor);
+    			insert(target, t9, anchor);
+    			if_blocks[current_block_type_index].m(target, anchor);
+    			insert(target, if_block1_anchor, anchor);
     			current = true;
     		},
 
     		p: function update(changed, ctx) {
-    			if (changed.username && (input.value !== ctx.username)) input.value = ctx.username;
+    			if (changed.username && (input0.value !== ctx.username)) input0.value = ctx.username;
 
-    			if ((!current || changed.username) && button_disabled_value !== (button_disabled_value = !ctx.username)) {
-    				button.disabled = button_disabled_value;
+    			if ((!current || changed.username) && button0_disabled_value !== (button0_disabled_value = !ctx.username)) {
+    				button0.disabled = button0_disabled_value;
+    			}
+
+    			if (changed.postLink && (input1.value !== ctx.postLink)) input1.value = ctx.postLink;
+
+    			if ((!current || changed.postLink) && button1_disabled_value !== (button1_disabled_value = !ctx.postLink)) {
+    				button1.disabled = button1_disabled_value;
     			}
 
     			if (ctx.outbox_collection) {
-    				if (if_block) {
-    					if_block.p(changed, ctx);
-    					transition_in(if_block, 1);
+    				if (if_block0) {
+    					if_block0.p(changed, ctx);
+    					transition_in(if_block0, 1);
     				} else {
-    					if_block = create_if_block$2(ctx);
-    					if_block.c();
-    					transition_in(if_block, 1);
-    					if_block.m(if_block_anchor.parentNode, if_block_anchor);
+    					if_block0 = create_if_block_1$2(ctx);
+    					if_block0.c();
+    					transition_in(if_block0, 1);
+    					if_block0.m(t9.parentNode, t9);
     				}
-    			} else if (if_block) {
+    			} else if (if_block0) {
     				group_outros();
-    				transition_out(if_block, 1, 1, () => {
-    					if_block = null;
+    				transition_out(if_block0, 1, 1, () => {
+    					if_block0 = null;
     				});
     				check_outros();
+    			}
+
+    			var previous_block_index = current_block_type_index;
+    			current_block_type_index = select_block_type(ctx);
+    			if (current_block_type_index === previous_block_index) {
+    				if_blocks[current_block_type_index].p(changed, ctx);
+    			} else {
+    				group_outros();
+    				transition_out(if_blocks[previous_block_index], 1, 1, () => {
+    					if_blocks[previous_block_index] = null;
+    				});
+    				check_outros();
+
+    				if_block1 = if_blocks[current_block_type_index];
+    				if (!if_block1) {
+    					if_block1 = if_blocks[current_block_type_index] = if_block_creators[current_block_type_index](ctx);
+    					if_block1.c();
+    				}
+    				transition_in(if_block1, 1);
+    				if_block1.m(if_block1_anchor.parentNode, if_block1_anchor);
     			}
     		},
 
     		i: function intro(local) {
     			if (current) return;
-    			transition_in(if_block);
+    			transition_in(if_block0);
+    			transition_in(if_block1);
     			current = true;
     		},
 
     		o: function outro(local) {
-    			transition_out(if_block);
+    			transition_out(if_block0);
+    			transition_out(if_block1);
     			current = false;
     		},
 
@@ -2387,17 +2658,28 @@ var app = (function () {
     			if (detaching) {
     				detach(br0);
     				detach(t0);
-    				detach(form);
+    				detach(form0);
     				detach(t3);
     				detach(br1);
     				detach(br2);
     				detach(t4);
+    				detach(form1);
+    				detach(t7);
+    				detach(br3);
+    				detach(br4);
+    				detach(t8);
     			}
 
-    			if (if_block) if_block.d(detaching);
+    			if (if_block0) if_block0.d(detaching);
 
     			if (detaching) {
-    				detach(if_block_anchor);
+    				detach(t9);
+    			}
+
+    			if_blocks[current_block_type_index].d(detaching);
+
+    			if (detaching) {
+    				detach(if_block1_anchor);
     			}
 
     			run_all(dispose);
@@ -2464,14 +2746,29 @@ var app = (function () {
             }
         }
 
+        let loadedPost = '';
+        let postLink = '';
+        async function loadPost(event) {
+            $: $$invalidate('loadedPost', loadedPost = '');
+            const fpost = xhr(postLink);
+            console.log(fpost);
+            $: $$invalidate('loadedPost', loadedPost = await fpost);
+            $$invalidate('postLink', postLink = '');
+        }
+
     	const writable_props = ['session'];
     	Object.keys($$props).forEach(key => {
-    		if (!writable_props.includes(key) && !key.startsWith('$$')) console.warn(`<SearchFollow> was created with unknown prop '${key}'`);
+    		if (!writable_props.includes(key) && !key.startsWith('$$')) console_1$1.warn(`<SearchFollow> was created with unknown prop '${key}'`);
     	});
 
-    	function input_input_handler() {
+    	function input0_input_handler() {
     		username = this.value;
     		$$invalidate('username', username);
+    	}
+
+    	function input1_input_handler() {
+    		postLink = this.value;
+    		$$invalidate('postLink', postLink);
     	}
 
     	$$self.$set = $$props => {
@@ -2484,7 +2781,11 @@ var app = (function () {
     		outbox_collection,
     		search,
     		follow,
-    		input_input_handler
+    		loadedPost,
+    		postLink,
+    		loadPost,
+    		input0_input_handler,
+    		input1_input_handler
     	};
     }
 
@@ -2496,7 +2797,7 @@ var app = (function () {
     		const { ctx } = this.$$;
     		const props = options.props || {};
     		if (ctx.session === undefined && !('session' in props)) {
-    			console.warn("<SearchFollow> was created without expected prop 'session'");
+    			console_1$1.warn("<SearchFollow> was created without expected prop 'session'");
     		}
     	}
 
@@ -2510,7 +2811,7 @@ var app = (function () {
     }
 
     /* src/Tab.svelte generated by Svelte v3.7.1 */
-    const { console: console_1$1 } = globals;
+    const { console: console_1$2 } = globals;
 
     const file$5 = "src/Tab.svelte";
 
@@ -2677,8 +2978,8 @@ var app = (function () {
     	var current_block_type_index, if_block, if_block_anchor, current;
 
     	var if_block_creators = [
-    		create_if_block_1$2,
-    		create_else_block$2
+    		create_if_block_1$3,
+    		create_else_block$3
     	];
 
     	var if_blocks = [];
@@ -2747,7 +3048,7 @@ var app = (function () {
     }
 
     // (78:4) {:else}
-    function create_else_block$2(ctx) {
+    function create_else_block$3(ctx) {
     	var div, t1, form0, fieldset0, input0, t2, fieldset1, input1, t3, button0, t4, button0_disabled_value, t5, br0, br1, t6, br2, t7, form1, fieldset2, input2, t8, fieldset3, input3, t9, fieldset4, textarea, t10, fieldset5, input4, t11, fieldset6, input5, t12, button1, t13, button1_disabled_value, dispose;
 
     	return {
@@ -2960,7 +3261,7 @@ var app = (function () {
     }
 
     // (74:4) {#if session.user }
-    function create_if_block_1$2(ctx) {
+    function create_if_block_1$3(ctx) {
     	var button, t_1, current, dispose;
 
     	var timeline = new TimeLine({
@@ -3171,7 +3472,7 @@ var app = (function () {
 
     	const writable_props = ['active_tab', 'session'];
     	Object.keys($$props).forEach(key => {
-    		if (!writable_props.includes(key) && !key.startsWith('$$')) console_1$1.warn(`<Tab> was created with unknown prop '${key}'`);
+    		if (!writable_props.includes(key) && !key.startsWith('$$')) console_1$2.warn(`<Tab> was created with unknown prop '${key}'`);
     	});
 
     	function input0_input_handler() {
@@ -3244,10 +3545,10 @@ var app = (function () {
     		const { ctx } = this.$$;
     		const props = options.props || {};
     		if (ctx.active_tab === undefined && !('active_tab' in props)) {
-    			console_1$1.warn("<Tab> was created without expected prop 'active_tab'");
+    			console_1$2.warn("<Tab> was created without expected prop 'active_tab'");
     		}
     		if (ctx.session === undefined && !('session' in props)) {
-    			console_1$1.warn("<Tab> was created without expected prop 'session'");
+    			console_1$2.warn("<Tab> was created without expected prop 'session'");
     		}
     	}
 
@@ -3320,7 +3621,7 @@ var app = (function () {
     }
 
     // (52:4) {#if session.user}
-    function create_if_block_1$3(ctx) {
+    function create_if_block_1$4(ctx) {
     	var li0, a0, t1, li1, a1, t3, li2, a2, dispose;
 
     	return {
@@ -3379,7 +3680,7 @@ var app = (function () {
     }
 
     // (65:33) {:else}
-    function create_else_block$3(ctx) {
+    function create_else_block$4(ctx) {
     	var t;
 
     	return {
@@ -3425,11 +3726,11 @@ var app = (function () {
 
     	var if_block0 = (ctx.pgi == true) && create_if_block_2$3(ctx);
 
-    	var if_block1 = (ctx.session.user) && create_if_block_1$3(ctx);
+    	var if_block1 = (ctx.session.user) && create_if_block_1$4(ctx);
 
     	function select_block_type(ctx) {
     		if (ctx.session.user) return create_if_block$4;
-    		return create_else_block$3;
+    		return create_else_block$4;
     	}
 
     	var current_block_type = select_block_type(ctx);
@@ -3536,7 +3837,7 @@ var app = (function () {
 
     			if (ctx.session.user) {
     				if (!if_block1) {
-    					if_block1 = create_if_block_1$3(ctx);
+    					if_block1 = create_if_block_1$4(ctx);
     					if_block1.c();
     					if_block1.m(ul, t1);
     				}

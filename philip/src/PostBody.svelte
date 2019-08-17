@@ -10,6 +10,17 @@
         showPublish = !showPublish
     };
 
+    const toggleLists = ev => {
+        ev.preventDefault();
+    };
+
+    let likes;
+    let comments;
+    let announces;
+
+    let liked;
+    let announced;
+
 </script>
 <style>
 .reactionz {
@@ -75,15 +86,15 @@
 
 <div class="reactionz">
     <div class="rs">
-           <a class="rs_left" href="">N likes</a>
-           <a class="rs_right" href="">N comments</a>
-           <a class="rs_right" href="">N announces</a>
+           <a class="rs_left" href="" on:click={toggleLists}>N likes</a>
+           <a class="rs_right" href="" on:click={toggleLists}>N comments</a>
+           <a class="rs_right" href="" on:click={toggleLists}>N announces</a>
     </div>
     {#if session.user }
         <div class="ra">
-            <a class="ra_item" href="">Like</a>
+            <a class="ra_item" href="">Like{#if liked}d{/if}</a>
                  <a class="ra_item" href="" on:click={togglePublish}>Add comment</a>
-                 <a class="ra_item" href="" >Announce</a>
+                 <a class="ra_item" href="" >Announce{#if announced}d{/if}</a>
              </div>
         {#if showPublish}
             <Publish reply={post} session={session}/>
