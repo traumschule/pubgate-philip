@@ -66,14 +66,14 @@
     <fieldset class="form-group">
         <input class="form-control form-control-lg" type="text" placeholder="Search format: username@domain" bind:value={username}>
     </fieldset>
-    <button class="btn btn-lg btn-primary pull-xs-right" type="submit" disabled='{!username}'>
+    <button class="btn btn-sm pull-xs-right btn-info" type="submit" disabled='{!username}'>
         Search
     </button>
 </form>
 <br><br>
 
 {#if outbox_collection}
-    <button class="btn btn-sm" on:click={follow}>Follow</button>
+    <button class="btn btn-sm pull-xs-right btn-info" on:click={follow}>Follow {username}</button>
     <TimeLine active_tab="search"
               session={session}
               outbox_collection={outbox_collection}/>

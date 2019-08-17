@@ -72,7 +72,7 @@
 
 {#if active_tab == 'profile'}
     {#if session.user }
-         <button class="btn btn-primary btn-sm" on:click={logout}>Logout</button>
+         <button class="btn btn-sm pull-xs-right btn-info" on:click={logout}>Logout</button>
         <TimeLine active_tab={active_tab}
                   session={session}/>
     {:else}
@@ -85,7 +85,7 @@
             <fieldset class="form-group">
                 <input class="form-control form-control-lg" type="password" placeholder="Password" bind:value={password}>
             </fieldset>
-            <button class="btn btn-lg btn-primary pull-xs-right" type="submit" disabled='{!username || !password}'>
+            <button class="btn btn-sm pull-xs-right btn-info" type="submit" disabled='{!username || !password}'>
                 Sign in
             </button>
         </form>
@@ -109,7 +109,7 @@
                 <input class="form-control form-control-lg" type="text" placeholder="Invite code" bind:value={invite}>
             </fieldset>
 
-            <button class="btn btn-lg btn-primary pull-xs-right" type="submit" disabled='{!username || !password}'>
+            <button class="btn btn-sm pull-xs-right btn-info" type="submit" disabled='{!username || !password}'>
                 Register
             </button>
         </form>

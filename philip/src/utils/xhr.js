@@ -6,16 +6,20 @@ export default function xhr(url, options = {}, accept = "application/activity+js
     };
 
     return fetch(url, Object.assign(defaultOptions, options))
-        .then(handleErrors)
-        .then(response => response.json());
-}
-
-function handleErrors(response) {
-    if (!response.ok) {
-        return response.json().then(error => {
-            return Promise.reject(error);
+        // .then(handleErrors)
+        .then(response => response.json())
+        .catch((error) => {
+          console.log(error);
         });
-    }
-
-    return response;
 }
+
+// function handleErrors(response) {
+//     console.log(response);
+//     if (!response.ok) {
+//         return response.json().then(error => {
+//             return Promise.reject(error);
+//         });
+//     }
+//
+//     return response;
+// }

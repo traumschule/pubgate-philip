@@ -12,7 +12,6 @@
 	if (["Announce", "Like"].includes(post.type)) {
 	    if (typeof post.object === "string") {
 	        fpost = xhr(post.object);
-
             // fpost = fetch(post.object, { headers: {
             //     "Accept": "application/activity+json"
             // }}).then(d => d.json());
@@ -49,7 +48,11 @@
         {/if}
     </div>
     <div class="reaction">
-        <PostBody post={post_object} session={session}/>
+        {#if post_object == true}
+            <PostBody post={post_object} session={session}/>
+        {:else}
+            <a href="{post.object}">{post.object}</a>
+        {/if}
     </div>
 </li>
 {/if}
