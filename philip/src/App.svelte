@@ -5,7 +5,11 @@
   let active_tab;
   let pgi = pubgate_instance;
 
-  active_tab = pgi ? "local" : "about";
+  if(session.user) {
+      active_tab = 'inbox'
+  } else {
+    active_tab = pgi ? "local" : "about";
+  }
 
   function selectTab(event) {
     event.preventDefault();

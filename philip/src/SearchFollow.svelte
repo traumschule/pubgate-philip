@@ -2,6 +2,7 @@
 	export let session;
 	import xhr from "./utils/xhr";
 	import TimeLine from "./TimeLine.svelte";
+	import PostBody from "./PostBody.svelte";
 
 	let username = '';
 	let outbox_collection = null;
@@ -59,22 +60,52 @@
         }
     }
 
+    let loadedPost = '';
+    let postLink = '';
+    async function loadPost(event) {
+        $: loadedPost = '';
+        const fpost = xhr(postLink);
+        console.log(fpost);
+        $: loadedPost = await fpost;
+        postLink = '';
+    }
+
 </script>
 
 <br>
+Search accounts
 <form on:submit|preventDefault={search}>
     <fieldset class="form-group">
         <input class="form-control form-control-lg" type="text" placeholder="Search format: username@domain" bind:value={username}>
     </fieldset>
-    <button class="btn btn-lg btn-primary pull-xs-right" type="submit" disabled='{!username}'>
-        Search
+    <button class="btn btn-sm pull-xs-right btn-info" type="submit" disabled='{!username}'>
+        Search user
+    </button>
+</form>
+<br><br>
+
+Load Post by link
+<form on:submit|preventDefault={loadPost}>
+    <fieldset class="form-group">
+        <input class="form-control form-control-lg" type="text" placeholder="Copy a link here" bind:value={postLink}>
+    </fieldset>
+    <button class="btn btn-sm pull-xs-right btn-info" type="submit" disabled='{!postLink}'>
+        Load post
     </button>
 </form>
 <br><br>
 
 {#if outbox_collection}
-    <button class="btn btn-sm" on:click={follow}>Follow</button>
+    <button class="btn btn-sm pull-xs-right btn-info" on:click={follow}>Follow {username}</button>
     <TimeLine active_tab="search"
               session={session}
               outbox_collection={outbox_collection}/>
+{/if}
+
+
+{#if typeof loadedPost === 'object'}
+    <PostBody post={loadedPost}
+              session={session}/>
+{:else}
+    {loadedPost}
 {/if}
