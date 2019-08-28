@@ -73,7 +73,13 @@
 
 {#if isReply == true}
     <div class="reaction">
-        <PostContent post={inReply}/>
+        {#if typeof(inReply) === 'object' && typeof(inReply.id) != 'string'}
+            {#await inReply then value}
+                <PostContent post={value}/>
+            {/await}
+         {:else}
+            <PostContent post={inReply}/>
+         {/if}
     </div>
 {/if}
 

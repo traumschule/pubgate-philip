@@ -1264,7 +1264,83 @@ var app = (function () {
 
     // (74:0) {#if isReply == true}
     function create_if_block_4$1(ctx) {
-    	var div, current;
+    	var div, current_block_type_index, if_block, current;
+
+    	var if_block_creators = [
+    		create_if_block_5$1,
+    		create_else_block$1
+    	];
+
+    	var if_blocks = [];
+
+    	function select_block_type(ctx) {
+    		if (typeof(ctx.inReply) === 'object' && typeof(ctx.inReply.id) != 'string') return 0;
+    		return 1;
+    	}
+
+    	current_block_type_index = select_block_type(ctx);
+    	if_block = if_blocks[current_block_type_index] = if_block_creators[current_block_type_index](ctx);
+
+    	return {
+    		c: function create() {
+    			div = element("div");
+    			if_block.c();
+    			attr(div, "class", "reaction svelte-quq8dc");
+    			add_location(div, file$2, 74, 4, 1189);
+    		},
+
+    		m: function mount(target, anchor) {
+    			insert(target, div, anchor);
+    			if_blocks[current_block_type_index].m(div, null);
+    			current = true;
+    		},
+
+    		p: function update(changed, ctx) {
+    			var previous_block_index = current_block_type_index;
+    			current_block_type_index = select_block_type(ctx);
+    			if (current_block_type_index === previous_block_index) {
+    				if_blocks[current_block_type_index].p(changed, ctx);
+    			} else {
+    				group_outros();
+    				transition_out(if_blocks[previous_block_index], 1, 1, () => {
+    					if_blocks[previous_block_index] = null;
+    				});
+    				check_outros();
+
+    				if_block = if_blocks[current_block_type_index];
+    				if (!if_block) {
+    					if_block = if_blocks[current_block_type_index] = if_block_creators[current_block_type_index](ctx);
+    					if_block.c();
+    				}
+    				transition_in(if_block, 1);
+    				if_block.m(div, null);
+    			}
+    		},
+
+    		i: function intro(local) {
+    			if (current) return;
+    			transition_in(if_block);
+    			current = true;
+    		},
+
+    		o: function outro(local) {
+    			transition_out(if_block);
+    			current = false;
+    		},
+
+    		d: function destroy(detaching) {
+    			if (detaching) {
+    				detach(div);
+    			}
+
+    			if_blocks[current_block_type_index].d();
+    		}
+    	};
+    }
+
+    // (80:9) {:else}
+    function create_else_block$1(ctx) {
+    	var current;
 
     	var postcontent = new PostContent({
     		props: { post: ctx.inReply },
@@ -1273,15 +1349,11 @@ var app = (function () {
 
     	return {
     		c: function create() {
-    			div = element("div");
     			postcontent.$$.fragment.c();
-    			attr(div, "class", "reaction svelte-quq8dc");
-    			add_location(div, file$2, 74, 4, 1189);
     		},
 
     		m: function mount(target, anchor) {
-    			insert(target, div, anchor);
-    			mount_component(postcontent, div, null);
+    			mount_component(postcontent, target, anchor);
     			current = true;
     		},
 
@@ -1304,16 +1376,150 @@ var app = (function () {
     		},
 
     		d: function destroy(detaching) {
-    			if (detaching) {
-    				detach(div);
-    			}
-
-    			destroy_component(postcontent);
+    			destroy_component(postcontent, detaching);
     		}
     	};
     }
 
-    // (89:4) {#if session.user }
+    // (76:8) {#if typeof(inReply) === 'object' && typeof(inReply.id) != 'string'}
+    function create_if_block_5$1(ctx) {
+    	var await_block_anchor, promise, current;
+
+    	let info = {
+    		ctx,
+    		current: null,
+    		token: null,
+    		pending: create_pending_block,
+    		then: create_then_block,
+    		catch: create_catch_block,
+    		value: 'value',
+    		error: 'null',
+    		blocks: [,,,]
+    	};
+
+    	handle_promise(promise = ctx.inReply, info);
+
+    	return {
+    		c: function create() {
+    			await_block_anchor = empty();
+
+    			info.block.c();
+    		},
+
+    		m: function mount(target, anchor) {
+    			insert(target, await_block_anchor, anchor);
+
+    			info.block.m(target, info.anchor = anchor);
+    			info.mount = () => await_block_anchor.parentNode;
+    			info.anchor = await_block_anchor;
+
+    			current = true;
+    		},
+
+    		p: function update(changed, new_ctx) {
+    			ctx = new_ctx;
+    			info.ctx = ctx;
+
+    			if (('inReply' in changed) && promise !== (promise = ctx.inReply) && handle_promise(promise, info)) ; else {
+    				info.block.p(changed, assign(assign({}, ctx), info.resolved));
+    			}
+    		},
+
+    		i: function intro(local) {
+    			if (current) return;
+    			transition_in(info.block);
+    			current = true;
+    		},
+
+    		o: function outro(local) {
+    			for (let i = 0; i < 3; i += 1) {
+    				const block = info.blocks[i];
+    				transition_out(block);
+    			}
+
+    			current = false;
+    		},
+
+    		d: function destroy(detaching) {
+    			if (detaching) {
+    				detach(await_block_anchor);
+    			}
+
+    			info.block.d(detaching);
+    			info.token = null;
+    			info = null;
+    		}
+    	};
+    }
+
+    // (1:0)  <script>  export let post;  export let session;  import Publish from "./Publish.svelte";  import PostContent from "./PostContent.svelte";  import { ensureObject }
+    function create_catch_block(ctx) {
+    	return {
+    		c: noop,
+    		m: noop,
+    		p: noop,
+    		i: noop,
+    		o: noop,
+    		d: noop
+    	};
+    }
+
+    // (77:39)                  <PostContent post={value}
+    function create_then_block(ctx) {
+    	var current;
+
+    	var postcontent = new PostContent({
+    		props: { post: ctx.value },
+    		$$inline: true
+    	});
+
+    	return {
+    		c: function create() {
+    			postcontent.$$.fragment.c();
+    		},
+
+    		m: function mount(target, anchor) {
+    			mount_component(postcontent, target, anchor);
+    			current = true;
+    		},
+
+    		p: function update(changed, ctx) {
+    			var postcontent_changes = {};
+    			if (changed.inReply) postcontent_changes.post = ctx.value;
+    			postcontent.$set(postcontent_changes);
+    		},
+
+    		i: function intro(local) {
+    			if (current) return;
+    			transition_in(postcontent.$$.fragment, local);
+
+    			current = true;
+    		},
+
+    		o: function outro(local) {
+    			transition_out(postcontent.$$.fragment, local);
+    			current = false;
+    		},
+
+    		d: function destroy(detaching) {
+    			destroy_component(postcontent, detaching);
+    		}
+    	};
+    }
+
+    // (1:0)  <script>  export let post;  export let session;  import Publish from "./Publish.svelte";  import PostContent from "./PostContent.svelte";  import { ensureObject }
+    function create_pending_block(ctx) {
+    	return {
+    		c: noop,
+    		m: noop,
+    		p: noop,
+    		i: noop,
+    		o: noop,
+    		d: noop
+    	};
+    }
+
+    // (95:4) {#if session.user }
     function create_if_block$1(ctx) {
     	var div, a0, t0, t1, a1, t3, a2, t4, t5, if_block2_anchor, current, dispose;
 
@@ -1341,15 +1547,15 @@ var app = (function () {
     			if_block2_anchor = empty();
     			attr(a0, "class", "ra_item svelte-quq8dc");
     			attr(a0, "href", "");
-    			add_location(a0, file$2, 90, 12, 1666);
+    			add_location(a0, file$2, 96, 12, 1884);
     			attr(a1, "class", "ra_item svelte-quq8dc");
     			attr(a1, "href", "");
-    			add_location(a1, file$2, 91, 17, 1736);
+    			add_location(a1, file$2, 97, 17, 1954);
     			attr(a2, "class", "ra_item svelte-quq8dc");
     			attr(a2, "href", "");
-    			add_location(a2, file$2, 92, 17, 1821);
+    			add_location(a2, file$2, 98, 17, 2039);
     			attr(div, "class", "ra svelte-quq8dc");
-    			add_location(div, file$2, 89, 8, 1637);
+    			add_location(div, file$2, 95, 8, 1855);
     			dispose = listen(a1, "click", ctx.togglePublish);
     		},
 
@@ -1446,7 +1652,7 @@ var app = (function () {
     	};
     }
 
-    // (91:43) {#if liked}
+    // (97:43) {#if liked}
     function create_if_block_3$1(ctx) {
     	var t;
 
@@ -1467,7 +1673,7 @@ var app = (function () {
     	};
     }
 
-    // (93:53) {#if announced}
+    // (99:53) {#if announced}
     function create_if_block_2$1(ctx) {
     	var t;
 
@@ -1488,7 +1694,7 @@ var app = (function () {
     	};
     }
 
-    // (95:8) {#if showPublish}
+    // (101:8) {#if showPublish}
     function create_if_block_1$1(ctx) {
     	var current;
 
@@ -1570,17 +1776,17 @@ var app = (function () {
     			if (if_block1) if_block1.c();
     			attr(a0, "class", "rs_left svelte-quq8dc");
     			attr(a0, "href", "");
-    			add_location(a0, file$2, 84, 11, 1377);
+    			add_location(a0, file$2, 90, 11, 1595);
     			attr(a1, "class", "rs_right svelte-quq8dc");
     			attr(a1, "href", "");
-    			add_location(a1, file$2, 85, 11, 1450);
+    			add_location(a1, file$2, 91, 11, 1668);
     			attr(a2, "class", "rs_right svelte-quq8dc");
     			attr(a2, "href", "");
-    			add_location(a2, file$2, 86, 11, 1527);
+    			add_location(a2, file$2, 92, 11, 1745);
     			attr(div0, "class", "rs svelte-quq8dc");
-    			add_location(div0, file$2, 83, 4, 1349);
+    			add_location(div0, file$2, 89, 4, 1567);
     			attr(div1, "class", "reactionz svelte-quq8dc");
-    			add_location(div1, file$2, 82, 0, 1321);
+    			add_location(div1, file$2, 88, 0, 1539);
 
     			dispose = [
     				listen(a0, "click", ctx.toggleLists),
@@ -1780,7 +1986,7 @@ var app = (function () {
     const file$3 = "src/Activity.svelte";
 
     // (37:4) {:else}
-    function create_else_block$1(ctx) {
+    function create_else_block$2(ctx) {
     	var div0, h2, t1, a0, t2_value = ctx.post.type, t2, a0_href_value, t3, a1, t4_value = ctx.post.actor.split('/').slice(-1)[0], t4, a1_href_value, t5, span, t7, t8, div1, current;
 
     	var if_block = (ctx.post.published) && create_if_block_1$2(ctx);
@@ -2001,7 +2207,7 @@ var app = (function () {
 
     	var if_block_creators = [
     		create_if_block$2,
-    		create_else_block$1
+    		create_else_block$2
     	];
 
     	var if_blocks = [];
@@ -2149,7 +2355,7 @@ var app = (function () {
     }
 
     // (1:0) <script>     export let active_tab;     export let session;     export let outbox_collection = {}
-    function create_catch_block(ctx) {
+    function create_catch_block$1(ctx) {
     	return {
     		c: noop,
     		m: noop,
@@ -2161,7 +2367,7 @@ var app = (function () {
     }
 
     // (44:25)  <ul class="post-list">     {#each value as post}
-    function create_then_block(ctx) {
+    function create_then_block$1(ctx) {
     	var ul, current;
 
     	var each_value = ctx.value;
@@ -2293,7 +2499,7 @@ var app = (function () {
     }
 
     // (1:0) <script>     export let active_tab;     export let session;     export let outbox_collection = {}
-    function create_pending_block(ctx) {
+    function create_pending_block$1(ctx) {
     	return {
     		c: noop,
     		m: noop,
@@ -2311,9 +2517,9 @@ var app = (function () {
     		ctx,
     		current: null,
     		token: null,
-    		pending: create_pending_block,
-    		then: create_then_block,
-    		catch: create_catch_block,
+    		pending: create_pending_block$1,
+    		then: create_then_block$1,
+    		catch: create_catch_block$1,
     		value: 'value',
     		error: 'null',
     		blocks: [,,,]
@@ -2555,7 +2761,7 @@ var app = (function () {
     }
 
     // (109:0) {:else}
-    function create_else_block$2(ctx) {
+    function create_else_block$3(ctx) {
     	var t;
 
     	return {
@@ -2638,7 +2844,7 @@ var app = (function () {
 
     	var if_block_creators = [
     		create_if_block$3,
-    		create_else_block$2
+    		create_else_block$3
     	];
 
     	var if_blocks = [];
@@ -3145,7 +3351,7 @@ var app = (function () {
 
     	var if_block_creators = [
     		create_if_block_1$4,
-    		create_else_block$3
+    		create_else_block$4
     	];
 
     	var if_blocks = [];
@@ -3214,7 +3420,7 @@ var app = (function () {
     }
 
     // (78:4) {:else}
-    function create_else_block$3(ctx) {
+    function create_else_block$4(ctx) {
     	var div, t1, form0, fieldset0, input0, t2, fieldset1, input1, t3, button0, t4, button0_disabled_value, t5, br0, br1, t6, br2, t7, form1, fieldset2, input2, t8, fieldset3, input3, t9, fieldset4, textarea, t10, fieldset5, input4, t11, fieldset6, input5, t12, button1, t13, button1_disabled_value, dispose;
 
     	return {
@@ -3846,7 +4052,7 @@ var app = (function () {
     }
 
     // (65:33) {:else}
-    function create_else_block$4(ctx) {
+    function create_else_block$5(ctx) {
     	var t;
 
     	return {
@@ -3896,7 +4102,7 @@ var app = (function () {
 
     	function select_block_type(ctx) {
     		if (ctx.session.user) return create_if_block$5;
-    		return create_else_block$4;
+    		return create_else_block$5;
     	}
 
     	var current_block_type = select_block_type(ctx);
