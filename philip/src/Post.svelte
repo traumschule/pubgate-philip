@@ -20,17 +20,28 @@
     let isReply = false;
 
     let likes = 'n/a';
-    let comments;
+    let comments = 'n/a';
     let announces = 'n/a';
 
     let liked;
     let announced;
     console.log(post);
 
-
     if (post.inReplyTo) {
         inReply = ensureObject(post.inReplyTo);
         isReply = true
+    }
+
+    if (post.likes) {
+        likes = post.likes.totalItems
+    }
+
+    if (post.shares) {
+        announces = post.shares.totalItems
+    }
+
+    if (post.replies) {
+        comments = post.replies.totalItems
     }
 
     let customType = isReply ? "Reply" : null
@@ -88,21 +99,18 @@
 
 <div class="reactionz">
     <div class="rs">
-           <a class="rs_left" href="" on:click={toggleLists}>N likes</a>
-           <a class="rs_right" href="" on:click={toggleLists}>N comments</a>
-           <a class="rs_right" href="" on:click={toggleLists}>N announces</a>
+           <a class="rs_left" href="" on:click={toggleLists}>{likes} likes</a>
+           <a class="rs_right" href="" on:click={toggleLists}>{comments} comments</a>
+           <a class="rs_right" href="" on:click={toggleLists}>{announces} announces</a>
     </div>
     {#if session.user }
         <div class="ra">
             <a class="ra_item" href="">Like{#if liked}d{/if}</a>
-                 <a class="ra_item" href="" on:click={togglePublish}>Add comment</a>
-                 <a class="ra_item" href="" >Announce{#if announced}d{/if}</a>
-             </div>
+             <a class="ra_item" href="" on:click={togglePublish}>Add comment</a>
+             <a class="ra_item" href="" >Announce{#if announced}d{/if}</a>
+         </div>
         {#if showPublish}
             <Publish reply={post} session={session}/>
         {/if}
     {/if}
 </div>
-
-
-

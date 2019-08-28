@@ -9,7 +9,7 @@
 
         <a href="{post.id}">{#if customType}
             {customType}{:else}{post.type}
-        {/if}</a> by user <a href="{ post.attributedTo }">{ post.attributedTo.split('/').pop() }</a>
+        {/if}</a> by user <a href="{ post.attributedTo }">{ post.attributedTo }</a>
         <span class="metadata-seperator">·</span>
         <span>{ post.published.replace("T", " ").replace("Z", " ")}</span>
     </div>

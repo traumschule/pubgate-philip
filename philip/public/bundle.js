@@ -640,7 +640,7 @@ var app = (function () {
     			a = element("a");
     			t = text(ctx.post);
     			attr(a, "href", ctx.post);
-    			add_location(a, file$1, 35, 4, 982);
+    			add_location(a, file$1, 35, 4, 965);
     		},
 
     		m: function mount(target, anchor) {
@@ -665,7 +665,7 @@ var app = (function () {
 
     // (7:0) {#if post.id}
     function create_if_block(ctx) {
-    	var div, a0, a0_href_value, t0, a1, t1_value = ctx.post.attributedTo.split('/').pop(), t1, a1_href_value, t2, span0, t4, span1, t5_value = ctx.post.published.replace("T", " ").replace("Z", " "), t5, t6, t7, p, raw_value = ctx.post.content, t8, if_block2_anchor;
+    	var div, a0, a0_href_value, t0, a1, t1_value = ctx.post.attributedTo, t1, a1_href_value, t2, span0, t4, span1, t5_value = ctx.post.published.replace("T", " ").replace("Z", " "), t5, t6, t7, p, raw_value = ctx.post.content, t8, if_block2_anchor;
 
     	function select_block_type_1(ctx) {
     		if (ctx.customType) return create_if_block_5;
@@ -705,11 +705,11 @@ var app = (function () {
     			attr(a1, "href", a1_href_value = ctx.post.attributedTo);
     			add_location(a1, file$1, 11, 26, 226);
     			attr(span0, "class", "metadata-seperator");
-    			add_location(span0, file$1, 12, 8, 309);
-    			add_location(span1, file$1, 13, 8, 359);
+    			add_location(span0, file$1, 12, 8, 292);
+    			add_location(span1, file$1, 13, 8, 342);
     			attr(div, "class", "metadata");
     			add_location(div, file$1, 7, 4, 88);
-    			add_location(p, file$1, 25, 4, 687);
+    			add_location(p, file$1, 25, 4, 670);
     		},
 
     		m: function mount(target, anchor) {
@@ -750,7 +750,7 @@ var app = (function () {
     				attr(a0, "href", a0_href_value);
     			}
 
-    			if ((changed.post) && t1_value !== (t1_value = ctx.post.attributedTo.split('/').pop())) {
+    			if ((changed.post) && t1_value !== (t1_value = ctx.post.attributedTo)) {
     				set_data(t1, t1_value);
     			}
 
@@ -895,7 +895,7 @@ var app = (function () {
     				each_blocks[i].c();
     			}
     			attr(div, "class", "tags");
-    			add_location(div, file$1, 16, 8, 464);
+    			add_location(div, file$1, 16, 8, 447);
     		},
 
     		m: function mount(target, anchor) {
@@ -949,7 +949,7 @@ var app = (function () {
     			t = text(t_value);
     			attr(a, "class", "tag");
     			attr(a, "href", a_href_value = ctx.tag.href);
-    			add_location(a, file$1, 19, 16, 571);
+    			add_location(a, file$1, 19, 16, 554);
     		},
 
     		m: function mount(target, anchor) {
@@ -1087,7 +1087,7 @@ var app = (function () {
     		c: function create() {
     			img = element("img");
     			attr(img, "src", img_src_value = ctx.attachment.url);
-    			add_location(img, file$1, 29, 16, 897);
+    			add_location(img, file$1, 29, 16, 880);
     		},
 
     		m: function mount(target, anchor) {
@@ -1262,7 +1262,7 @@ var app = (function () {
 
     const file$2 = "src/Post.svelte";
 
-    // (74:0) {#if isReply == true}
+    // (85:0) {#if isReply == true}
     function create_if_block_4$1(ctx) {
     	var div, current_block_type_index, if_block, current;
 
@@ -1286,7 +1286,7 @@ var app = (function () {
     			div = element("div");
     			if_block.c();
     			attr(div, "class", "reaction svelte-quq8dc");
-    			add_location(div, file$2, 74, 4, 1189);
+    			add_location(div, file$2, 85, 4, 1410);
     		},
 
     		m: function mount(target, anchor) {
@@ -1338,7 +1338,7 @@ var app = (function () {
     	};
     }
 
-    // (80:9) {:else}
+    // (91:9) {:else}
     function create_else_block$1(ctx) {
     	var current;
 
@@ -1381,7 +1381,7 @@ var app = (function () {
     	};
     }
 
-    // (76:8) {#if typeof(inReply) === 'object' && typeof(inReply.id) != 'string'}
+    // (87:8) {#if typeof(inReply) === 'object' && typeof(inReply.id) != 'string'}
     function create_if_block_5$1(ctx) {
     	var await_block_anchor, promise, current;
 
@@ -1464,7 +1464,7 @@ var app = (function () {
     	};
     }
 
-    // (77:39)                  <PostContent post={value}
+    // (88:39)                  <PostContent post={value}
     function create_then_block(ctx) {
     	var current;
 
@@ -1519,7 +1519,7 @@ var app = (function () {
     	};
     }
 
-    // (95:4) {#if session.user }
+    // (106:4) {#if session.user }
     function create_if_block$1(ctx) {
     	var div, a0, t0, t1, a1, t3, a2, t4, t5, if_block2_anchor, current, dispose;
 
@@ -1547,15 +1547,15 @@ var app = (function () {
     			if_block2_anchor = empty();
     			attr(a0, "class", "ra_item svelte-quq8dc");
     			attr(a0, "href", "");
-    			add_location(a0, file$2, 96, 12, 1884);
+    			add_location(a0, file$2, 107, 12, 2130);
     			attr(a1, "class", "ra_item svelte-quq8dc");
     			attr(a1, "href", "");
-    			add_location(a1, file$2, 97, 17, 1954);
+    			add_location(a1, file$2, 108, 13, 2196);
     			attr(a2, "class", "ra_item svelte-quq8dc");
     			attr(a2, "href", "");
-    			add_location(a2, file$2, 98, 17, 2039);
+    			add_location(a2, file$2, 109, 13, 2277);
     			attr(div, "class", "ra svelte-quq8dc");
-    			add_location(div, file$2, 95, 8, 1855);
+    			add_location(div, file$2, 106, 8, 2101);
     			dispose = listen(a1, "click", ctx.togglePublish);
     		},
 
@@ -1652,7 +1652,7 @@ var app = (function () {
     	};
     }
 
-    // (97:43) {#if liked}
+    // (108:43) {#if liked}
     function create_if_block_3$1(ctx) {
     	var t;
 
@@ -1673,7 +1673,7 @@ var app = (function () {
     	};
     }
 
-    // (99:53) {#if announced}
+    // (110:49) {#if announced}
     function create_if_block_2$1(ctx) {
     	var t;
 
@@ -1694,7 +1694,7 @@ var app = (function () {
     	};
     }
 
-    // (101:8) {#if showPublish}
+    // (112:8) {#if showPublish}
     function create_if_block_1$1(ctx) {
     	var current;
 
@@ -1742,7 +1742,7 @@ var app = (function () {
     }
 
     function create_fragment$2(ctx) {
-    	var t0, t1, div1, div0, a0, t3, a1, t5, a2, t7, current, dispose;
+    	var t0, t1, div1, div0, a0, t2, t3, t4, a1, t5, t6, t7, a2, t8, t9, t10, current, dispose;
 
     	var if_block0 = (ctx.isReply == true) && create_if_block_4$1(ctx);
 
@@ -1765,28 +1765,31 @@ var app = (function () {
     			div1 = element("div");
     			div0 = element("div");
     			a0 = element("a");
-    			a0.textContent = "N likes";
-    			t3 = space();
+    			t2 = text(ctx.likes);
+    			t3 = text(" likes");
+    			t4 = space();
     			a1 = element("a");
-    			a1.textContent = "N comments";
-    			t5 = space();
-    			a2 = element("a");
-    			a2.textContent = "N announces";
+    			t5 = text(ctx.comments);
+    			t6 = text(" comments");
     			t7 = space();
+    			a2 = element("a");
+    			t8 = text(ctx.announces);
+    			t9 = text(" announces");
+    			t10 = space();
     			if (if_block1) if_block1.c();
     			attr(a0, "class", "rs_left svelte-quq8dc");
     			attr(a0, "href", "");
-    			add_location(a0, file$2, 90, 11, 1595);
+    			add_location(a0, file$2, 101, 11, 1816);
     			attr(a1, "class", "rs_right svelte-quq8dc");
     			attr(a1, "href", "");
-    			add_location(a1, file$2, 91, 11, 1668);
+    			add_location(a1, file$2, 102, 11, 1895);
     			attr(a2, "class", "rs_right svelte-quq8dc");
     			attr(a2, "href", "");
-    			add_location(a2, file$2, 92, 11, 1745);
+    			add_location(a2, file$2, 103, 11, 1981);
     			attr(div0, "class", "rs svelte-quq8dc");
-    			add_location(div0, file$2, 89, 4, 1567);
+    			add_location(div0, file$2, 100, 4, 1788);
     			attr(div1, "class", "reactionz svelte-quq8dc");
-    			add_location(div1, file$2, 88, 0, 1539);
+    			add_location(div1, file$2, 99, 0, 1760);
 
     			dispose = [
     				listen(a0, "click", ctx.toggleLists),
@@ -1807,11 +1810,17 @@ var app = (function () {
     			insert(target, div1, anchor);
     			append(div1, div0);
     			append(div0, a0);
-    			append(div0, t3);
+    			append(a0, t2);
+    			append(a0, t3);
+    			append(div0, t4);
     			append(div0, a1);
-    			append(div0, t5);
+    			append(a1, t5);
+    			append(a1, t6);
+    			append(div0, t7);
     			append(div0, a2);
-    			append(div1, t7);
+    			append(a2, t8);
+    			append(a2, t9);
+    			append(div1, t10);
     			if (if_block1) if_block1.m(div1, null);
     			current = true;
     		},
@@ -1839,6 +1848,18 @@ var app = (function () {
     			if (changed.post) postcontent_changes.post = ctx.post;
     			if (changed.customType) postcontent_changes.customType = ctx.customType;
     			postcontent.$set(postcontent_changes);
+
+    			if (!current || changed.likes) {
+    				set_data(t2, ctx.likes);
+    			}
+
+    			if (!current || changed.comments) {
+    				set_data(t5, ctx.comments);
+    			}
+
+    			if (!current || changed.announces) {
+    				set_data(t8, ctx.announces);
+    			}
 
     			if (ctx.session.user) {
     				if (if_block1) {
@@ -1912,14 +1933,29 @@ var app = (function () {
         let inReply;
         let isReply = false;
 
+        let likes = 'n/a';
+        let comments = 'n/a';
+        let announces = 'n/a';
+
         let liked;
         let announced;
         console.log(post);
 
-
         if (post.inReplyTo) {
             $$invalidate('inReply', inReply = ensureObject(post.inReplyTo));
             $$invalidate('isReply', isReply = true);
+        }
+
+        if (post.likes) {
+            $$invalidate('likes', likes = post.likes.totalItems);
+        }
+
+        if (post.shares) {
+            $$invalidate('announces', announces = post.shares.totalItems);
+        }
+
+        if (post.replies) {
+            $$invalidate('comments', comments = post.replies.totalItems);
         }
 
         let customType = isReply ? "Reply" : null;
@@ -1942,6 +1978,9 @@ var app = (function () {
     		toggleLists,
     		inReply,
     		isReply,
+    		likes,
+    		comments,
+    		announces,
     		liked,
     		announced,
     		customType
@@ -1987,7 +2026,7 @@ var app = (function () {
 
     // (37:4) {:else}
     function create_else_block$2(ctx) {
-    	var div0, h2, t1, a0, t2_value = ctx.post.type, t2, a0_href_value, t3, a1, t4_value = ctx.post.actor.split('/').slice(-1)[0], t4, a1_href_value, t5, span, t7, t8, div1, current;
+    	var div0, h2, t1, a0, t2_value = ctx.post.type, t2, a0_href_value, t3, a1, t4_value = ctx.post.actor, t4, a1_href_value, t5, span, t7, t8, div1, current;
 
     	var if_block = (ctx.post.published) && create_if_block_1$2(ctx);
 
@@ -2025,11 +2064,11 @@ var app = (function () {
     			attr(a1, "href", a1_href_value = ctx.post.actor);
     			add_location(a1, file$3, 40, 56, 895);
     			attr(span, "class", "metadata-seperator");
-    			add_location(span, file$3, 41, 12, 975);
+    			add_location(span, file$3, 41, 12, 951);
     			attr(div0, "class", "metadata");
     			add_location(div0, file$3, 38, 8, 785);
     			attr(div1, "class", "reaction svelte-1rfnwxy");
-    			add_location(div1, file$3, 47, 8, 1173);
+    			add_location(div1, file$3, 47, 8, 1149);
     		},
 
     		m: function mount(target, anchor) {
@@ -2060,7 +2099,7 @@ var app = (function () {
     				attr(a0, "href", a0_href_value);
     			}
 
-    			if ((!current || changed.post) && t4_value !== (t4_value = ctx.post.actor.split('/').slice(-1)[0])) {
+    			if ((!current || changed.post) && t4_value !== (t4_value = ctx.post.actor)) {
     				set_data(t4, t4_value);
     			}
 
@@ -2180,7 +2219,7 @@ var app = (function () {
     		c: function create() {
     			span = element("span");
     			t = text(t_value);
-    			add_location(span, file$3, 44, 12, 1064);
+    			add_location(span, file$3, 44, 12, 1040);
     		},
 
     		m: function mount(target, anchor) {

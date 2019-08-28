@@ -38,7 +38,7 @@
 
         <div class="metadata">
             <h2 id=""> . </h2>
-            <a href="{post.id}">{post.type}</a> by user <a href="{ post.actor }">{ post.actor.split('/').slice(-1)[0] }</a>
+            <a href="{post.id}">{post.type}</a> by user <a href="{ post.actor }">{ post.actor }</a>
             <span class="metadata-seperator">·</span>
 
             {#if post.published }
