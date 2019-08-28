@@ -2,7 +2,7 @@
     export let active_tab;
     export let session;
     export let outbox_collection = {};
-	import Post from "./Post.svelte";
+	import Activity from "./Activity.svelte";
 
 	let pgi = pubgate_instance;
 
@@ -45,7 +45,7 @@
 <ul class="post-list">
     {#each value as post}
 
-        <Post post={post} session={session}/>
+        <Activity post={post} session={session}/>
 
     {/each}
 </ul>

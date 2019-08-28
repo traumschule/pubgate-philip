@@ -2,57 +2,101 @@
 <script>
 	export let post;
 	export let session;
-	import PostBody from "./PostBody.svelte";
-	import xhr from "./utils/xhr";
+	import Publish from "./Publish.svelte";
+	import PostContent from "./PostContent.svelte";
+	import { ensureObject } from "./utils/objectUtils";
 
-	let fpost;
-	let post_object;
-	let fetched_post = false;
+    let showPublish = false;
+    const togglePublish = ev => {
+        ev.preventDefault();
+        showPublish = !showPublish
+    };
 
-	if (["Announce", "Like"].includes(post.type)) {
-	    if (typeof post.object === "string") {
-	        fpost = xhr(post.object);
-            // fpost = fetch(post.object, { headers: {
-            //     "Accept": "application/activity+json"
-            // }}).then(d => d.json());
-            post_object = fpost => fpost.object;
-	    } else {
-	        post_object = post.object;
-	    }
+    const toggleLists = ev => {
+        ev.preventDefault();
+    };
 
-	    fetched_post = true
+    let inReply;
+    let isReply = false;
+
+    let likes = 'n/a';
+    let comments;
+    let announces = 'n/a';
+
+    let liked;
+    let announced;
+    console.log(post);
+
+
+    if (post.inReplyTo) {
+        inReply = ensureObject(post.inReplyTo);
+        isReply = true
     }
+
+    let customType = isReply ? "Reply" : null
+
 </script>
-
 <style>
-    .reaction {
-        margin-left: 30px;
-    }
+.reactionz {
+    font-size: 18px;
+}
+.rs {
+    border-bottom: 1px solid #dadde1;
+    display: flex;
+}
+.ra {
+    padding: 4px 0;
+    display: flex;
+}
+
+.rs_left {
+    flex-grow: 1;
+}
+.rs_right {
+    margin-left: 7px;
+}
+.ra_item {
+    flex: 1 0;
+    align-items: center;
+    color: #606770;
+    display: flex;
+    font-weight: 600;
+    height: 32px;
+    justify-content: center;
+}
+
+.reaction {
+    margin-left: 30px;
+}
+
 </style>
 
-{#if fetched_post == false}
-<li class="post">
-    <h2 id=""> . </h2>
-    <PostBody post={post.object} session={session}/>
-</li>
-
-{:else}
-<li class="post">
-    <div class="metadata">
-        <h2 id=""> . </h2>
-        <a href="{post.id}">{post.type}</a> by user <a href="{ post.actor }">{ post.actor.split('/').slice(-1)[0] }</a>
-        <span class="metadata-seperator">·</span>
-
-        {#if post.published }
-        <span>{ post.published.replace("T", " ").replace("Z", " ") }</span>
-        {/if}
-    </div>
+{#if isReply == true}
     <div class="reaction">
-        {#if post_object.id}
-            <PostBody post={post_object} session={session}/>
-        {:else}
-            <a href="{post.object}">{post.object}</a>
-        {/if}
+        <PostContent post={inReply}/>
     </div>
-</li>
 {/if}
+
+<PostContent post={post} customType={customType}/>
+
+
+<div class="reactionz">
+    <div class="rs">
+           <a class="rs_left" href="" on:click={toggleLists}>N likes</a>
+           <a class="rs_right" href="" on:click={toggleLists}>N comments</a>
+           <a class="rs_right" href="" on:click={toggleLists}>N announces</a>
+    </div>
+    {#if session.user }
+        <div class="ra">
+            <a class="ra_item" href="">Like{#if liked}d{/if}</a>
+                 <a class="ra_item" href="" on:click={togglePublish}>Add comment</a>
+                 <a class="ra_item" href="" >Announce{#if announced}d{/if}</a>
+             </div>
+        {#if showPublish}
+            <Publish reply={post} session={session}/>
+        {/if}
+    {/if}
+</div>
+
+
+
