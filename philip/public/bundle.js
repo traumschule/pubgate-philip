@@ -1262,7 +1262,7 @@ var app = (function () {
 
     const file$2 = "src/Post.svelte";
 
-    // (85:0) {#if isReply == true}
+    // (86:0) {#if isReply == true}
     function create_if_block_4$1(ctx) {
     	var div, current_block_type_index, if_block, current;
 
@@ -1286,7 +1286,7 @@ var app = (function () {
     			div = element("div");
     			if_block.c();
     			attr(div, "class", "reaction svelte-quq8dc");
-    			add_location(div, file$2, 85, 4, 1410);
+    			add_location(div, file$2, 86, 4, 1411);
     		},
 
     		m: function mount(target, anchor) {
@@ -1338,7 +1338,7 @@ var app = (function () {
     	};
     }
 
-    // (91:9) {:else}
+    // (92:9) {:else}
     function create_else_block$1(ctx) {
     	var current;
 
@@ -1381,7 +1381,7 @@ var app = (function () {
     	};
     }
 
-    // (87:8) {#if typeof(inReply) === 'object' && typeof(inReply.id) != 'string'}
+    // (88:8) {#if typeof(inReply) === 'object' && typeof(inReply.id) != 'string'}
     function create_if_block_5$1(ctx) {
     	var await_block_anchor, promise, current;
 
@@ -1452,7 +1452,7 @@ var app = (function () {
     	};
     }
 
-    // (1:0)  <script>  export let post;  export let session;  import Publish from "./Publish.svelte";  import PostContent from "./PostContent.svelte";  import { ensureObject }
+    // (1:0)  <script>  export let post;  export let session;   import Publish from "./Publish.svelte";  import PostContent from "./PostContent.svelte";  import { ensureObject }
     function create_catch_block(ctx) {
     	return {
     		c: noop,
@@ -1464,7 +1464,7 @@ var app = (function () {
     	};
     }
 
-    // (88:39)                  <PostContent post={value}
+    // (89:39)                  <PostContent post={value}
     function create_then_block(ctx) {
     	var current;
 
@@ -1507,7 +1507,7 @@ var app = (function () {
     	};
     }
 
-    // (1:0)  <script>  export let post;  export let session;  import Publish from "./Publish.svelte";  import PostContent from "./PostContent.svelte";  import { ensureObject }
+    // (1:0)  <script>  export let post;  export let session;   import Publish from "./Publish.svelte";  import PostContent from "./PostContent.svelte";  import { ensureObject }
     function create_pending_block(ctx) {
     	return {
     		c: noop,
@@ -1519,7 +1519,7 @@ var app = (function () {
     	};
     }
 
-    // (106:4) {#if session.user }
+    // (107:4) {#if session.user }
     function create_if_block$1(ctx) {
     	var div, a0, t0, t1, a1, t3, a2, t4, t5, if_block2_anchor, current, dispose;
 
@@ -1547,15 +1547,15 @@ var app = (function () {
     			if_block2_anchor = empty();
     			attr(a0, "class", "ra_item svelte-quq8dc");
     			attr(a0, "href", "");
-    			add_location(a0, file$2, 107, 12, 2130);
+    			add_location(a0, file$2, 108, 12, 2131);
     			attr(a1, "class", "ra_item svelte-quq8dc");
     			attr(a1, "href", "");
-    			add_location(a1, file$2, 108, 13, 2196);
+    			add_location(a1, file$2, 109, 13, 2197);
     			attr(a2, "class", "ra_item svelte-quq8dc");
     			attr(a2, "href", "");
-    			add_location(a2, file$2, 109, 13, 2277);
+    			add_location(a2, file$2, 110, 13, 2278);
     			attr(div, "class", "ra svelte-quq8dc");
-    			add_location(div, file$2, 106, 8, 2101);
+    			add_location(div, file$2, 107, 8, 2102);
     			dispose = listen(a1, "click", ctx.togglePublish);
     		},
 
@@ -1652,7 +1652,7 @@ var app = (function () {
     	};
     }
 
-    // (108:43) {#if liked}
+    // (109:43) {#if liked}
     function create_if_block_3$1(ctx) {
     	var t;
 
@@ -1673,7 +1673,7 @@ var app = (function () {
     	};
     }
 
-    // (110:49) {#if announced}
+    // (111:49) {#if announced}
     function create_if_block_2$1(ctx) {
     	var t;
 
@@ -1694,7 +1694,7 @@ var app = (function () {
     	};
     }
 
-    // (112:8) {#if showPublish}
+    // (113:8) {#if showPublish}
     function create_if_block_1$1(ctx) {
     	var current;
 
@@ -1779,17 +1779,17 @@ var app = (function () {
     			if (if_block1) if_block1.c();
     			attr(a0, "class", "rs_left svelte-quq8dc");
     			attr(a0, "href", "");
-    			add_location(a0, file$2, 101, 11, 1816);
+    			add_location(a0, file$2, 102, 11, 1817);
     			attr(a1, "class", "rs_right svelte-quq8dc");
     			attr(a1, "href", "");
-    			add_location(a1, file$2, 102, 11, 1895);
+    			add_location(a1, file$2, 103, 11, 1896);
     			attr(a2, "class", "rs_right svelte-quq8dc");
     			attr(a2, "href", "");
-    			add_location(a2, file$2, 103, 11, 1981);
+    			add_location(a2, file$2, 104, 11, 1982);
     			attr(div0, "class", "rs svelte-quq8dc");
-    			add_location(div0, file$2, 100, 4, 1788);
+    			add_location(div0, file$2, 101, 4, 1789);
     			attr(div1, "class", "reactionz svelte-quq8dc");
-    			add_location(div1, file$2, 99, 0, 1760);
+    			add_location(div1, file$2, 100, 0, 1761);
 
     			dispose = [
     				listen(a0, "click", ctx.toggleLists),
@@ -1987,7 +1987,7 @@ var app = (function () {
     	};
     }
 
-    class Post extends SvelteComponentDev {
+    class Post$1 extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
     		init(this, options, instance$2, create_fragment$2, safe_not_equal, ["post", "session"]);
@@ -2030,7 +2030,7 @@ var app = (function () {
 
     	var if_block = (ctx.post.published) && create_if_block_1$2(ctx);
 
-    	var post_1 = new Post({
+    	var post_1 = new Post$1({
     		props: {
     		post: ctx.postObject,
     		session: ctx.session
@@ -2159,7 +2159,7 @@ var app = (function () {
     function create_if_block$2(ctx) {
     	var h2, t_1, current;
 
-    	var post_1 = new Post({
+    	var post_1 = new Post$1({
     		props: { post: ctx.post.object, session: ctx.session },
     		$$inline: true
     	});
@@ -2833,7 +2833,7 @@ var app = (function () {
     function create_if_block$3(ctx) {
     	var current;
 
-    	var postbody = new Post({
+    	var post = new Post({
     		props: {
     		post: ctx.loadedPost,
     		session: ctx.session
@@ -2843,35 +2843,35 @@ var app = (function () {
 
     	return {
     		c: function create() {
-    			postbody.$$.fragment.c();
+    			post.$$.fragment.c();
     		},
 
     		m: function mount(target, anchor) {
-    			mount_component(postbody, target, anchor);
+    			mount_component(post, target, anchor);
     			current = true;
     		},
 
     		p: function update(changed, ctx) {
-    			var postbody_changes = {};
-    			if (changed.loadedPost) postbody_changes.post = ctx.loadedPost;
-    			if (changed.session) postbody_changes.session = ctx.session;
-    			postbody.$set(postbody_changes);
+    			var post_changes = {};
+    			if (changed.loadedPost) post_changes.post = ctx.loadedPost;
+    			if (changed.session) post_changes.session = ctx.session;
+    			post.$set(post_changes);
     		},
 
     		i: function intro(local) {
     			if (current) return;
-    			transition_in(postbody.$$.fragment, local);
+    			transition_in(post.$$.fragment, local);
 
     			current = true;
     		},
 
     		o: function outro(local) {
-    			transition_out(postbody.$$.fragment, local);
+    			transition_out(post.$$.fragment, local);
     			current = false;
     		},
 
     		d: function destroy(detaching) {
-    			destroy_component(postbody, detaching);
+    			destroy_component(post, detaching);
     		}
     	};
     }

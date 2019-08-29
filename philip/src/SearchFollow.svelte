@@ -104,7 +104,7 @@ Load Post by link
 
 
 {#if typeof loadedPost === 'object'}
-    <PostBody post={loadedPost}
+    <Post post={loadedPost}
               session={session}/>
 {:else}
     {loadedPost}

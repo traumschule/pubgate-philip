@@ -2,6 +2,7 @@
 <script>
 	export let post;
 	export let session;
+
 	import Publish from "./Publish.svelte";
 	import PostContent from "./PostContent.svelte";
 	import { ensureObject } from "./utils/objectUtils";
