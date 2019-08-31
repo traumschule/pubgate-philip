@@ -17,16 +17,33 @@
         ev.preventDefault();
     };
 
+    let liked;
+    let announced;
+    if (session.user) {
+
+        if (post.reactions) {
+            if (post.reactions.Like) {
+                if (post.reactions.Like[session.user.name]) {
+                    $: liked = true
+                }
+            }
+        }
+
+        if (post.reactions) {
+            if (post.reactions.Announce) {
+                if (post.reactions.Announce[session.user.name]) {
+                    $: announced = true
+                }
+            }
+        }
+    }
+
     let inReply;
     let isReply = false;
 
     let likes = 'n/a';
     let comments = 'n/a';
     let announces = 'n/a';
-
-    let liked;
-    let announced;
-    console.log(post);
 
     if (post.inReplyTo) {
         inReply = ensureObject(post.inReplyTo);
@@ -46,6 +63,39 @@
     }
 
     let customType = isReply ? "Reply" : null
+
+    async function doLike(ev) {
+        ev.preventDefault();
+        if (!liked) {
+            let ap_object = {
+                "type": "Like",
+                "object": post.id ,
+            };
+            const response = await fetch(session.user.outbox, {
+                method: 'POST',
+                body: JSON.stringify(ap_object),
+                headers : {'Authorization': "Bearer " + session.token}
+            }).then(d => d.json());
+            $: liked = true
+        }
+    }
+
+    async function doAnnounce(ev) {
+        ev.preventDefault();
+        if (!announced) {
+            let ap_object = {
+                "type": "Announce",
+                "object": post.id ,
+            };
+            const response = await fetch(session.user.outbox, {
+                method: 'POST',
+                body: JSON.stringify(ap_object),
+                headers : {'Authorization': "Bearer " + session.token}
+            }).then(d => d.json());
+            $: announced = true
+        }
+    }
+
 
 </script>
 <style>
@@ -106,9 +156,9 @@
     </div>
     {#if session.user }
         <div class="ra">
-            <a class="ra_item" href="">Like{#if liked}d{/if}</a>
+            <a class="ra_item" href=""  on:click={doLike}>Like{#if liked}d{/if}</a>
              <a class="ra_item" href="" on:click={togglePublish}>Add comment</a>
-             <a class="ra_item" href="" >Announce{#if announced}d{/if}</a>
+             <a class="ra_item" href="" on:click={doAnnounce}>Announce{#if announced}d{/if}</a>
          </div>
         {#if showPublish}
             <Publish reply={post} session={session}/>

@@ -19,7 +19,6 @@
 	    // }
 	    isReaction = true
     }
-	console.log(post)
 </script>
 
 <style>
