@@ -2,7 +2,7 @@
 	export let session;
 	import xhr from "./utils/xhr";
 	import TimeLine from "./TimeLine.svelte";
-	import PostBody from "./PostBody.svelte";
+	import PostBody from "./Post.svelte";
 
 	let username = '';
 	let outbox_collection = null;
@@ -104,7 +104,7 @@ Load Post by link
 
 
 {#if typeof loadedPost === 'object'}
-    <PostBody post={loadedPost}
+    <Post post={loadedPost}
               session={session}/>
 {:else}
     {loadedPost}
