@@ -1261,7 +1261,7 @@ var app = (function () {
 
     const file$2 = "src/Post.svelte";
 
-    // (136:0) {#if isReply == true}
+    // (138:0) {#if isReply == true}
     function create_if_block_4$1(ctx) {
     	var div, current_block_type_index, if_block, current;
 
@@ -1285,7 +1285,7 @@ var app = (function () {
     			div = element("div");
     			if_block.c();
     			attr(div, "class", "reaction svelte-quq8dc");
-    			add_location(div, file$2, 136, 4, 2853);
+    			add_location(div, file$2, 138, 4, 2937);
     		},
 
     		m: function mount(target, anchor) {
@@ -1337,7 +1337,7 @@ var app = (function () {
     	};
     }
 
-    // (142:9) {:else}
+    // (144:9) {:else}
     function create_else_block$1(ctx) {
     	var current;
 
@@ -1380,7 +1380,7 @@ var app = (function () {
     	};
     }
 
-    // (138:8) {#if typeof(inReply) === 'object' && typeof(inReply.id) != 'string'}
+    // (140:8) {#if typeof(inReply) === 'object' && typeof(inReply.id) != 'string'}
     function create_if_block_5$1(ctx) {
     	var await_block_anchor, promise, current;
 
@@ -1463,7 +1463,7 @@ var app = (function () {
     	};
     }
 
-    // (139:39)                  <PostContent post={value}
+    // (141:39)                  <PostContent post={value}
     function create_then_block(ctx) {
     	var current;
 
@@ -1518,7 +1518,7 @@ var app = (function () {
     	};
     }
 
-    // (157:4) {#if session.user }
+    // (159:4) {#if session.user }
     function create_if_block$1(ctx) {
     	var div, a0, t0, t1, a1, t3, a2, t4, t5, if_block2_anchor, current, dispose;
 
@@ -1546,15 +1546,15 @@ var app = (function () {
     			if_block2_anchor = empty();
     			attr(a0, "class", "ra_item svelte-quq8dc");
     			attr(a0, "href", "");
-    			add_location(a0, file$2, 158, 12, 3573);
+    			add_location(a0, file$2, 160, 12, 3657);
     			attr(a1, "class", "ra_item svelte-quq8dc");
     			attr(a1, "href", "");
-    			add_location(a1, file$2, 159, 13, 3658);
+    			add_location(a1, file$2, 161, 13, 3742);
     			attr(a2, "class", "ra_item svelte-quq8dc");
     			attr(a2, "href", "");
-    			add_location(a2, file$2, 160, 13, 3739);
+    			add_location(a2, file$2, 162, 13, 3823);
     			attr(div, "class", "ra svelte-quq8dc");
-    			add_location(div, file$2, 157, 8, 3544);
+    			add_location(div, file$2, 159, 8, 3628);
 
     			dispose = [
     				listen(a0, "click", ctx.doLike),
@@ -1656,7 +1656,7 @@ var app = (function () {
     	};
     }
 
-    // (159:62) {#if liked}
+    // (161:62) {#if liked}
     function create_if_block_3$1(ctx) {
     	var t;
 
@@ -1677,7 +1677,7 @@ var app = (function () {
     	};
     }
 
-    // (161:70) {#if announced}
+    // (163:70) {#if announced}
     function create_if_block_2$1(ctx) {
     	var t;
 
@@ -1698,7 +1698,7 @@ var app = (function () {
     	};
     }
 
-    // (163:8) {#if showPublish}
+    // (165:8) {#if showPublish}
     function create_if_block_1$1(ctx) {
     	var current;
 
@@ -1783,17 +1783,17 @@ var app = (function () {
     			if (if_block1) if_block1.c();
     			attr(a0, "class", "rs_left svelte-quq8dc");
     			attr(a0, "href", "");
-    			add_location(a0, file$2, 152, 11, 3259);
+    			add_location(a0, file$2, 154, 11, 3343);
     			attr(a1, "class", "rs_right svelte-quq8dc");
     			attr(a1, "href", "");
-    			add_location(a1, file$2, 153, 11, 3338);
+    			add_location(a1, file$2, 155, 11, 3422);
     			attr(a2, "class", "rs_right svelte-quq8dc");
     			attr(a2, "href", "");
-    			add_location(a2, file$2, 154, 11, 3424);
+    			add_location(a2, file$2, 156, 11, 3508);
     			attr(div0, "class", "rs svelte-quq8dc");
-    			add_location(div0, file$2, 151, 4, 3231);
+    			add_location(div0, file$2, 153, 4, 3315);
     			attr(div1, "class", "reactionz svelte-quq8dc");
-    			add_location(div1, file$2, 150, 0, 3203);
+    			add_location(div1, file$2, 152, 0, 3287);
 
     			dispose = [
     				listen(a0, "click", ctx.toggleLists),
@@ -1987,6 +1987,7 @@ var app = (function () {
                 let ap_object = {
                     "type": "Like",
                     "object": post.id ,
+                    "cc": [post.attributedTo]
                 };
                 const response = await fetch(session.user.outbox, {
                     method: 'POST',
@@ -2003,6 +2004,7 @@ var app = (function () {
                 let ap_object = {
                     "type": "Announce",
                     "object": post.id ,
+                    "cc": [post.attributedTo]
                 };
                 const response = await fetch(session.user.outbox, {
                     method: 'POST',

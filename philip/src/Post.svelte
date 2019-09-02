@@ -70,6 +70,7 @@
             let ap_object = {
                 "type": "Like",
                 "object": post.id ,
+                "cc": [post.attributedTo]
             };
             const response = await fetch(session.user.outbox, {
                 method: 'POST',
@@ -86,6 +87,7 @@
             let ap_object = {
                 "type": "Announce",
                 "object": post.id ,
+                "cc": [post.attributedTo]
             };
             const response = await fetch(session.user.outbox, {
                 method: 'POST',
