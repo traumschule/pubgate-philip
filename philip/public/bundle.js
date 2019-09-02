@@ -2042,7 +2042,7 @@ var app = (function () {
     	};
     }
 
-    class Post$1 extends SvelteComponentDev {
+    class Post extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
     		init(this, options, instance$2, create_fragment$2, safe_not_equal, ["post", "session"]);
@@ -2084,7 +2084,7 @@ var app = (function () {
 
     	var if_block = (ctx.post.published) && create_if_block_1$2(ctx);
 
-    	var post_1 = new Post$1({
+    	var post_1 = new Post({
     		props: {
     		post: ctx.postObject,
     		session: ctx.session
@@ -2213,7 +2213,7 @@ var app = (function () {
     function create_if_block$2(ctx) {
     	var h2, t_1, current;
 
-    	var post_1 = new Post$1({
+    	var post_1 = new Post({
     		props: { post: ctx.post.object, session: ctx.session },
     		$$inline: true
     	});
@@ -2803,7 +2803,7 @@ var app = (function () {
     			t2 = space();
     			timeline.$$.fragment.c();
     			attr(button, "class", "btn btn-sm pull-xs-right btn-info");
-    			add_location(button, file$5, 98, 4, 3062);
+    			add_location(button, file$5, 98, 4, 3058);
     			dispose = listen(button, "click", ctx.follow);
     		},
 
@@ -2977,33 +2977,33 @@ var app = (function () {
     			t9 = space();
     			if_block1.c();
     			if_block1_anchor = empty();
-    			add_location(br0, file$5, 74, 0, 2275);
+    			add_location(br0, file$5, 74, 0, 2271);
     			attr(input0, "class", "form-control form-control-lg");
     			attr(input0, "type", "text");
     			attr(input0, "placeholder", "Search format: username@domain");
-    			add_location(input0, file$5, 78, 8, 2379);
+    			add_location(input0, file$5, 78, 8, 2375);
     			attr(fieldset0, "class", "form-group");
-    			add_location(fieldset0, file$5, 77, 4, 2341);
+    			add_location(fieldset0, file$5, 77, 4, 2337);
     			attr(button0, "class", "btn btn-sm pull-xs-right btn-info");
     			attr(button0, "type", "submit");
     			button0.disabled = button0_disabled_value = !ctx.username;
-    			add_location(button0, file$5, 80, 4, 2523);
-    			add_location(form0, file$5, 76, 0, 2296);
-    			add_location(br1, file$5, 84, 0, 2653);
-    			add_location(br2, file$5, 84, 4, 2657);
+    			add_location(button0, file$5, 80, 4, 2519);
+    			add_location(form0, file$5, 76, 0, 2292);
+    			add_location(br1, file$5, 84, 0, 2649);
+    			add_location(br2, file$5, 84, 4, 2653);
     			attr(input1, "class", "form-control form-control-lg");
     			attr(input1, "type", "text");
     			attr(input1, "placeholder", "Copy a link here");
-    			add_location(input1, file$5, 89, 8, 2766);
+    			add_location(input1, file$5, 89, 8, 2762);
     			attr(fieldset1, "class", "form-group");
-    			add_location(fieldset1, file$5, 88, 4, 2728);
+    			add_location(fieldset1, file$5, 88, 4, 2724);
     			attr(button1, "class", "btn btn-sm pull-xs-right btn-info");
     			attr(button1, "type", "submit");
     			button1.disabled = button1_disabled_value = !ctx.postLink;
-    			add_location(button1, file$5, 91, 4, 2896);
-    			add_location(form1, file$5, 87, 0, 2681);
-    			add_location(br3, file$5, 95, 0, 3024);
-    			add_location(br4, file$5, 95, 4, 3028);
+    			add_location(button1, file$5, 91, 4, 2892);
+    			add_location(form1, file$5, 87, 0, 2677);
+    			add_location(br3, file$5, 95, 0, 3020);
+    			add_location(br4, file$5, 95, 4, 3024);
 
     			dispose = [
     				listen(input0, "input", ctx.input0_input_handler),
