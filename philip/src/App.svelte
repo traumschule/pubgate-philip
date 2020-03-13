@@ -1,31 +1,27 @@
 <script>
-  import Tab from "./Tab.svelte";
+  import { routes, curRoute } from "./store";
+  import { Navigation, Footer } from "./components";
+  import Router from "./Router.svelte";
+
+  export let name;
 
   let session = {};
-  let active_tab;
   let pgi = pubgate_instance;
 
-  if(session.user) {
-      active_tab = 'inbox'
-  } else {
-    active_tab = pgi ? "local" : "about";
-  }
+  // if (session.user) active_tab.set("inbox");
+  // else active_tab.set(pgi ? "local" : "about");
 
-  function selectTab(event) {
-    event.preventDefault();
-
-    active_tab = this.href.split("#")[1];
-
+  function selectTab(target) {
+    const path = target.pathname;
     Array.prototype.forEach.call(
-      this.parentNode.parentNode.children,
+      target.parentNode.parentNode.children,
       (el, i) => {
-        if (el.firstChild.href.split("#")[1] !== active_tab) {
+        if (el.firstChild.href.split("/")[1] !== path) {
           el.firstChild.classList.remove("header-selected");
         }
       }
     );
-
-    this.classList.add("header-selected");
+    target.classList.add("header-selected");
   }
 
   const updateSession = e => {
@@ -37,47 +33,6 @@
 
 </style>
 
-<header>
-  <ul>
-    {#if pgi == true}
-      <li>
-        <a href="#local" class="header-selected" on:click={selectTab}>
-          Local Timeline
-        </a>
-      </li>
-      <li>
-        <a href="#federated" on:click={selectTab}>Federated Timeline</a>
-      </li>
-    {/if}
-    {#if session.user}
-      <li>
-        <a href="#inbox" on:click={selectTab}>Inbox</a>
-      </li>
-      <li>
-        <a href="#create" on:click={selectTab}>Create</a>
-      </li>
-      <li>
-        <a href="#search" on:click={selectTab}>Search/Follow</a>
-      </li>
-    {/if}
-    <li>
-      <a href="#profile" on:click={selectTab}>
-        {#if session.user}Profile{:else}Login{/if}
-      </a>
-    </li>
-    <li>
-      <a href="#about" on:click={selectTab}>About</a>
-    </li>
-  </ul>
-</header>
-
-<div class="content">
-  <Tab {active_tab} {session} on:updatesession={updateSession} />
-</div>
-
-<hr class="separator" />
-<footer class="content">
-  <div class="left-column">
-    <h3>PubGate-Philip</h3>
-  </div>
-</footer>
+<Navigation {routes} {curRoute} {selectTab} {session} {pgi} />
+<Router {routes} {curRoute} {session} {updateSession} />
+<Footer />

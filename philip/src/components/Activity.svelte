@@ -3,8 +3,7 @@
 	export let post;
 	export let session;
 	import Post from "./Post.svelte";
-	import xhr from "./utils/xhr";
-	import { ensureObject } from "./utils/objectUtils";
+	import { xhr, ensureObject } from "../utils";
 
 	let postObject;
 	let isReaction = false;

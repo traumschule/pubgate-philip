@@ -1,8 +1,9 @@
 <script>
-  import { getCreateObject, getHashTag } from "./utils/pubGate";
+  import { getCreateObject, getHashTag } from "../utils/pubGate";
 
   export let reply = null;
   export let session;
+  export let curRoute;
 
   let inProgress = false;
   let content = "";
