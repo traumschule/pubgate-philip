@@ -35,10 +35,10 @@
     }
 
     try {
-      const response = await fetch(session.user.outbox, {
+      const response = await fetch($session.user.outbox, {
         method: "POST",
         body: JSON.stringify(ap_object),
-        headers: { Authorization: "Bearer " + session.token },
+        headers: { Authorization: "Bearer " + $session.token },
       });
       const data = await response.json();
     } catch (e) {

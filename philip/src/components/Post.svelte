@@ -18,10 +18,10 @@
 
   let liked;
   let announced;
-  if (session.user) {
+  if ($session.user) {
     if (post.reactions) {
       if (post.reactions.Like) {
-        if (post.reactions.Like[session.user.name]) {
+        if (post.reactions.Like[$session.user.name]) {
           $: liked = true;
         }
       }
@@ -29,7 +29,7 @@
 
     if (post.reactions) {
       if (post.reactions.Announce) {
-        if (post.reactions.Announce[session.user.name]) {
+        if (post.reactions.Announce[$session.user.name]) {
           $: announced = true;
         }
       }
@@ -70,11 +70,11 @@
         object: post.id,
         cc: [post.attributedTo],
       };
-      const response = await fetch(session.user.outbox, {
+      const response = await fetch($session.user.outbox, {
         method: "POST",
         body: JSON.stringify(ap_object),
         headers: {
-          Authorization: "Bearer " + session.token,
+          Authorization: "Bearer " + $session.token,
         },
       }).then(d => d.json());
       $: liked = true;
@@ -89,11 +89,11 @@
         object: post.id,
         cc: [post.attributedTo],
       };
-      const response = await fetch(session.user.outbox, {
+      const response = await fetch($session.user.outbox, {
         method: "POST",
         body: JSON.stringify(ap_object),
         headers: {
-          Authorization: "Bearer " + session.token,
+          Authorization: "Bearer " + $session.token,
         },
       }).then(d => d.json());
       $: announced = true;
@@ -155,7 +155,7 @@
     <a class="rs_right" href="" on:click={toggleLists}>{comments} comments</a>
     <a class="rs_right" href="" on:click={toggleLists}>{announces} announces</a>
   </div>
-  {#if session.user}
+  {#if $session.user}
     <div class="ra">
       <a class="ra_item" href="" on:click={doLike}>
         Like

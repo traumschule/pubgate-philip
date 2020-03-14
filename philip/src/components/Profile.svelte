@@ -1,39 +1,41 @@
 <script>
-  import TimeLine from './TimeLine.svelte';
+  import TimeLine from "./TimeLine.svelte";
 
-  import { xhr } from '../utils';
-  import { createEventDispatcher } from 'svelte';
+  import { xhr } from "../utils";
+  import { createEventDispatcher } from "svelte";
   const dispatch = createEventDispatcher();
 
   export let curRoute;
   export let session;
 
-  let username = '';
-  let password = '';
-  let description = '';
-  let avatar = '';
-  let invite = '';
+  let username = "";
+  let password = "";
+  let description = "";
+  let avatar = "";
+  let invite = "";
 
   async function login(event) {
-    const profile = await xhr(base_url + '/@' + username).catch(error => {
+    const profile = await xhr(base_url + "/@" + username).catch(error => {
       console.log(error);
     });
 
     const token = await xhr(profile.endpoints.oauthTokenEndpoint, {
-      method: 'POST',
+      method: "POST",
       body: JSON.stringify({ username: username, password: password }),
     });
 
+    let temp = $session;
     if (token.access_token) {
-      $: session.user = profile;
-      $: session.token = token.access_token;
+      temp.user = profile;
+      temp.token = token.access_token;
+      session.set(temp);
     }
-    dispatch('updatesession', session);
+    dispatch("updatesession", $session);
   }
 
   async function logout(event) {
-    $: session = {};
-    dispatch('updatesession', session);
+    $: $session.set({});
+    dispatch("updatesession", $session);
   }
 
   async function register(event) {
@@ -42,19 +44,19 @@
       password: password,
       invite: invite,
       profile: {
-        type: 'Person',
+        type: "Person",
         name: username,
         summary: description,
         icon: {
-          type: 'Image',
-          mediaType: 'image/jpeg',
+          type: "Image",
+          mediaType: "image/jpeg",
           url: avatar,
         },
       },
     };
 
-    const create_user = await fetch(base_url + '/user', {
-      method: 'POST',
+    const create_user = await fetch(base_url + "/user", {
+      method: "POST",
       body: JSON.stringify(user_data),
     }).then(d => d.json());
 
@@ -64,7 +66,7 @@
   }
 </script>
 
-{#if session.user}
+{#if $session.user}
   <button class="btn btn-sm pull-xs-right btn-info" on:click={logout}>
     Logout
   </button>

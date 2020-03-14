@@ -6,14 +6,14 @@
 
   let pgi = pubgate_instance;
 
-  const fetchCollection = function(path, session = {}) {
-    let headers_set = {
+  const fetchCollection = function(path, session = {}, inbox = false) {
+    let headers = {
       Accept: "application/activity+json",
     };
-    if (session.user && curRoute === "/inbox") {
-      headers_set["Authorization"] = "Bearer " + session.token;
+    if (session.user && inbox) {
+      headers["Authorization"] = "Bearer " + session.token;
     }
-    return fetch(path, { headers: headers_set })
+    return fetch(path, { headers })
       .then(d => d.json())
       .then(d => d.first.orderedItems);
   };
@@ -29,8 +29,9 @@
           ? fetchCollection(base_url + "/timeline/federated?cached=1")
           : [];
       case "/inbox":
+        if (!session.user) return [];
         return pgi
-          ? fetchCollection(session.user.inbox + "?cached=1", session)
+          ? fetchCollection(session.user.inbox + "?cached=1", session, true)
           : fetchCollection(session.user.inbox, session);
       case "/profile":
         return pgi
@@ -42,7 +43,7 @@
         return [];
     }
   };
-  $: posts = getTimeline($curRoute, session);
+  $: posts = getTimeline($curRoute, $session);
 </script>
 
 {#await posts then value}

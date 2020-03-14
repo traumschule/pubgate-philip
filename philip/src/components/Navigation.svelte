@@ -16,7 +16,7 @@
       <Link {curRoute} {selectTab} {routes} path="/local" />
       <Link {curRoute} {selectTab} {routes} path="/federated" />
     {/if}
-    {#if session.user}
+    {#if $session.user}
       <Link {curRoute} {selectTab} {routes} path="/inbox" />
       <Link {curRoute} {selectTab} {routes} path="/create" />
       <Link {curRoute} {selectTab} {routes} path="/search" />

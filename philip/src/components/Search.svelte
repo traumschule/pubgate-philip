@@ -5,10 +5,19 @@
   import xhr from "../utils/xhr";
   import TimeLine from "./TimeLine.svelte";
   import Post from "./Post.svelte";
+  import { readable } from "svelte/store";
+  const timelineRoute = readable("/search");
 
+  // search user
   let username = "";
   let outbox_collection = null;
   let searched_profile = null;
+
+  // search post
+  let loadedPost = "";
+  let postLink = "";
+  let error = "";
+
   async function search(event) {
     $: outbox_collection = null;
     let pair = username.split("@");
@@ -54,22 +63,28 @@
         type: "Follow",
         object: searched_profile.id,
       };
-      const response = await fetch(session.user.outbox, {
+      const response = await fetch($session.user.outbox, {
         method: "POST",
         body: JSON.stringify(ap_object),
-        headers: { Authorization: "Bearer " + session.token },
+        headers: { Authorization: "Bearer " + $session.token },
       }).then(d => d.json());
     }
   }
 
-  let loadedPost = "";
-  let postLink = "";
   async function loadPost(event) {
-    $: loadedPost = "";
-    const fpost = xhr(postLink);
-    console.log(fpost);
-    $: loadedPost = await fpost;
-    postLink = "";
+    error = loadedPost = "";
+    try {
+      const response = await xhr(postLink);
+      const { type } = response;
+      if (type !== "Note") {
+        error = `Wrong type: ${type}`;
+        return;
+      }
+      loadedPost = response;
+      postLink = "";
+    } catch (e) {
+      error = e.message;
+    }
   }
 </script>
 
@@ -112,12 +127,19 @@ Load Post by link
 <br />
 
 {#if outbox_collection}
-  <button class="btn btn-sm pull-xs-right btn-info" on:click={follow}>
-    Follow {username}
-  </button>
-  <TimeLine curRoute="/search" {session} {outbox_collection} />
+  <h2>
+    {username}
+    {#if $session.user}
+      <button class="btn btn-sm pull-xs-right btn-info" on:click={follow}>
+        Follow
+      </button>
+    {/if}
+  </h2>
+  <TimeLine curRoute={timelineRoute} {session} {outbox_collection} />
 {/if}
 
 {#if typeof loadedPost === 'object'}
   <Post post={loadedPost} {session} />
-{:else}{loadedPost}{/if}
+{/if}
+
+<p class="text-danger">{error}</p>

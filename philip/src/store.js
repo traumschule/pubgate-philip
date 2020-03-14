@@ -1,7 +1,16 @@
-import { TimeLine, Publish, Search, Profile, About } from "./components";
+import {
+  TimeLine,
+  Publish,
+  Search,
+  Profile,
+  About,
+  User,
+  Object,
+  Error,
+} from "./components";
 import { writable } from "svelte/store";
 
-const curRoute = writable("/local");
+const curRoute = writable(window.location.pathname);
 
 const routes = {
   "/local": { name: "Local Timeline", component: TimeLine },
@@ -9,12 +18,13 @@ const routes = {
   "/create": { name: "Create", component: Publish },
   "/search": { name: "Search", component: Search },
   "/inbox": { name: "Inbox", component: TimeLine },
-  "/profile": {
-    name: "Profile",
-    //name: () => (session.user ? "Profile" : "Login"),
-    component: Profile
-  },
-  "/about": { name: "About", component: About }
+  "/profile": { name: "Profile", component: Profile },
+  "/about": { name: "About", component: About },
+  user: { component: User },
+  object: { component: Object },
+  error: { component: Error },
 };
 
-export { curRoute, routes };
+const session = writable({});
+
+export { curRoute, routes, session };
