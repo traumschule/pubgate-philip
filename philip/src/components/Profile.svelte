@@ -34,7 +34,7 @@
   }
 
   async function logout(event) {
-    $: $session.set({});
+    session.set({});
     dispatch("updatesession", $session);
   }
 

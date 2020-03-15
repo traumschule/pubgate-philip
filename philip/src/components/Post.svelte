@@ -22,7 +22,7 @@
     if (post.reactions) {
       if (post.reactions.Like) {
         if (post.reactions.Like[$session.user.name]) {
-          $: liked = true;
+          liked = true;
         }
       }
     }
@@ -30,7 +30,7 @@
     if (post.reactions) {
       if (post.reactions.Announce) {
         if (post.reactions.Announce[$session.user.name]) {
-          $: announced = true;
+          announced = true;
         }
       }
     }
@@ -77,7 +77,7 @@
           Authorization: "Bearer " + $session.token,
         },
       }).then(d => d.json());
-      $: liked = true;
+      liked = true;
     }
   }
 
@@ -96,7 +96,7 @@
           Authorization: "Bearer " + $session.token,
         },
       }).then(d => d.json());
-      $: announced = true;
+      announced = true;
     }
   }
 </script>
@@ -151,21 +151,21 @@
 
 <div class="reactionz">
   <div class="rs">
-    <a class="rs_left" href="" on:click={toggleLists}>{likes} likes</a>
-    <a class="rs_right" href="" on:click={toggleLists}>{comments} comments</a>
-    <a class="rs_right" href="" on:click={toggleLists}>{announces} announces</a>
+    <span class="rs_left" on:click={toggleLists}>{likes} likes</span>
+    <span class="rs_right" on:click={toggleLists}>{comments} comments</span>
+    <span class="rs_right" on:click={toggleLists}>{announces} announces</span>
   </div>
   {#if $session.user}
     <div class="ra">
-      <a class="ra_item" href="" on:click={doLike}>
+      <span class="ra_item" on:click={doLike}>
         Like
         {#if liked}d{/if}
-      </a>
-      <a class="ra_item" href="" on:click={togglePublish}>Add comment</a>
-      <a class="ra_item" href="" on:click={doAnnounce}>
+      </span>
+      <span class="ra_item" on:click={togglePublish}>Add comment</span>
+      <span class="ra_item" on:click={doAnnounce}>
         Announce
         {#if announced}d{/if}
-      </a>
+      </span>
     </div>
     {#if showPublish}
       <Publish reply={post} {session} />

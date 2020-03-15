@@ -19,7 +19,7 @@
   }
 
   const updateSession = e => {
-    $: session.set(e.detail);
+    session.set(e.detail);
   };
 </script>
 

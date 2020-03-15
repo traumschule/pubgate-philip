@@ -15,7 +15,7 @@
     }
     return fetch(path, { headers })
       .then(d => d.json())
-      .then(d => d.first.orderedItems);
+      .then(d => updatePageLinks(d));
   };
 
   const getTimeline = function(tab, session) {
@@ -43,8 +43,34 @@
         return [];
     }
   };
+
   $: posts = getTimeline($curRoute, $session);
+
+  // pagination
+
+  let homeUrl, prevUrl, nextUrl, page;
+
+  const selectPage = query => {
+    let args = query.split("?");
+    let url = args.shift(); // pull out first argument
+    if (pgi) args.push("cached=1");
+    posts = fetchCollection(url + "?" + args.join("&"), session);
+  };
+
+  const updatePageLinks = d => {
+    let pageMatch = /page=(\d+)$/.exec(d.id);
+    page = pageMatch ? parseInt(pageMatch[1]) : 1;
+    homeUrl = page > 1 && d.partOf ? d.partOf : null;
+    prevUrl = page > 1 ? `${homeUrl}?page=${page - 1}` : null;
+    nextUrl = d.next;
+    return d.first ? d.first.orderedItems : d.orderedItems;
+  };
 </script>
+
+<style>
+  .navigation {
+  }
+</style>
 
 {#await posts then value}
   <ul class="post-list">
@@ -52,4 +78,19 @@
       <Activity {post} {session} />
     {/each}
   </ul>
+
+  <div class="navigation">
+    {#if homeUrl}
+      <span on:click={() => selectPage(homeUrl)}>First</span>
+    {/if}
+    {#if prevUrl}
+      <span on:click={() => selectPage(prevUrl)}>Previous</span>
+    {/if}
+    {#if page}
+      <b>{page}</b>
+    {/if}
+    {#if nextUrl}
+      <span on:click={() => selectPage(nextUrl)}>Next</span>
+    {/if}
+  </div>
 {/await}

@@ -19,7 +19,7 @@
   let error = "";
 
   async function search(event) {
-    $: outbox_collection = null;
+    outbox_collection = null;
     let pair = username.split("@");
     let profile_url = "https://" + pair[1] + "/@" + pair[0];
     let collection;
@@ -29,7 +29,7 @@
         body: JSON.stringify({ url: profile_url }),
       }).then(d => d.json());
 
-      $: searched_profile = profile;
+      searched_profile = profile;
       const outbox = await fetch(base_url + "/proxy", {
         method: "POST",
         body: JSON.stringify({ url: profile.outbox }),
@@ -43,7 +43,7 @@
       } else {
         collection = outbox.first;
       }
-      $: outbox_collection = collection;
+      outbox_collection = collection;
     } else {
       const profile = await fetch(profile_url, {
         headers: {
@@ -52,7 +52,7 @@
       }).then(d => d.json());
 
       if (profile.outbox) {
-        $: outbox_collection = profile.outbox;
+        outbox_collection = profile.outbox;
       }
     }
   }
