@@ -133,6 +133,10 @@
   .reaction {
     margin-left: 30px;
   }
+  button {
+    border: none;
+    background: none;
+  }
 </style>
 
 {#if isReply == true}
@@ -157,15 +161,13 @@
   </div>
   {#if $session.user}
     <div class="ra">
-      <span class="ra_item" on:click={doLike}>
-        Like
-        {#if liked}d{/if}
-      </span>
-      <span class="ra_item" on:click={togglePublish}>Add comment</span>
-      <span class="ra_item" on:click={doAnnounce}>
-        Announce
-        {#if announced}d{/if}
-      </span>
+      <button class="ra_item">
+        {#if liked}Liked{:else}Liked{/if}
+      </button>
+      <button class="ra_item" on:click={togglePublish}>Add comment</button>
+      <button class="ra_item" on:click={doAnnounce}>
+        {#if announced}Announced{:else}Announce{/if}
+      </button>
     </div>
     {#if showPublish}
       <Publish reply={post} {session} />
