@@ -20,7 +20,18 @@
 
   const updateSession = e => {
     session.set(e.detail);
+    saveToStore("session", $session);
   };
+  const saveToStore = (key, value) => {
+    //console.log("saving", key, value);
+    localStorage.setItem(key, JSON.stringify(value));
+  };
+  const loadFromStore = key => {
+    //console.log("loading", key);
+    return JSON.parse(localStorage.getItem(key));
+  };
+
+  session.set(loadFromStore("session") || {});
 </script>
 
 <style>

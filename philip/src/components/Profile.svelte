@@ -13,11 +13,16 @@
   let description = "";
   let avatar = "";
   let invite = "";
+  let error = "";
 
   async function login(event) {
     const profile = await xhr(base_url + "/@" + username).catch(error => {
       console.log(error);
     });
+    if (!profile) {
+      error = "login failed";
+      return;
+    }
 
     const token = await xhr(profile.endpoints.oauthTokenEndpoint, {
       method: "POST",
@@ -26,16 +31,15 @@
 
     let temp = $session;
     if (token.access_token) {
-      temp.user = profile;
-      temp.token = token.access_token;
-      session.set(temp);
+      let newSession = $session;
+      newSession.user = profile;
+      newSession.token = token.access_token;
+      dispatch("updatesession", newSession);
     }
-    dispatch("updatesession", $session);
   }
 
   async function logout(event) {
-    session.set({});
-    dispatch("updatesession", $session);
+    dispatch("updatesession", {});
   }
 
   async function register(event) {
@@ -67,9 +71,13 @@
 </script>
 
 {#if $session.user}
-  <button class="btn btn-sm pull-xs-right btn-info" on:click={logout}>
-    Logout
-  </button>
+  <h2>
+    <a href={$session.user.url}>{$session.user.name}</a>
+    <button class="btn btn-sm pull-xs-right btn-info" on:click={logout}>
+      Logout
+    </button>
+  </h2>
+  {$session.user.summary}
   <TimeLine {curRoute} {session} />
 {:else}
   <div class="form-group">
@@ -99,6 +107,7 @@
     </button>
   </form>
   <br />
+  <div class="text-danger">{error}</div>
   <br />
   or register ( PubGate only )
   <br />
