@@ -4,10 +4,8 @@
   const protocol = base_url.match(/^https/) ? "https" : "http";
 
   import xhr from "../utils/xhr";
-  import TimeLine from "./TimeLine.svelte";
+  import Collection from "./Collection.svelte";
   import Post from "./Post.svelte";
-  import { readable } from "svelte/store";
-  const timelineRoute = readable("/search");
 
   // search user
   let username = "";
@@ -31,7 +29,6 @@
     let profile_url = `${protocol}://${pair[1]}/@${pair[0]}`;
 
     if (pubgate_instance) {
-      console.log("search", profile_url);
       const res = await fetch(base_url + "/proxy", {
         method: "POST",
         body: JSON.stringify({ url: profile_url }),
@@ -149,7 +146,7 @@ Load Post by link
   </h2>
   {profile.summary}
   {#if outbox_collection}
-    <TimeLine curRoute={timelineRoute} {session} {outbox_collection} />
+    <Collection {session} collection={outbox_collection} />
   {/if}
 {/if}
 
