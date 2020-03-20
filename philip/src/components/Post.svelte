@@ -4,7 +4,7 @@
 
   import { ensureObject } from "../utils";
   import Publish from "./Publish.svelte";
-  import PostContent from "./PostContent.svelte";
+  import PostContent from "./Post/Content.svelte";
   import Collection from "./Collection.svelte";
 
   let pgi = pubgate_instance;
@@ -156,8 +156,6 @@
       {#await inReply then value}
         <PostContent post={value} />
       {/await}
-    {:else}
-      <PostContent post={inReply} />
     {/if}
   </div>
 {/if}
