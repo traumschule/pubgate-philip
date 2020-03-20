@@ -1,6 +1,7 @@
 <script>
   export let session;
   export let curRoute;
+  const protocol = base_url.match(/^https/) ? "https" : "http";
 
   import xhr from "../utils/xhr";
   import TimeLine from "./TimeLine.svelte";
@@ -10,8 +11,9 @@
 
   // search user
   let username = "";
+  let profile = null;
+  let following = false;
   let outbox_collection = null;
-  let searched_profile = null;
 
   // search post
   let loadedPost = "";
@@ -19,57 +21,70 @@
   let error = "";
 
   async function search(event) {
+    error = "";
+    profile = null;
     outbox_collection = null;
     let pair = username.split("@");
-    let profile_url = "https://" + pair[1] + "/@" + pair[0];
-    let collection;
+    if (pair.length !== 2) {
+      return (error = "Use this format: username@domain");
+    }
+    let profile_url = `${protocol}://${pair[1]}/@${pair[0]}`;
+
     if (pubgate_instance) {
-      const profile = await fetch(base_url + "/proxy", {
+      console.log("search", profile_url);
+      const res = await fetch(base_url + "/proxy", {
         method: "POST",
         body: JSON.stringify({ url: profile_url }),
       }).then(d => d.json());
-
-      searched_profile = profile;
-      const outbox = await fetch(base_url + "/proxy", {
-        method: "POST",
-        body: JSON.stringify({ url: profile.outbox }),
-      }).then(d => d.json());
-
-      if (typeof outbox.first === "string") {
-        collection = await fetch(base_url + "/proxy", {
-          method: "POST",
-          body: JSON.stringify({ url: outbox.first }),
-        }).then(d => d.json());
-      } else {
-        collection = outbox.first;
+      if (res.error) {
+        return (error = JSON.stringify(res.error.strerror || res.error));
       }
-      outbox_collection = collection;
+      profile = res;
+
+      const body = JSON.stringify({ url: profile.outbox });
+      const req = { method: "POST", body };
+      const resp = await fetch(base_url + "/proxy", req).then(d => d.json());
+      if (!resp) {
+        return (error = "Failed to fetch timeline.");
+      }
+
+      outbox_collection =
+        typeof resp.first === "string"
+          ? await fetchTimeline(resp.first)
+          : resp.first;
     } else {
-      const profile = await fetch(profile_url, {
-        headers: {
-          Accept: "application/activity+json",
-        },
-      }).then(d => d.json());
-
-      if (profile.outbox) {
-        outbox_collection = profile.outbox;
-      }
+      const headers = { Accept: "application/activity+json" };
+      const response = await fetch(profile_url, headers).then(d => d.json());
+      if (profile.outbox) outbox_collection = profile.outbox;
     }
   }
 
-  async function follow(event) {
-    if (pubgate_instance) {
-      let ap_object = {
-        type: "Follow",
-        object: searched_profile.id,
-      };
-      const response = await fetch($session.user.outbox, {
-        method: "POST",
-        body: JSON.stringify(ap_object),
-        headers: { Authorization: "Bearer " + $session.token },
-      }).then(d => d.json());
+  const fetchTimeline = async url => {
+    return await fetch(base_url + "/proxy", {
+      method: "POST",
+      body: JSON.stringify({ url: res.first }),
+    }).then(d => d.json());
+  };
+
+  const follow = async event => {
+    const type = event.target.innerText;
+    const { id, name } = profile; // OPTIMIZE kind of quirky to pull this form parent
+    if (!$session.user) error = "You are not logged in.";
+    else if (pubgate_instance) {
+      const body = JSON.stringify({ type, object: id });
+      const headers = { Authorization: "Bearer " + $session.token };
+      const outbox = $session.user.outbox;
+      const req = { method: "POST", body, headers };
+      const res = await fetch(outbox, req).then(d => d.json());
+      if (!res) error = `Empty response trying to ${type} ${name}`;
+      else if (res.Created === "success")
+        following = type === "Follow" ? true : false;
+      else if (res.error)
+        if (res.error === "This user is already followed") following = true;
+        else error = JSON.stringify(res.error);
+      else error = "Something went wrong.";
     }
-  }
+  };
 
   async function loadPost(event) {
     error = loadedPost = "";
@@ -77,8 +92,7 @@
       const response = await xhr(postLink);
       const { type } = response;
       if (type !== "Note") {
-        error = `Wrong type: ${type}`;
-        return;
+        return (error = `Wrong type: ${type}`);
       }
       loadedPost = response;
       postLink = "";
@@ -126,16 +140,17 @@ Load Post by link
 <br />
 <br />
 
-{#if outbox_collection}
+{#if profile}
   <h2>
-    {username}
-    {#if $session.user}
-      <button class="btn btn-sm pull-xs-right btn-info" on:click={follow}>
-        Follow
-      </button>
-    {/if}
+    {profile.name}
+    <button class="btn btn-sm pull-xs-right btn-info" on:click={follow}>
+      {#if following}Unfollow{:else}Follow{/if}
+    </button>
   </h2>
-  <TimeLine curRoute={timelineRoute} {session} {outbox_collection} />
+  {profile.summary}
+  {#if outbox_collection}
+    <TimeLine curRoute={timelineRoute} {session} {outbox_collection} />
+  {/if}
 {/if}
 
 {#if typeof loadedPost === 'object'}
