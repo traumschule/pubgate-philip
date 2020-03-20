@@ -8,7 +8,7 @@
   let inProgress = false;
   let content = "";
 
-  const hashTagMatcher = /(^|\W)(#[a-z\d][\w-]*)/gi;
+  const hashTagMatcher = /(^|\W)(#[^#\s]+)/gi;
 
   const wrapHashTagsWithLink = text =>
     text.match(hashTagMatcher)
@@ -16,6 +16,9 @@
       : text;
 
   const getAllHashTags = text => text.match(hashTagMatcher) || [];
+
+  const wrapLinksWithTags = text =>
+    text.replace(/(https?:\/\/([^\s]+))/gi, '<a href="$1">$2</a>');
 
   const publish = async ev => {
     ev.preventDefault();
@@ -25,7 +28,7 @@
       .map(v => v.trim())
       .map(getHashTag);
 
-    const data = wrapHashTagsWithLink(content);
+    const data = wrapHashTagsWithLink(wrapLinksWithTags(content));
 
     let ap_object = getCreateObject(data, tags);
 
