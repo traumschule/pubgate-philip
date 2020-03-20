@@ -33,4 +33,4 @@ async def proxy(request, **kwargs):
     except Exception as e:
         result = {'server_error': e}
         status_code = 500
-    return response.json(result, status_code=status_code)
+    return response.json(result, status=status_code)

@@ -1093,13 +1093,13 @@ var app = (function () {
     			t1 = text("Publish");
     			attr(textarea, "class", "form-control svelte-1fvj4fs");
     			attr(textarea, "placeholder", "Write your text here");
-    			add_location(textarea, file$3, 61, 4, 1326);
+    			add_location(textarea, file$3, 64, 4, 1444);
     			attr(fieldset, "class", "form-group");
-    			add_location(fieldset, file$3, 60, 2, 1292);
+    			add_location(fieldset, file$3, 63, 2, 1410);
     			attr(button, "class", "btn btn-sm pull-xs-right btn-info");
     			button.disabled = button_disabled_value = !ctx.content || ctx.inProgress;
-    			add_location(button, file$3, 67, 2, 1451);
-    			add_location(form, file$3, 58, 0, 1262);
+    			add_location(button, file$3, 70, 2, 1569);
+    			add_location(form, file$3, 61, 0, 1380);
 
     			dispose = [
     				listen(textarea, "input", ctx.textarea_input_handler),
@@ -1144,7 +1144,7 @@ var app = (function () {
     	};
     }
 
-    const hashTagMatcher = /(^|\W)(#[a-z\d][\w-]*)/gi;
+    const hashTagMatcher = /(^|\W)(#[^#\s]+)/gi;
 
     function instance$2($$self, $$props, $$invalidate) {
     	let $session;
@@ -1161,6 +1161,9 @@ var app = (function () {
 
       const getAllHashTags = text => text.match(hashTagMatcher) || [];
 
+      const wrapLinksWithTags = text =>
+        text.replace(/(https?:\/\/([^\s]+))/gi, '<a href="$1">$2</a>');
+
       const publish = async ev => {
         ev.preventDefault();
 
@@ -1169,7 +1172,7 @@ var app = (function () {
           .map(v => v.trim())
           .map(getHashTag);
 
-        const data = wrapHashTagsWithLink(content);
+        const data = wrapHashTagsWithLink(wrapLinksWithTags(content));
 
         let ap_object = getCreateObject(data, tags);
 
@@ -3728,8 +3731,8 @@ var app = (function () {
     			if (if_block1) if_block1.c();
     			if_block1_anchor = empty();
     			attr(button, "class", "btn btn-sm pull-xs-right btn-info");
-    			add_location(button, file$8, 145, 4, 4085);
-    			add_location(h2, file$8, 143, 2, 4057);
+    			add_location(button, file$8, 145, 4, 4094);
+    			add_location(h2, file$8, 143, 2, 4066);
     			dispose = listen(button, "click", ctx.follow);
     		},
 
@@ -3996,35 +3999,35 @@ var app = (function () {
     			t12 = space();
     			p = element("p");
     			t13 = text(ctx.error);
-    			add_location(br0, file$8, 104, 0, 3231);
+    			add_location(br0, file$8, 104, 0, 3240);
     			attr(input0, "class", "form-control form-control-lg");
     			attr(input0, "type", "text");
     			attr(input0, "placeholder", "Search format: username@domain");
-    			add_location(input0, file$8, 108, 4, 3331);
+    			add_location(input0, file$8, 108, 4, 3340);
     			attr(fieldset0, "class", "form-group");
-    			add_location(fieldset0, file$8, 107, 2, 3297);
+    			add_location(fieldset0, file$8, 107, 2, 3306);
     			attr(button0, "class", "btn btn-sm pull-xs-right btn-info");
     			attr(button0, "type", "submit");
     			button0.disabled = button0_disabled_value = !ctx.username;
-    			add_location(button0, file$8, 114, 2, 3497);
-    			add_location(form0, file$8, 106, 0, 3254);
-    			add_location(br1, file$8, 121, 0, 3631);
-    			add_location(br2, file$8, 122, 0, 3638);
+    			add_location(button0, file$8, 114, 2, 3506);
+    			add_location(form0, file$8, 106, 0, 3263);
+    			add_location(br1, file$8, 121, 0, 3640);
+    			add_location(br2, file$8, 122, 0, 3647);
     			attr(input1, "class", "form-control form-control-lg");
     			attr(input1, "type", "text");
     			attr(input1, "placeholder", "Copy a link here");
-    			add_location(input1, file$8, 126, 4, 3742);
+    			add_location(input1, file$8, 126, 4, 3751);
     			attr(fieldset1, "class", "form-group");
-    			add_location(fieldset1, file$8, 125, 2, 3708);
+    			add_location(fieldset1, file$8, 125, 2, 3717);
     			attr(button1, "class", "btn btn-sm pull-xs-right btn-info");
     			attr(button1, "type", "submit");
     			button1.disabled = button1_disabled_value = !ctx.postLink;
-    			add_location(button1, file$8, 132, 2, 3894);
-    			add_location(form1, file$8, 124, 0, 3663);
-    			add_location(br3, file$8, 139, 0, 4026);
-    			add_location(br4, file$8, 140, 0, 4033);
+    			add_location(button1, file$8, 132, 2, 3903);
+    			add_location(form1, file$8, 124, 0, 3672);
+    			add_location(br3, file$8, 139, 0, 4035);
+    			add_location(br4, file$8, 140, 0, 4042);
     			attr(p, "class", "text-danger");
-    			add_location(p, file$8, 159, 0, 4440);
+    			add_location(p, file$8, 159, 0, 4449);
 
     			dispose = [
     				listen(input0, "input", ctx.input0_input_handler),
@@ -4258,10 +4261,10 @@ var app = (function () {
           if (!res) $$invalidate('error', error = `Empty response trying to ${type} ${name}`);
           else if (res.Created === "success")
             $$invalidate('following', following = type === "Follow" ? true : false);
-          else if (res.error && res.error.status_code === 409)
-            // 409: 'This user is already followed'
-            $$invalidate('following', following = true);
-          else $$invalidate('error', error = JSON.stringify(res.error || res));
+          else if (res.error)
+            if (res.error === "This user is already followed") $$invalidate('following', following = true);
+            else $$invalidate('error', error = JSON.stringify(res.error));
+          else $$invalidate('error', error = "Something went wrong.");
         }
       };
 
