@@ -27,10 +27,6 @@ async def home(request, **kwargs):
 
 @philip_v1.route('/proxy', methods=['POST'])
 async def proxy(request, **kwargs):
-    try:
-        status_code, result = await fetch(request.json["url"],
-                                          status=True)
-    except Exception as e:
-        result = {'server_error': e}
-        status_code = 500
+    status_code, result = await fetch(request.json["url"],
+                                      pass_through=True)
     return response.json(result, status=status_code)
