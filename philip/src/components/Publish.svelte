@@ -28,7 +28,6 @@
       .map(v => v.trim())
       .map(getHashTag);
 
-    const data = wrapHashTagsWithLink(content);
     const data = wrapHashTagsWithLink(wrapLinksWithTags(content));
 
     let ap_object = getCreateObject(data, tags);
