@@ -1,3 +1,3 @@
 export { default as xhr } from "./xhr";
 export { ensureObject } from "./objectUtils";
-export { getUserId } from "./user";
+export { getUserId, findUser, fetchUser, fetchOutbox } from "./user";

@@ -1,9 +1,8 @@
 <script>
   export let session;
   export let curRoute;
-  const protocol = base_url.match(/^https/) ? "https" : "http";
 
-  import xhr from "../utils/xhr";
+  import { xhr, findUser, fetchOutbox } from "../utils";
   import TimeLine from "./TimeLine.svelte";
   import Post from "./Post.svelte";
   import { readable } from "svelte/store";
@@ -20,50 +19,40 @@
   let postLink = "";
   let error = "";
 
-  async function search(event) {
+  const search = async event => {
     error = "";
     profile = null;
     outbox_collection = null;
-    let pair = username.split("@");
+    let name, domain, url;
+    if (username.match(/^http/)) {
+      url = username; // TODO
+      error = "we could do the request for you, but we don't";
+      return;
+    }
+
+    const pair = username.split("@");
     if (pair.length !== 2) {
       return (error = "Use this format: username@domain");
     }
-    let profile_url = `${protocol}://${pair[1]}/@${pair[0]}`;
+    name = pair[0];
+    domain = pair[1];
 
-    if (pubgate_instance) {
-      console.log("search", profile_url);
-      const res = await fetch(base_url + "/proxy", {
-        method: "POST",
-        body: JSON.stringify({ url: profile_url }),
-      }).then(d => d.json());
-      if (res.error) {
-        return (error = JSON.stringify(res.error.strerror || res.error));
-      }
-      profile = res;
+    const res = await handleResult(findUser(name, domain));
 
-      const body = JSON.stringify({ url: profile.outbox });
-      const req = { method: "POST", body };
-      const resp = await fetch(base_url + "/proxy", req).then(d => d.json());
-      if (!resp) {
-        return (error = "Failed to fetch timeline.");
-      }
+    if (!res.outbox) return;
+    profile = res;
 
-      outbox_collection =
-        typeof resp.first === "string"
-          ? await fetchTimeline(resp.first)
-          : resp.first;
-    } else {
-      const headers = { Accept: "application/activity+json" };
-      const response = await fetch(profile_url, headers).then(d => d.json());
-      if (profile.outbox) outbox_collection = profile.outbox;
-    }
-  }
+    outbox_collection =
+      typeof profile.outbox === "string"
+        ? await handleResult(fetchOutbox(profile.outbox))
+        : profile.outbox;
+  };
 
-  const fetchTimeline = async url => {
-    return await fetch(base_url + "/proxy", {
-      method: "POST",
-      body: JSON.stringify({ url: res.first }),
-    }).then(d => d.json());
+  const handleResult = async promise => {
+    const result = await promise;
+    if (!result) error = "Empty response.";
+    else if (result.error) error = result.error;
+    return result;
   };
 
   const follow = async event => {
