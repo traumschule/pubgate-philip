@@ -1,5 +1,6 @@
 <script>
-  import { getCreateObject, getHashTag } from "../utils/pubGate";
+  import { getCreateObject, getHashTag, getMention } from "../utils/pubGate";
+  import { getUserId } from "../utils";
 
   export let reply = null;
   export let session;
@@ -7,49 +8,66 @@
 
   let inProgress = false;
   let content = "";
+  let error = "";
 
   const hashTagMatcher = /(^|\W)(#[^#\s]+)/gi;
+  const mentionMatcher = /(^|\W)@([^@\s]+)(@([^@\s]+))?/gi;
 
   const wrapHashTagsWithLink = text =>
-    text.match(hashTagMatcher)
-      ? text.replace(hashTagMatcher, '$1<a href="" rel="tag">$2</a>')
-      : text;
+    text.replace(hashTagMatcher, '$1<a href="" rel="tag">$2</a>');
 
   const getAllHashTags = text => text.match(hashTagMatcher) || [];
+  const getAllMentions = text => [...text.matchAll(mentionMatcher)] || [];
 
   const wrapLinksWithTags = text =>
     text.replace(/(https?:\/\/([^\s]+))/gi, '<a href="$1">$2</a>');
 
-  const publish = async ev => {
+  const publish = ev => {
     ev.preventDefault();
-
     inProgress = true;
-    let tags = getAllHashTags(content)
+
+    const tags = getAllHashTags(content)
       .map(v => v.trim())
       .map(getHashTag);
+    content = wrapHashTagsWithLink(wrapLinksWithTags(content));
 
-    const data = wrapHashTagsWithLink(wrapLinksWithTags(content));
-
-    let ap_object = getCreateObject(data, tags);
+    // parse and replace mentions
+    const mentions = getAllMentions(content).map(m => {
+      const orig = m[0];
+      const name = m[2];
+      const domain = m[4];
+      const id = getUserId(name, domain);
+      const wrapped = `${m[1]}<span class='h-card'><a href="${id}"' class='u-url mention'>@<span>${name}</span></a></span>`;
+      content = content.replace(orig, wrapped);
+      return getMention(name, id);
+    });
+    let ap_object = getCreateObject(content, tags.concat(mentions));
+    ap_object.cc = mentions.map(m => m.href);
 
     if (reply) {
       ap_object.object.inReplyTo = reply.id;
-      ap_object.cc = [reply.attributedTo];
+      ap_object.cc = ap_object.cc.concat(reply.attributedTo);
     }
+    sendPost(JSON.stringify(ap_object));
+  };
 
+  const sendPost = async body => {
     try {
-      const response = await fetch($session.user.outbox, {
-        method: "POST",
-        body: JSON.stringify(ap_object),
-        headers: { Authorization: "Bearer " + $session.token },
-      });
-      const data = await response.json();
+      const headers = { Authorization: "Bearer " + $session.token };
+      const req = { method: "POST", body, headers };
+      console.log("sending", req);
+      const res = await fetch($session.user.outbox, req).then(d => d.json());
+      console.log("response", res);
+      if (res.error) error = res.error;
+      else if (res.Created !== "success")
+        error = "Failed to create post: " + JSON.stringify(res);
     } catch (e) {
-      console.log(e);
+      error = e;
     }
 
     inProgress = false;
     content = "";
+    // TODO change route to show post?
   };
 </script>
 
@@ -75,3 +93,5 @@
   </button>
 
 </form>
+
+<p class="text-danger">{error}</p>
