@@ -16,6 +16,13 @@ jinja_env = Environment(
 
 
 @philip_v1.route('/', methods=['GET'])
+@philip_v1.route('/local', methods=['GET'])
+@philip_v1.route('/federated', methods=['GET'])
+@philip_v1.route('/inbox', methods=['GET'])
+@philip_v1.route('/create', methods=['GET'])
+@philip_v1.route('/search', methods=['GET'])
+@philip_v1.route('/profile', methods=['GET'])
+@philip_v1.route('/about', methods=['GET'])
 async def home(request, **kwargs):
     return response.html(
         jinja_env.get_template("svelte_home.jinja").render(
