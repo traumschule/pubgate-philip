@@ -1,10 +1,13 @@
 <script>
+  import { fetchUser } from "../utils";
+
   import Collection from "./Collection.svelte";
 
   export let curRoute;
   export let session;
 
   const username = $curRoute.match(/^\/@([^\/]+)$/)[1];
+
   let outbox, followers, following, liked;
 
   let headers = { Accept: "application/activity+json" };
@@ -13,20 +16,17 @@
       .then(d => d.json())
       .then(cb);
 
-  const fetchUser = path => {
-    return fetch(base_url + path, { headers })
-      .then(d => d.json())
-      .then(d => {
-        console.log("[User]Fetching timeline", d.outbox);
-        outbox = fetchJSON(d.outbox, d => d);
-        followers = fetchJSON(d.followers);
-        following = fetchJSON(d.following);
-        liked = fetchJSON(d.liked);
-        return d;
-      });
+  const updateUser = async url => {
+    const d = await fetchUser(url);
+    console.log("[User] Fetching timeline", d.outbox);
+    outbox = fetchJSON(d.outbox, d => d);
+    followers = fetchJSON(d.followers);
+    following = fetchJSON(d.following);
+    liked = fetchJSON(d.liked);
+    return d;
   };
 
-  $: profile = fetchUser($curRoute);
+  $: profile = updateUser(base_url + $curRoute);
 </script>
 
 {#await profile}

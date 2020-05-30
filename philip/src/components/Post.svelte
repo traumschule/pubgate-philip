@@ -7,6 +7,8 @@
   import Collection from "./Collection.svelte";
   import Publish from "./Publish.svelte";
 
+  import { fetchItem } from "../utils";
+
   let pgi = pubgate_instance;
   let showPublish = false;
   let content = "replies";
@@ -14,20 +16,12 @@
   let inReply;
   let isReply = false;
 
-  let isID = typeof post === 'string';
+  let isID = typeof post === "string";
   let skip_comments;
-  if (!isID && post.type.startsWith("To")){
-    skip_comments = true
+  if (!isID && post.type.startsWith("To")) {
+    skip_comments = true;
   }
   let tags = post.tag;
-
-  const fetchItem = path => {
-    let headers = { Accept: "application/activity+json" };
-    return fetch(path, { headers })
-      .then(d => d.json())
-      .then(d => d);
-  };
-
 
   const togglePublish = ev => {
     ev.preventDefault();
@@ -40,7 +34,8 @@
 
   const getCount = async (item, returnAll = false) => {
     if (!item) return "n/a";
-    const data = typeof item === "string" && !pgi ? await fetchItem(item): item;
+    const data =
+      typeof item === "string" && !pgi ? await fetchItem(item) : item;
     return returnAll ? data : data.totalItems;
   };
 
@@ -71,7 +66,8 @@
   async function doLike(ev) {
     ev.preventDefault();
     if (!liked) {
-      let recipients = post.attributedTo !== $session.user.url ? [post.attributedTo] : []
+      let recipients =
+        post.attributedTo !== $session.user.url ? [post.attributedTo] : [];
       let ap_object = {
         type: "Like",
         object: post.id,
@@ -91,7 +87,8 @@
   async function doAnnounce(ev) {
     ev.preventDefault();
     if (!announced) {
-      let recipients = post.attributedTo !== $session.user.url ? [post.attributedTo] : []
+      let recipients =
+        post.attributedTo !== $session.user.url ? [post.attributedTo] : [];
       let ap_object = {
         type: "Announce",
         object: post.id,
@@ -107,7 +104,6 @@
       announced = true;
     }
   }
-
 </script>
 
 <style>
@@ -145,50 +141,55 @@
   }
 </style>
 
-
 {#if isID}
-    <a href="{post}">{post}</a>
+  <a href={post}>{post}</a>
 {:else}
-    <Header {post}/>
-    <Tags {tags} />
-    <PostContent {post} />
-    <div>
-      <div class="rs">
-        {#await likes then likes}
-          <span class="rs_left" on:click={toggleLists}>{likes} likes</span>
-        {/await}
-        {#await comments then comments}
-          <span class="rs_right" on:click={toggleLists}>
-            {comments.totalItems !== null ? comments.totalItems : comments} comments
-          </span>
-        {/await}
-        {#await announces then announces}
-          <span class="rs_right" on:click={toggleLists}>{announces} announces</span>
-        {/await}
-      </div>
-      {#if $session.user}
-        <div class="ra">
-          <button class="btn btn-dark ra_item" on:click={doLike}>
-            Like{#if liked}d{/if}
-          </button>
-          <button class="btn btn-dark ra_item" on:click={togglePublish}>Add comment</button>
-          <button class="btn btn-dark ra_item" on:click={doAnnounce}>
-            Announce{#if announced}d{/if}
-          </button>
-        </div>
-        {#if showPublish}
-          <Publish reply={post} {session} />
-        {/if}
-      {/if}
-      {#if !skip_comments}
-          {#await comments then collection}
-            {#if collection.totalItems}
-              <div class="comments">
-                <Collection {collection} {session} {content}/>
-              </div>
-            {/if}
-          {/await}
-      {/if}
+  <Header {post} />
+  <Tags {tags} />
+  <PostContent {post} />
+  <div>
+    <div class="rs">
+      {#await likes then likes}
+        <span class="rs_left" on:click={toggleLists}>{likes} likes</span>
+      {/await}
+      {#await comments then comments}
+        <span class="rs_right" on:click={toggleLists}>
+          {comments.totalItems !== null ? comments.totalItems : comments}
+          comments
+        </span>
+      {/await}
+      {#await announces then announces}
+        <span class="rs_right" on:click={toggleLists}>
+          {announces} announces
+        </span>
+      {/await}
     </div>
-
+    {#if $session.user}
+      <div class="ra">
+        <button class="btn btn-dark ra_item" on:click={doLike}>
+          Like
+          {#if liked}d{/if}
+        </button>
+        <button class="btn btn-dark ra_item" on:click={togglePublish}>
+          Add comment
+        </button>
+        <button class="btn btn-dark ra_item" on:click={doAnnounce}>
+          Announce
+          {#if announced}d{/if}
+        </button>
+      </div>
+      {#if showPublish}
+        <Publish reply={post} {session} />
+      {/if}
+    {/if}
+    {#if !skip_comments}
+      {#await comments then collection}
+        {#if collection.totalItems}
+          <div class="comments">
+            <Collection {collection} {session} {content} />
+          </div>
+        {/if}
+      {/await}
+    {/if}
+  </div>
 {/if}

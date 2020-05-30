@@ -1,7 +1,7 @@
 <script>
   import TimeLine from "./TimeLine.svelte";
 
-  import { xhr } from "../utils";
+  import { xhr, fetchLocal } from "../utils";
   import { createEventDispatcher } from "svelte";
   const dispatch = createEventDispatcher();
 
@@ -13,20 +13,36 @@
   let description = "";
   let avatar = "";
   let invite = "";
-  let error = "";
+  let errorLogin = "";
+  let errorRegister = "";
 
   async function login(event) {
-    const profile = await xhr(base_url + "/@" + username).catch(error => {
-      console.log(error);
-    });
+    errorLogin = "";
+    console.log("loggin in");
+    const profile = await fetchLocal(base_url + "/@" + username).catch(
+      error => {
+        console.log("login failed", error);
+      }
+    );
     if (!profile) {
-      error = "login failed";
+      errorLogin = "login failed";
       return;
     }
-
-    const token = await xhr(profile.endpoints.oauthTokenEndpoint, {
+    if (profile.error) {
+      errorLogin = profile.error;
+      return;
+    }
+    console.log("login result", profile);
+    if (!profile.endpoints) {
+      console.log("profile.endpoints doesn't exist.");
+      return;
+    }
+    console.log("fetching token", profile.endpoints.oauthTokenEndpoint);
+    const tokenUrl = profile.endpoints.oauthTokenEndpoint;
+    const body = JSON.stringify({ username, password });
+    const token = await fetchLocal(tokenUrl, {
       method: "POST",
-      body: JSON.stringify({ username: username, password: password }),
+      body,
     });
 
     let temp = $session;
@@ -35,7 +51,7 @@
       newSession.user = profile;
       newSession.token = token.access_token;
       dispatch("updatesession", newSession);
-    }
+    } else console.log("token result", token);
   }
 
   async function logout(event) {
@@ -58,7 +74,7 @@
         },
       },
     };
-
+    console.log("registering", user_data);
     const create_user = await fetch(base_url + "/user", {
       method: "POST",
       body: JSON.stringify(user_data),
@@ -66,6 +82,9 @@
 
     if (create_user.profile) {
       await login({});
+    } else {
+      errorRegister = create_user.error;
+      console.log("register", create_user);
     }
   }
 </script>
@@ -105,9 +124,9 @@
       disabled={!username || !password}>
       Sign in
     </button>
+    <span class="text-danger">{errorLogin}</span>
   </form>
   <br />
-  <div class="text-danger">{error}</div>
   <br />
   or register ( PubGate only )
   <br />
@@ -154,5 +173,6 @@
       disabled={!username || !password}>
       Register
     </button>
+    <span class="text-danger">{errorRegister}</span>
   </form>
 {/if}
