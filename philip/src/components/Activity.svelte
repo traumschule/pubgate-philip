@@ -1,7 +1,7 @@
 <script>
   import Post from "./Post.svelte";
   import Header from "./Post/Header.svelte";
-  import { xhr, ensureObject } from "../utils";
+  import { ensureObject } from "../utils";
 
   export let post, session, content;
 

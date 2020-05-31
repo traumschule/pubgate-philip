@@ -1,7 +1,7 @@
 <script>
   import TimeLine from "./TimeLine.svelte";
 
-  import { xhr, fetchLocal } from "../utils";
+  import { fetchLocal } from "../utils";
   import { createEventDispatcher } from "svelte";
   const dispatch = createEventDispatcher();
 

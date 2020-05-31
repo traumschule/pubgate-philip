@@ -1,13 +1,11 @@
 export { ensureObject } from "./objectUtils";
 export {
   xhr,
+  fetchJSON,
   fetchLocal,
   fetchCollection,
-  fetchItem,
-  fetchObject,
   getUserId,
   findUser,
-  fetchUser,
   fetchOutbox,
   followUser,
   findPost,

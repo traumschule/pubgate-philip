@@ -1,5 +1,5 @@
 <script>
-  import { fetchUser } from "../utils";
+  import { fetchJSON } from "../utils";
 
   import Collection from "./Collection.svelte";
 
@@ -10,16 +10,10 @@
 
   let outbox, followers, following, liked;
 
-  let headers = { Accept: "application/activity+json" };
-  const fetchJSON = (url, cb = d => d) =>
-    fetch(url, { headers })
-      .then(d => d.json())
-      .then(cb);
-
   const updateUser = async url => {
-    const d = await fetchUser(url);
+    const d = await fetchJSON(url);
     console.log("[User] Fetching timeline", d.outbox);
-    outbox = fetchJSON(d.outbox, d => d);
+    outbox = fetchJSON(d.outbox);
     followers = fetchJSON(d.followers);
     following = fetchJSON(d.following);
     liked = fetchJSON(d.liked);
