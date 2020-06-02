@@ -20,7 +20,7 @@
   const getAllMentions = text => [...text.matchAll(mentionMatcher)] || [];
 
   const wrapLinksWithTags = text =>
-    text.replace(/(https?:\/\/([^\s]+))/gi, '<a href="$1">$2</a>');
+    text.replace(/( https?:\/\/([^\s]+))/gi, '<a href="$1">$2</a>');
 
   const publish = ev => {
     ev.preventDefault();
