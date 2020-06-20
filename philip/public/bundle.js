@@ -2045,7 +2045,7 @@ var app = (function () {
 
     const file$7 = "src/components/Post.svelte";
 
-    // (151:0) {:else}
+    // (149:0) {:else}
     function create_else_block$1(ctx) {
     	var t0, t1, t2, div1, div0, promise, t3, promise_1, t4, promise_2, t5, t6, current;
 
@@ -2133,8 +2133,8 @@ var app = (function () {
     			t6 = space();
     			if (if_block1) if_block1.c();
     			attr(div0, "class", "rs svelte-vekltv");
-    			add_location(div0, file$7, 155, 6, 3244);
-    			add_location(div1, file$7, 154, 4, 3232);
+    			add_location(div0, file$7, 153, 6, 3166);
+    			add_location(div1, file$7, 152, 4, 3154);
     		},
 
     		m: function mount(target, anchor) {
@@ -2299,7 +2299,7 @@ var app = (function () {
     	};
     }
 
-    // (149:0) {#if isID}
+    // (147:0) {#if isID}
     function create_if_block$3(ctx) {
     	var a, t;
 
@@ -2308,7 +2308,7 @@ var app = (function () {
     			a = element("a");
     			t = text(ctx.post);
     			attr(a, "href", ctx.post);
-    			add_location(a, file$7, 149, 4, 3124);
+    			add_location(a, file$7, 147, 4, 3046);
     		},
 
     		m: function mount(target, anchor) {
@@ -2334,7 +2334,7 @@ var app = (function () {
     	};
     }
 
-    // (1:0) <script>   export let post, session;    import PostContent from "./Post/Content.svelte";   import Header from "./Post/Header.svelte";   import Tags from "./Post/Tags.svelte";   import Collection from "./Collection.svelte";   import Publish from "./Publish.svelte";    let pgi = pubgate_instance;   let showPublish = false;   let content = "replies";    let inReply;   let isReply = false;    let isID = typeof post === 'string';   let skip_comments;   if (!isID && post.type.startsWith("To")){     skip_comments = true   }
+    // (1:0) <script>   export let post, session;    import PostContent from "./Post/Content.svelte";   import Header from "./Post/Header.svelte";   import Tags from "./Post/Tags.svelte";   import Collection from "./Collection.svelte";   import Publish from "./Publish.svelte";     let showPublish = false;   let content = "replies";    let inReply;   let isReply = false;    let isID = typeof post === 'string';   let skip_comments;   if (!isID && post.type.startsWith("To")){     skip_comments = true   }
     function create_catch_block_3(ctx) {
     	return {
     		c: noop,
@@ -2344,7 +2344,7 @@ var app = (function () {
     	};
     }
 
-    // (157:33)            <span class="rs_left" on:click={toggleLists}
+    // (155:33)            <span class="rs_left" on:click={toggleLists}
     function create_then_block_3(ctx) {
     	var span, t0_value = ctx.likes, t0, t1, dispose;
 
@@ -2354,7 +2354,7 @@ var app = (function () {
     			t0 = text(t0_value);
     			t1 = text(" likes");
     			attr(span, "class", "rs_left svelte-vekltv");
-    			add_location(span, file$7, 157, 10, 3305);
+    			add_location(span, file$7, 155, 10, 3227);
     			dispose = listen(span, "click", ctx.toggleLists);
     		},
 
@@ -2376,7 +2376,7 @@ var app = (function () {
     	};
     }
 
-    // (1:0) <script>   export let post, session;    import PostContent from "./Post/Content.svelte";   import Header from "./Post/Header.svelte";   import Tags from "./Post/Tags.svelte";   import Collection from "./Collection.svelte";   import Publish from "./Publish.svelte";    let pgi = pubgate_instance;   let showPublish = false;   let content = "replies";    let inReply;   let isReply = false;    let isID = typeof post === 'string';   let skip_comments;   if (!isID && post.type.startsWith("To")){     skip_comments = true   }
+    // (1:0) <script>   export let post, session;    import PostContent from "./Post/Content.svelte";   import Header from "./Post/Header.svelte";   import Tags from "./Post/Tags.svelte";   import Collection from "./Collection.svelte";   import Publish from "./Publish.svelte";     let showPublish = false;   let content = "replies";    let inReply;   let isReply = false;    let isID = typeof post === 'string';   let skip_comments;   if (!isID && post.type.startsWith("To")){     skip_comments = true   }
     function create_pending_block_3(ctx) {
     	return {
     		c: noop,
@@ -2386,7 +2386,7 @@ var app = (function () {
     	};
     }
 
-    // (1:0) <script>   export let post, session;    import PostContent from "./Post/Content.svelte";   import Header from "./Post/Header.svelte";   import Tags from "./Post/Tags.svelte";   import Collection from "./Collection.svelte";   import Publish from "./Publish.svelte";    let pgi = pubgate_instance;   let showPublish = false;   let content = "replies";    let inReply;   let isReply = false;    let isID = typeof post === 'string';   let skip_comments;   if (!isID && post.type.startsWith("To")){     skip_comments = true   }
+    // (1:0) <script>   export let post, session;    import PostContent from "./Post/Content.svelte";   import Header from "./Post/Header.svelte";   import Tags from "./Post/Tags.svelte";   import Collection from "./Collection.svelte";   import Publish from "./Publish.svelte";     let showPublish = false;   let content = "replies";    let inReply;   let isReply = false;    let isID = typeof post === 'string';   let skip_comments;   if (!isID && post.type.startsWith("To")){     skip_comments = true   }
     function create_catch_block_2(ctx) {
     	return {
     		c: noop,
@@ -2396,7 +2396,7 @@ var app = (function () {
     	};
     }
 
-    // (160:39)            <span class="rs_right" on:click={toggleLists}
+    // (158:39)            <span class="rs_right" on:click={toggleLists}
     function create_then_block_2(ctx) {
     	var span, t0_value = ctx.comments.totalItems !== null ? ctx.comments.totalItems : ctx.comments, t0, t1, dispose;
 
@@ -2406,7 +2406,7 @@ var app = (function () {
     			t0 = text(t0_value);
     			t1 = text(" comments");
     			attr(span, "class", "rs_right svelte-vekltv");
-    			add_location(span, file$7, 160, 10, 3438);
+    			add_location(span, file$7, 158, 10, 3360);
     			dispose = listen(span, "click", ctx.toggleLists);
     		},
 
@@ -2428,7 +2428,7 @@ var app = (function () {
     	};
     }
 
-    // (1:0) <script>   export let post, session;    import PostContent from "./Post/Content.svelte";   import Header from "./Post/Header.svelte";   import Tags from "./Post/Tags.svelte";   import Collection from "./Collection.svelte";   import Publish from "./Publish.svelte";    let pgi = pubgate_instance;   let showPublish = false;   let content = "replies";    let inReply;   let isReply = false;    let isID = typeof post === 'string';   let skip_comments;   if (!isID && post.type.startsWith("To")){     skip_comments = true   }
+    // (1:0) <script>   export let post, session;    import PostContent from "./Post/Content.svelte";   import Header from "./Post/Header.svelte";   import Tags from "./Post/Tags.svelte";   import Collection from "./Collection.svelte";   import Publish from "./Publish.svelte";     let showPublish = false;   let content = "replies";    let inReply;   let isReply = false;    let isID = typeof post === 'string';   let skip_comments;   if (!isID && post.type.startsWith("To")){     skip_comments = true   }
     function create_pending_block_2(ctx) {
     	return {
     		c: noop,
@@ -2438,7 +2438,7 @@ var app = (function () {
     	};
     }
 
-    // (1:0) <script>   export let post, session;    import PostContent from "./Post/Content.svelte";   import Header from "./Post/Header.svelte";   import Tags from "./Post/Tags.svelte";   import Collection from "./Collection.svelte";   import Publish from "./Publish.svelte";    let pgi = pubgate_instance;   let showPublish = false;   let content = "replies";    let inReply;   let isReply = false;    let isID = typeof post === 'string';   let skip_comments;   if (!isID && post.type.startsWith("To")){     skip_comments = true   }
+    // (1:0) <script>   export let post, session;    import PostContent from "./Post/Content.svelte";   import Header from "./Post/Header.svelte";   import Tags from "./Post/Tags.svelte";   import Collection from "./Collection.svelte";   import Publish from "./Publish.svelte";     let showPublish = false;   let content = "replies";    let inReply;   let isReply = false;    let isID = typeof post === 'string';   let skip_comments;   if (!isID && post.type.startsWith("To")){     skip_comments = true   }
     function create_catch_block_1(ctx) {
     	return {
     		c: noop,
@@ -2448,7 +2448,7 @@ var app = (function () {
     	};
     }
 
-    // (165:41)            <span class="rs_right" on:click={toggleLists}
+    // (163:41)            <span class="rs_right" on:click={toggleLists}
     function create_then_block_1(ctx) {
     	var span, t0_value = ctx.announces, t0, t1, dispose;
 
@@ -2458,7 +2458,7 @@ var app = (function () {
     			t0 = text(t0_value);
     			t1 = text(" announces");
     			attr(span, "class", "rs_right svelte-vekltv");
-    			add_location(span, file$7, 165, 10, 3657);
+    			add_location(span, file$7, 163, 10, 3579);
     			dispose = listen(span, "click", ctx.toggleLists);
     		},
 
@@ -2480,7 +2480,7 @@ var app = (function () {
     	};
     }
 
-    // (1:0) <script>   export let post, session;    import PostContent from "./Post/Content.svelte";   import Header from "./Post/Header.svelte";   import Tags from "./Post/Tags.svelte";   import Collection from "./Collection.svelte";   import Publish from "./Publish.svelte";    let pgi = pubgate_instance;   let showPublish = false;   let content = "replies";    let inReply;   let isReply = false;    let isID = typeof post === 'string';   let skip_comments;   if (!isID && post.type.startsWith("To")){     skip_comments = true   }
+    // (1:0) <script>   export let post, session;    import PostContent from "./Post/Content.svelte";   import Header from "./Post/Header.svelte";   import Tags from "./Post/Tags.svelte";   import Collection from "./Collection.svelte";   import Publish from "./Publish.svelte";     let showPublish = false;   let content = "replies";    let inReply;   let isReply = false;    let isID = typeof post === 'string';   let skip_comments;   if (!isID && post.type.startsWith("To")){     skip_comments = true   }
     function create_pending_block_1(ctx) {
     	return {
     		c: noop,
@@ -2490,7 +2490,7 @@ var app = (function () {
     	};
     }
 
-    // (169:6) {#if $session.user}
+    // (167:6) {#if $session.user}
     function create_if_block_3(ctx) {
     	var div, button0, t0, t1, button1, t3, button2, t4, t5, if_block2_anchor, current, dispose;
 
@@ -2517,13 +2517,13 @@ var app = (function () {
     			if (if_block2) if_block2.c();
     			if_block2_anchor = empty();
     			attr(button0, "class", "btn btn-dark ra_item svelte-vekltv");
-    			add_location(button0, file$7, 170, 10, 3823);
+    			add_location(button0, file$7, 168, 10, 3745);
     			attr(button1, "class", "btn btn-dark ra_item svelte-vekltv");
-    			add_location(button1, file$7, 173, 10, 3943);
+    			add_location(button1, file$7, 171, 10, 3865);
     			attr(button2, "class", "btn btn-dark ra_item svelte-vekltv");
-    			add_location(button2, file$7, 174, 10, 4036);
+    			add_location(button2, file$7, 172, 10, 3958);
     			attr(div, "class", "ra svelte-vekltv");
-    			add_location(div, file$7, 169, 8, 3796);
+    			add_location(div, file$7, 167, 8, 3718);
 
     			dispose = [
     				listen(button0, "click", ctx.doLike),
@@ -2625,7 +2625,7 @@ var app = (function () {
     	};
     }
 
-    // (172:16) {#if liked}
+    // (170:16) {#if liked}
     function create_if_block_6(ctx) {
     	var t;
 
@@ -2646,7 +2646,7 @@ var app = (function () {
     	};
     }
 
-    // (176:20) {#if announced}
+    // (174:20) {#if announced}
     function create_if_block_5(ctx) {
     	var t;
 
@@ -2667,7 +2667,7 @@ var app = (function () {
     	};
     }
 
-    // (179:8) {#if showPublish}
+    // (177:8) {#if showPublish}
     function create_if_block_4(ctx) {
     	var current;
 
@@ -2714,7 +2714,7 @@ var app = (function () {
     	};
     }
 
-    // (183:6) {#if !skip_comments}
+    // (181:6) {#if !skip_comments}
     function create_if_block_1$3(ctx) {
     	var await_block_anchor, promise, current;
 
@@ -2785,7 +2785,7 @@ var app = (function () {
     	};
     }
 
-    // (1:0) <script>   export let post, session;    import PostContent from "./Post/Content.svelte";   import Header from "./Post/Header.svelte";   import Tags from "./Post/Tags.svelte";   import Collection from "./Collection.svelte";   import Publish from "./Publish.svelte";    let pgi = pubgate_instance;   let showPublish = false;   let content = "replies";    let inReply;   let isReply = false;    let isID = typeof post === 'string';   let skip_comments;   if (!isID && post.type.startsWith("To")){     skip_comments = true   }
+    // (1:0) <script>   export let post, session;    import PostContent from "./Post/Content.svelte";   import Header from "./Post/Header.svelte";   import Tags from "./Post/Tags.svelte";   import Collection from "./Collection.svelte";   import Publish from "./Publish.svelte";     let showPublish = false;   let content = "replies";    let inReply;   let isReply = false;    let isID = typeof post === 'string';   let skip_comments;   if (!isID && post.type.startsWith("To")){     skip_comments = true   }
     function create_catch_block(ctx) {
     	return {
     		c: noop,
@@ -2797,7 +2797,7 @@ var app = (function () {
     	};
     }
 
-    // (184:43)              {#if collection.totalItems}
+    // (182:43)              {#if collection.totalItems}
     function create_then_block(ctx) {
     	var if_block_anchor, current;
 
@@ -2856,7 +2856,7 @@ var app = (function () {
     	};
     }
 
-    // (185:12) {#if collection.totalItems}
+    // (183:12) {#if collection.totalItems}
     function create_if_block_2$1(ctx) {
     	var div, current;
 
@@ -2874,7 +2874,7 @@ var app = (function () {
     			div = element("div");
     			collection.$$.fragment.c();
     			attr(div, "class", "comments svelte-vekltv");
-    			add_location(div, file$7, 185, 14, 4395);
+    			add_location(div, file$7, 183, 14, 4317);
     		},
 
     		m: function mount(target, anchor) {
@@ -2913,7 +2913,7 @@ var app = (function () {
     	};
     }
 
-    // (1:0) <script>   export let post, session;    import PostContent from "./Post/Content.svelte";   import Header from "./Post/Header.svelte";   import Tags from "./Post/Tags.svelte";   import Collection from "./Collection.svelte";   import Publish from "./Publish.svelte";    let pgi = pubgate_instance;   let showPublish = false;   let content = "replies";    let inReply;   let isReply = false;    let isID = typeof post === 'string';   let skip_comments;   if (!isID && post.type.startsWith("To")){     skip_comments = true   }
+    // (1:0) <script>   export let post, session;    import PostContent from "./Post/Content.svelte";   import Header from "./Post/Header.svelte";   import Tags from "./Post/Tags.svelte";   import Collection from "./Collection.svelte";   import Publish from "./Publish.svelte";     let showPublish = false;   let content = "replies";    let inReply;   let isReply = false;    let isID = typeof post === 'string';   let skip_comments;   if (!isID && post.type.startsWith("To")){     skip_comments = true   }
     function create_pending_block(ctx) {
     	return {
     		c: noop,
@@ -3009,7 +3009,7 @@ var app = (function () {
 
     	let { post, session } = $$props; validate_store(session, 'session'); component_subscribe($$self, session, $$value => { $session = $$value; $$invalidate('$session', $session); });
 
-      let pgi = pubgate_instance;
+
       let showPublish = false;
 
       let isID = typeof post === 'string';
@@ -3019,11 +3019,9 @@ var app = (function () {
       }
       let tags = post.tag;
 
-
       const fetchItem = path => {
         let headers = { Accept: "application/activity+json" };
-        const url = pgi ? path + "?cached=1" : path;
-        return fetch(url, { headers })
+        return fetch(path, { headers })
           .then(d => d.json())
           .then(d => d);
       };
@@ -6666,7 +6664,7 @@ var app = (function () {
     /* src/components/Object.svelte generated by Svelte v3.7.1 */
     const { Object: Object_1 } = globals;
 
-    // (1:0) <script>   import Post from "./Post.svelte";    export let curRoute;   export let session;    let id = $curRoute.match(/^\/@([^\/]+)\/object\/(.+)$/)[2];    const fetchObject = function(path, session = {}
+    // (1:0) <script>   import Post from "./Post.svelte";    export let curRoute;   export let session;   let pgi = pubgate_instance;   let id = $curRoute.match(/^\/@([^\/]+)\/object\/(.+)$/)[2];    const fetchObject = function(path, session = {}
     function create_catch_block$3(ctx) {
     	return {
     		c: noop,
@@ -6678,7 +6676,7 @@ var app = (function () {
     	};
     }
 
-    // (23:0) {:then post}
+    // (24:0) {:then post}
     function create_then_block$3(ctx) {
     	var current;
 
@@ -6722,7 +6720,7 @@ var app = (function () {
     	};
     }
 
-    // (21:15)    So you want to see object {id}
+    // (22:15)    So you want to see object {id}
     function create_pending_block$3(ctx) {
     	var t0, t1, t2;
 
@@ -6832,14 +6830,15 @@ var app = (function () {
 
     	let { curRoute } = $$props; validate_store(curRoute, 'curRoute'); component_subscribe($$self, curRoute, $$value => { $curRoute = $$value; $$invalidate('$curRoute', $curRoute); });
       let { session } = $$props; validate_store(session, 'session'); component_subscribe($$self, session, $$value => { $session = $$value; $$invalidate('$session', $session); });
-
+      let pgi = pubgate_instance;
       let id = $curRoute.match(/^\/@([^\/]+)\/object\/(.+)$/)[2];
 
       const fetchObject = function(path, session = {}) {
         let headers_set = {
           Accept: "application/activity+json",
         };
-        return fetch(base_url + path, { headers: headers_set })
+        const url = pgi ? path + "?cached=1" : path;
+        return fetch(base_url + url, { headers: headers_set })
           .then(d => d.json())
           .then(d => d);
       };
