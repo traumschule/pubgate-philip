@@ -4,24 +4,27 @@
   import { ensureObject } from "../utils";
 
   export let post, session, content;
+  console.log("post", post);
 
   let pgi = pubgate_instance;
   let postObject, isReply, isReaction;
 
   if (content == "replies") {
-      post.object.type = "Reply"
-  } else if (["Announce", "Like"].includes(post.type) || post.object.inReplyTo) {
+    post.object.type = "Reply";
+  } else if (
+    ["Announce", "Like"].includes(post.type) ||
+    post.object.inReplyTo
+  ) {
     postObject = pgi ? post.object : ensureObject(post.object);
 
-    if (["Announce", "Like"].includes(post.type)){
-        isReaction = true;
-    }
-    else if (postObject.inReplyTo) {
-        isReply = true;
-        postObject.type = "Reply";
-        if (typeof postObject.inReplyTo !== 'string'){
-            postObject.inReplyTo.type = "To " + postObject.inReplyTo.type
-        }
+    if (["Announce", "Like"].includes(post.type)) {
+      isReaction = true;
+    } else if (postObject.inReplyTo) {
+      isReply = true;
+      postObject.type = "Reply";
+      if (typeof postObject.inReplyTo !== "string") {
+        postObject.inReplyTo.type = "To " + postObject.inReplyTo.type;
+      }
     }
   }
 </script>
@@ -33,24 +36,24 @@
 </style>
 
 <li class="post">
-  {#if content == "replies"}
-      <div class="reaction">
-        <Post post={post.object} {session}/>
-      </div>
+  {#if content == 'replies'}
+    <div class="reaction">
+      <Post post={post.object} {session} />
+    </div>
   {:else}
-      <h2 id="">.</h2>
-      {#if isReaction}
-          <Header {post} />
-          <div class="reaction">
-              <Post post={postObject} {session}/>
-          </div>
-      {:else if isReply}
-          <Post post={postObject} {session}/>
-          <div class="reaction">
-              <Post post={postObject.inReplyTo} {session}/>
-          </div>
-      {:else}
-          <Post post={post.object} {session}/>
-      {/if}
+    <h2 id="">.</h2>
+    {#if isReaction}
+      <Header {post} />
+      <div class="reaction">
+        <Post post={postObject} {session} />
+      </div>
+    {:else if isReply}
+      <Post post={postObject} {session} />
+      <div class="reaction">
+        <Post post={postObject.inReplyTo} {session} />
+      </div>
+    {:else}
+      <Post post={post.object} {session} />
+    {/if}
   {/if}
 </li>
