@@ -10,19 +10,17 @@
 
   let username = "";
   let password = "";
-  let description = "";
+  let summary = "";
   let avatar = "";
   let invite = "";
   let errorLogin = "";
   let errorRegister = "";
 
-  async function login(event) {
+  const login = async event => {
     errorLogin = "";
     console.log("loggin in");
-    const profile = await fetchLocal(base_url + "/@" + username).catch(
-      error => {
-        console.log("login failed", error);
-      }
+    const profile = await fetchLocal(base_url + "/@" + username).catch(error =>
+      console.log("login failed", error)
     );
     if (!profile) {
       errorLogin = "login failed";
@@ -34,16 +32,13 @@
     }
     console.log("login result", profile);
     if (!profile.endpoints) {
-      console.log("profile.endpoints doesn't exist.");
+      console.log("BUG profile.endpoints doesn't exist.");
       return;
     }
     console.log("fetching token", profile.endpoints.oauthTokenEndpoint);
     const tokenUrl = profile.endpoints.oauthTokenEndpoint;
     const body = JSON.stringify({ username, password });
-    const token = await fetchLocal(tokenUrl, {
-      method: "POST",
-      body,
-    });
+    const token = await fetchLocal(tokenUrl, { method: "POST", body });
 
     let temp = $session;
     if (token.access_token) {
@@ -52,41 +47,19 @@
       newSession.token = token.access_token;
       dispatch("updatesession", newSession);
     } else console.log("token result", token);
-  }
+  };
 
-  async function logout(event) {
-    dispatch("updatesession", {});
-  }
+  const logout = async event => dispatch("updatesession", {});
+  const register = async event => {
+    const icon = { type: "Image", mediaType: "image/jpeg", url: avatar };
+    const profile = { type: "Person", name: username, summary, icon };
+    const body = JSON.stringify({ username, password, invite, profile });
+    const user = await fetchLocal(base_url + "/user", { method: "POST", body });
 
-  async function register(event) {
-    let user_data = {
-      username: username,
-      password: password,
-      invite: invite,
-      profile: {
-        type: "Person",
-        name: username,
-        summary: description,
-        icon: {
-          type: "Image",
-          mediaType: "image/jpeg",
-          url: avatar,
-        },
-      },
-    };
-    console.log("registering", user_data);
-    const create_user = await fetch(base_url + "/user", {
-      method: "POST",
-      body: JSON.stringify(user_data),
-    }).then(d => d.json());
-
-    if (create_user.profile) {
-      await login({});
-    } else {
-      errorRegister = create_user.error;
-      console.log("register", create_user);
-    }
-  }
+    if (user.profile) await login({});
+    else if (user.error) errorRegister = user.error;
+    else console.log("register failed:", user);
+  };
 </script>
 
 {#if $session.user}
@@ -150,7 +123,7 @@
         class="form-control"
         rows="8"
         placeholder="Profile Description"
-        bind:value={description} />
+        bind:value={summary} />
     </fieldset>
     <fieldset class="form-group">
       <input
