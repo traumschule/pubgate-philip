@@ -7,7 +7,7 @@
   import Collection from "./Collection.svelte";
   import Publish from "./Publish.svelte";
 
-
+  let pgi = pubgate_instance;
   let showPublish = false;
   let content = "replies";
 
@@ -40,7 +40,7 @@
 
   const getCount = async (item, returnAll = false) => {
     if (!item) return "n/a";
-    const data = typeof item === "string" ? await fetchItem(item) : item;
+    const data = typeof item === "string" && !pgi ? await fetchItem(item): item;
     return returnAll ? data : data.totalItems;
   };
 
@@ -71,10 +71,11 @@
   async function doLike(ev) {
     ev.preventDefault();
     if (!liked) {
+      let recipients = post.attributedTo !== $session.user.url ? [post.attributedTo] : []
       let ap_object = {
         type: "Like",
         object: post.id,
-        cc: [post.attributedTo],
+        cc: recipients,
       };
       const response = await fetch($session.user.outbox, {
         method: "POST",
@@ -90,10 +91,11 @@
   async function doAnnounce(ev) {
     ev.preventDefault();
     if (!announced) {
+      let recipients = post.attributedTo !== $session.user.url ? [post.attributedTo] : []
       let ap_object = {
         type: "Announce",
         object: post.id,
-        cc: [post.attributedTo],
+        cc: recipients,
       };
       const response = await fetch($session.user.outbox, {
         method: "POST",
