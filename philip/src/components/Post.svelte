@@ -34,10 +34,12 @@
 
   const getReactions = async item => {
     if (!item) return "n/a";
-    const data = typeof item === "string" ? await fetchJSON(item) : item;
+    const data = typeof item === "string" && !pgi ? await fetchJSON(item) : item;
     // TODO only fetch on hover?
+    // Should be in cache with backend caching. With FE-caching, IDK
 
     // TODO mastodon returns first as string: totalItems is higher level than first
+    // Not critical with BE caching
     if (typeof data.first === "string") console.log("first is string", data);
 
     return data;
@@ -60,6 +62,7 @@
   const headers = { Authorization: "Bearer " + $session.token };
 
   // TODO is it possible to pass type (Like or Announce) and catch event to combine functions?
+  // Yes
   const doLike = async ev => {
     ev.preventDefault();
     if (liked) return;
