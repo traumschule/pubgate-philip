@@ -1,17 +1,24 @@
 <script>
-  import { fetchJSON } from "../utils";
+  // import { fetchJSON } from "../utils";
 
   const defaultIcon = "favicon.png";
 
   const getName = id => {
+    // Will fail with user ids, which are not FollowYouNoseFormat
+    // Could be fetched on hover at same time as avatar
+
     const name = id.match(/@([^\/]+)$/);
     return name ? name[1] : id;
   };
 
   const getAvatar = async id => {
-    const user = await fetchJSON(id);
-    console.log("icon", user.icon, defaultIcon);
-    return user.icon.url !== "" ? user.icon.url : defaultIcon;
+    // Should be performed on hover, not on page load
+
+    // const user = await fetchJSON(id);
+    // console.log("icon", user.icon, defaultIcon);
+    // return user.icon.url !== "" ? user.icon.url : defaultIcon;
+
+    return defaultIcon
   };
 
   export let id;
