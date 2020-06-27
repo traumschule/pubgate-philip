@@ -10,7 +10,6 @@
   if (data) {
     //console.debug("rendering overlay", label, data);
     items = data.first ? data.first.orderedItems : data.orderedItems;
-    if (items.length) console.log("items", items);
   }
 </script>
 

@@ -4,7 +4,6 @@
   import { ensureObject } from "../utils";
 
   export let post, session, content;
-  console.log("post", post);
 
   let pgi = pubgate_instance;
   let postObject, isReply, isReaction;
@@ -27,6 +26,8 @@
       }
     }
   }
+  let showComments = true;
+  let notShowComments = false
 </script>
 
 <style>
@@ -38,22 +39,22 @@
 <li class="post">
   {#if content == 'replies'}
     <div class="reaction">
-      <Post post={post.object} {session} />
+      <Post post={post.object} {session} {showComments} />
     </div>
   {:else}
     <h2 id="">.</h2>
     {#if isReaction}
       <Header {post} />
       <div class="reaction">
-        <Post post={postObject} {session} />
+        <Post post={postObject} {session} {notShowComments}/>
       </div>
     {:else if isReply}
-      <Post post={postObject} {session} />
+      <Post post={postObject} {session} {notShowComments}/>
       <div class="reaction">
-        <Post post={postObject.inReplyTo} {session} />
+        <Post post={postObject.inReplyTo} {session} {notShowComments}/>
       </div>
     {:else}
-      <Post post={post.object} {session} />
+      <Post post={post.object} {session} {notShowComments} />
     {/if}
   {/if}
 </li>

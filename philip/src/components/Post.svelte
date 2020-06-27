@@ -1,26 +1,25 @@
 <script>
-  export let post, session;
+  export let post, session, showComments;
 
   import PostContent from "./Post/Content.svelte";
   import Header from "./Post/Header.svelte";
   import Tags from "./Post/Tags.svelte";
   import Collection from "./Collection.svelte";
   import Publish from "./Publish.svelte";
-  import Overlay from "./Overlay.svelte";
+  import Overlay from "./Post/Overlay.svelte";
 
   import { fetchJSON } from "../utils";
 
   let pgi = pubgate_instance;
   let showPublish = false;
-  let showComments = false;
   let content = "replies";
 
   let inReply;
   let isReply = false;
 
   let isID = typeof post === "string";
-  let skip_comments;
-  if (!isID && post.type.startsWith("To")) skip_comments = true;
+  // let skip_comments;
+  // if (!isID && post.type.startsWith("To")) skip_comments = true;
   let tags = post.tag;
 
   const togglePublish = ev => {
@@ -165,7 +164,7 @@
         <Publish reply={post} {session} />
       {/if}
     {/if}
-    {#if showComments && !skip_comments}
+    {#if showComments}
       {#await comments then collection}
         {#if collection.totalItems}
           <div class="comments">
