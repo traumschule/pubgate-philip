@@ -39,22 +39,22 @@
 <li class="post">
   {#if content == 'replies'}
     <div class="reaction">
-      <Post post={post.object} {session} {showComments} />
+      <Post post={post.object} {session} showComments={showComments} />
     </div>
   {:else}
     <h2 id="">.</h2>
     {#if isReaction}
       <Header {post} />
       <div class="reaction">
-        <Post post={postObject} {session} {notShowComments}/>
+        <Post post={postObject} {session} showComments={notShowComments} />
       </div>
     {:else if isReply}
-      <Post post={postObject} {session} {notShowComments}/>
+      <Post post={postObject} {session} showComments={notShowComments} />
       <div class="reaction">
-        <Post post={postObject.inReplyTo} {session} {notShowComments}/>
+        <Post post={postObject.inReplyTo} {session} showComments={notShowComments} />
       </div>
     {:else}
-      <Post post={post.object} {session} {notShowComments} />
+      <Post post={post.object} {session} showComments={showComments} />
     {/if}
   {/if}
 </li>
