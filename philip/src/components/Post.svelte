@@ -4,11 +4,11 @@
   import PostContent from "./Post/Content.svelte";
   import Header from "./Post/Header.svelte";
   import Tags from "./Post/Tags.svelte";
+  import Overlay from "./Post/Overlay.svelte";
   import Collection from "./Collection.svelte";
   import Publish from "./Publish.svelte";
-  import Overlay from "./Post/Overlay.svelte";
 
-  import { fetchJSON } from "../utils";
+  import { fetchJSON, outboxPost } from "../utils";
 
   let pgi = pubgate_instance;
   let showPublish = false;
@@ -68,8 +68,7 @@
     const object = post.id;
     const cc = [post.attributedTo];
     const body = JSON.stringify({ type: "Like", object, cc });
-    const params = { headers, method: "POST", body };
-    const response = await fetchJSON($session.user.outbox, params); // TODO test
+    const res = await outboxPost($session, body);
     liked = true;
   };
 
@@ -79,8 +78,7 @@
     const object = post.id;
     const cc = [post.attributedTo];
     const body = JSON.stringify({ type: "Announce", object, cc });
-    const params = { headers, method: "POST", body };
-    const response = await fetchJSON($session.user.outbox, params); // TODO test
+    const res = await outboxPost($session, body);
     announced = true;
   };
 </script>

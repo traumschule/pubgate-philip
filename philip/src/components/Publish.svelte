@@ -51,7 +51,7 @@
       }
     }
     const body = JSON.stringify(ap_object);
-    const res = await publishPost($session, body);
+    const res = await outboxPost($session, body);
     if (res.error) error = res.error;
     else if (res.Created !== "success")
       error = "Failed to create post: " + JSON.stringify(res);

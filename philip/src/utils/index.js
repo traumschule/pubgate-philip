@@ -9,5 +9,5 @@ export {
   fetchOutbox,
   followUser,
   findPost,
-  publishPost,
+  outboxPost,
 } from "./request";

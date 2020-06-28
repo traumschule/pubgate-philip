@@ -100,7 +100,7 @@ export const findPost = async url => {
   }
 };
 
-export const publishPost = (session, body) => {
+export const outboxPost = (session, body) => {
   try {
     const headers = { Authorization: "Bearer " + session.token };
     const req = { method: "POST", body, headers };
